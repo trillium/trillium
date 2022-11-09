@@ -1,0 +1,43 @@
+[user]
+    name = Trillium Smith
+    email = spiteless@gmail.com
+[core]
+    autocrlf = false
+    filemode = false
+    editor = code --wait
+    excludesfile = ~/.gitignore
+[push]
+    default = current
+[pull]
+    default = current
+
+[pretty]
+    all = format:%C(auto)%h %C(green)%<(15,trunc)%aN %C(reset)%<(50,trunc)%s %C(yellow)%<(30,trunc)%S %C(auto)%d
+    summary = format:%C(auto)%h %C(green)%<(15,trunc)%aN %C(reset)%<(50,trunc)%s %C(auto)%d
+
+[diff]
+    tool = vscode
+[difftool]
+    prompt = false
+[difftool "vscode"]
+    cmd = code --wait --diff "$LOCAL" "$REMOTE"
+[difftool "meld"]
+    # Choose one of these 2 lines, not both!.
+    # cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+    cmd = meld "$LOCAL" "$BASE" --output "$BASE"
+    keepbackup = true
+
+[merge]
+    tool = vscode
+[mergetool "vscode"]
+    cmd = code --wait $MERGED
+    keepbackup = false
+    trustexitcode = true
+[mergetool "meld"]
+    # Choose one of these 2 lines, not both!.
+    # cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+	cmd = meld \"\" \"\" \"\" --output \"\"
+    keepbackup = true
+[default]
+	pull = current
+	push = current
