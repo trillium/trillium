@@ -13,14 +13,14 @@ I'm reachable at: Trillium@hatsfabulous.com or via my LinkedIn: https://www.link
 
 ## Projects
 
-**Community Fridge Map** | [Repo](https://github.com/CollectiveFocus)
+**Community Fridge Map** | [Repo](https://github.com/CollectiveFocus) | [Live Site](https://fridgefinder.app/)
 
 A community fridge is a decentralized resource where businesses and individuals can donate perishable food. There are dozens of fridges hosted by volunteers across the country. Made with a team of skilled developers, project managers, UI designers, and UX researchers, this project is the crystallization of months of research and development. I have had the luxury of assisting in Front End Development, Dev Ops, and QA testing roles for this project. 
 
 *Stack*: [AWS](https://aws.amazon.com/) | [Swagger Open API](https://swagger.io/specification/) | [NextJs](https://nextjs.org/) | [MaterialUI](https://mui.com/) |  [Docker](https://www.docker.com/) | [GitHub Actions](https://github.com/features/actions)
 
-**Keyword Tracker** | [Repo](https://github.com/Spiteless/keyword-tracker-tool) | [Live Site](https://keyword-tracker.trilliumsmith.com/)
+**Kwdz.app** | [Repo](https://github.com/Spiteless/kwdz) | [Live Site](https://kwdz.app/)
 
-Keyword Tracker is a blogging productivity tool that counts the number of occurances of keywords within an article or blog post. The tool is simple, versatile, and lightwieght, utilizing query strings to store keywords themselves rather than hanging onto user data. This project was originally intended to be an inhouse tool with a very barebones version built, but was later adapted to be more user friendly. Usability features were added such as creating keyword groups, and adding a hotkey accessible command bar.
+Kwdz.app is a blogging productivity tool that counts the number of occurances of keywords within an article or blog post. The tool is simple, versatile, and lightwieght, utilizing query strings to store keywords themselves rather than hanging onto user data. This project was originally intended to be an inhouse tool with a very barebones version built, but was later adapted to be more user friendly. Usability features were added such as creating keyword groups, and adding a hotkey accessible command bar.
 
 *Stack*: [NextJs](https://nextjs.org/) | [MaterialUI](https://mui.com/) | [Netlify](https://www.netlify.com/) 
