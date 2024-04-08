@@ -5,7 +5,7 @@ I enjoy getting into the knitty gritty of elusive bugs and errors, taking a larg
 
 Outside of software development work, I'm an avid social dancer, massage therapist, and espresso enthusiast.
 
-I'm reachable at via email at: Trillium@hatsfabulous.com
+I'm reachable at via email at: Trillium@trilliumsmith.com
 
 Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
 
