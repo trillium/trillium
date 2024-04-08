@@ -1,6 +1,7 @@
-# Hello World :)
+<h1 align="center">I'm Trillium! (Rhymes with 'William')</h1>
+<h3 align="center">a fullstack web engineer / web developer based in Los Angeles, CA</h3>
 
-Hi, I’m Trillium, I'm a fullstack web developer with experience in the React ecosystem, building robust, scalable web applications as well as fun one-offs and tiny tools. 
+I build robust, scalable web applications as well as fun one-offs and tiny tools. 
 I enjoy getting into the knitty gritty of elusive bugs and errors, taking a larger scoped view to help design and architect systems, or finding the exact right css to make a website really shine.
 
 Outside of software development work, I'm an avid social dancer, massage therapist, and espresso enthusiast.
