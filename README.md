@@ -29,7 +29,7 @@ As the lead developer of the Volunteer Resource Management System (VRMS), I over
 ---
 
 <h3 align="center">
- <strong>Fridge Finder</strong> - Contributor | <a href="[https://github.com/hackforla/VRMS/](https://github.com/CollectiveFocus)">Repo</a> | <a href="[https://www.vrms.io/](https://fridgefinder.app/)">Live Site</a>
+ <strong>Fridge Finder</strong> - Contributor | <a href="https://github.com/CollectiveFocus">Repo</a> | <a href="https://fridgefinder.app/">Live Site</a>
 </h3>
 
 <div align="center">
