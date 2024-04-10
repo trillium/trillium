@@ -45,7 +45,7 @@ I've had the luxury of assisting in Front End Development, Dev Ops, and QA testi
 ---
 
 <h3 align="center">
- <strong>Trillium Massage</strong> | <a href="[https://github.com/hackforla/VRMS/](https://github.com/Spiteless/www-massage/)">Repo</a> | <a href="[https://www.vrms.io/](https://trilliummassage.la/)">Live Site</a>
+ <strong>Trillium Massage</strong> | <a href="https://github.com/Spiteless/www-massage/">Repo</a> | <a href="https://trilliummassage.la/">Live Site</a>
 </h3>
 
 <div align="center">
