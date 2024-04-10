@@ -42,19 +42,23 @@ I've had the luxury of assisting in Front End Development, Dev Ops, and QA testi
 
 *Stack*: [AWS](https://aws.amazon.com/) | [Swagger Open API](https://swagger.io/specification/) | [NextJs](https://nextjs.org/) | [MaterialUI](https://mui.com/) |  [Docker](https://www.docker.com/) | [GitHub Actions](https://github.com/features/actions)
 
+---
 
+<h3 align="center">
+ <strong>Trillium Massage</strong> | <a href="[https://github.com/hackforla/VRMS/](https://github.com/Spiteless/www-massage/)">Repo</a> | <a href="[https://www.vrms.io/](https://trilliummassage.la/)">Live Site</a>
+</h3>
 
-### **Calendar-It** | [Repo](https://github.com/calendar-it/meet) | [Live Site](https://trilliummassage.la/)
+<div align="center">
+ <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/70064ac2-d836-498d-97aa-d4ec7cf2d393">
+</div>
 
 A simplistic scheduling tool built in typescript to allow for clients to book appointments with a service provider, coach, business owner, etc.
 This tool integrates with the Google Calendar API and Gmail API to provide up to date booking information.
 This tool is built to function for both in-person and online meetings, serving as a simpler, more customizable version of a Calendly like service.
 
- <!-- * Encountered and resolved issues with timezone communication between client and server -->
-
 *Stack*: [TypeScript](https://www.typescriptlang.org/) | [Tailwind.css](https://tailwindcss.com/) | [Vercel](https://vercel.com/d) 
 
-
+---
 
 ### **Kwdz.app** | [Repo](https://github.com/Spiteless/kwdz) | [Live Site](https://kwdz.app/)
 
