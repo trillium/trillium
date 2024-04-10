@@ -14,7 +14,13 @@ Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
 
 
 
-### **VRMS** - Lead Developer | [Repo](https://github.com/hackforla/VRMS/) | [Live Site](https://www.vrms.io/)
+<h3 align="center">
+ <strong>VRMS</strong> - Lead Developer | <a href="https://github.com/hackforla/VRMS/">Repo</a> | <a href="https://www.vrms.io/">Live Site</a>
+</h3>
+
+<div align="center">
+  <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/feb1b3fc-04f3-4dd5-ab0d-9956e1423140">
+</div>
 
 As the lead developer of the Volunteer Resource Management System (VRMS), I oversee the strategic enhancement and modernization of this legacy application to align with contemporary application architecture standards. Constructed using Create React App for the frontend and an Express backend hosted on AWS, VRMS has undergone consistent refinement and growth since its inception in 2019. My responsibilities encompass delineating the technical direction, crafting software architecture, code composition and review, team management, and assuring the application's quality through rigorous testing measures.
 
