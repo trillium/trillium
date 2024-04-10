@@ -60,7 +60,14 @@ This tool is built to function for both in-person and online meetings, serving a
 
 ---
 
-### **Kwdz.app** | [Repo](https://github.com/Spiteless/kwdz) | [Live Site](https://kwdz.app/)
+<h3 align="center">
+ <strong>Kwdz.app</strong> | <a href="https://github.com/Spiteless/kwdz">Repo</a> | <a href="httpshttps://kwdz.app/">Live Site</a>
+</h3>
+
+<div align="center">
+  <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/62ec4930-edfe-4d55-885c-0a1f111582e4">
+</div>
+
 
 Kwdz.app is a blogging productivity tool that counts the number of occurances of keywords within an article or blog post. The tool is simple, versatile, and lightwieght, utilizing query strings to store keywords themselves rather than hanging onto user data. This project was originally intended to be an inhouse tool with a very barebones version built, but was later adapted to be more user friendly. Usability features were added such as creating keyword groups, and adding a hotkey accessible command bar.
 
