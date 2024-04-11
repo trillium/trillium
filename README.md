@@ -61,7 +61,7 @@ This tool is built to function for both in-person and online meetings, serving a
 ---
 
 <h3 align="center">
- <strong>Kwdz.app</strong> | <a href="https://github.com/Spiteless/kwdz">Repo</a> | <a href="httpshttps://kwdz.app/">Live Site</a>
+ <strong>Kwdz.app</strong> | <a href="https://github.com/Spiteless/kwdz">Repo</a> | <a href="https://kwdz.app/">Live Site</a>
 </h3>
 
 <div align="center">
