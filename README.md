@@ -24,7 +24,7 @@ Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
 
 As the lead developer of the Volunteer Resource Management System (VRMS), I oversee the strategic enhancement and modernization of this legacy application to align with contemporary application architecture standards. Constructed using Create React App for the frontend and an Express backend hosted on AWS, VRMS has undergone consistent refinement and growth since its inception in 2019. My responsibilities encompass delineating the technical direction, crafting software architecture, code composition and review, team management, and assuring the application's quality through rigorous testing measures.
 
-*Stack*: [React](https://react.dev/) | [ExpressJS](https://expressjs.com/) | [MongoDB](https://www.mongodb.com/)  |  [Docker](https://www.docker.com/) | [AWS ECS](https://aws.amazon.com/ecs/)
+*Stack*: [React](https://react.dev/) | [ExpressJS](https://expressjs.com/) | [MongoDB](https://www.mongodb.com/)  |  [Docker](https://www.docker.com/) | [AWS ECS](https://aws.amazon.com/ecs/) | [GitHub Actions](https://github.com/features/actions)
 
 ---
 
