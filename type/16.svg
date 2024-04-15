@@ -1,0 +1,119 @@
+<svg fill="none" viewBox="0 0 420 24
+" width="420" height="24"
+  xmlns="http://www.w3.org/2000/svg">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        .body {
+            --color-main: white;
+            --color-primary: #f43f5e;
+            color: white;
+        }
+
+        .container {
+          height: 1.2em;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px red solid;
+
+        }
+
+        .type {
+          --d:2s; /* duration */
+          display:inline-block;
+          vertical-align: bottom;
+        }
+
+        .type > span {
+          display:grid;
+          overflow: hidden;
+          line-height: 1 !important;
+          height: 1;
+        }
+
+        .type span span {
+          color: var(--color-main);
+          width:0%;
+          max-width:max-content;
+          overflow: hidden;
+          height: 1.5em;
+          line-height: 1.5 !important;
+          word-break:break-all;
+          animation:
+            c 0.5s infinite steps(1),  
+            t var(--d) linear infinite alternate,
+            m calc(var(--d)*2*var(--n)) steps(var(--n)) infinite;
+          }
+        .type span span:before {
+          content:" ";
+          display:inline-block;
+        }
+
+        .no-display {
+          height: 0;
+          width: 0;
+          overflow: hidden;
+        } 
+
+        .type span span div {
+          color: var(--color-primary);
+          display: inline;
+          font-weight: 600;
+          }
+
+        @keyframes t{
+          90%,100% {width:100%}
+        }
+
+        @keyframes c{
+          0%,100%{box-shadow:2px 0 0 #0000}
+          50%    {box-shadow:2px 0 0 var(--color-caret)  }
+        }
+
+        @keyframes m{
+          100% {transform:translateY(calc(-100%*var(--n)))}
+        }
+
+
+        body {
+          font-size:40px;
+        }
+
+
+
+      </style>
+      <div class='body'>
+        <div class='container'>
+          <span class="type" style="--n:5  ;--d:0.5s">
+            <span style="border: 1px blue solid; min-width: 100%;">
+                   <span><div>01. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>02. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>03. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>04. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>05. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <!-- <span><div>06. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>07. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>08. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>09. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>10. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>11. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>12. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>13. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>14. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>15. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>16. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>17. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>18. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>19. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>20. abcdefghijklmnopqrstuvwxyz</div></span>
+                   <span><div>21. abcdefghijklmnopqrstuvwxyz</div> 21. ABCDEFGJIJKLM</span> -->
+            </span> 
+          </span>
+        </div>
+      </div>
+    </div>
+  </foreignObject>
+</svg>
+

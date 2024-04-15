@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Foo foo</h1>
+    <div class="body">
+      <div class="type" style="--n: 3; --d: 2s">
+        <ul class="type" style="--n: 3; --d: 2s">
+          <li>1. A Fullstack Software Developer</li>
+          <li>2. An Open Source Contributor</li>
+          <li>3. A Gentleman and a Scholar</li>
+        </ul>
+      </div>
+    </div>
+    <p>Content lorem ipsum dolorem dominus finiti</p>
+    <p>Content lorem ipsum dolorem dominus finiti</p>
+    <p>Content lorem ipsum dolorem dominus finiti</p>
+
+    <img src="./t1.svg" style="width: 100%" alt="Click to see the source" />
+
+    <p>Content lorem ipsum dolorem dominus finiti</p>
+    <p>Content lorem ipsum dolorem dominus finiti</p>
+    <p>Content lorem ipsum dolorem dominus finiti</p>
+
+    <style>
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      ul,
+      li {
+        margin: 0;
+        padding: 0;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: black;
+          color: white;
+        }
+      }
+
+      .type {
+        display: inline-block;
+        vertical-align: bottom;
+      }
+
+      .type > ul {
+        display: grid;
+        overflow: hidden;
+        height: 1.2em;
+      }
+
+      .type li {
+        width: 0%;
+        max-width: max-content;
+        overflow: hidden;
+        height: inherit;
+        word-break: break-all;
+        animation: c 0.5s infinite steps(1),
+          t var(--d) linear infinite alternate,
+          m calc(var(--d) * 2 * var(--n)) steps(var(--n)) infinite;
+      }
+
+      .type li:before {
+        content: " ";
+        display: inline-block;
+      }
+
+      @keyframes t {
+        90%,
+        100% {
+          width: 100%;
+        }
+      }
+
+      @keyframes c {
+        0%,
+        100% {
+          box-shadow: 2px 0 0 #0000;
+        }
+        50% {
+          box-shadow: 2px 0 0 red;
+        }
+      }
+
+      @keyframes m {
+        100% {
+          transform: translateY(calc(-100% * var(--n)));
+        }
+      }
+    </style>
+  </body>
+</html>

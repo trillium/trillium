@@ -1,0 +1,128 @@
+<svg fill="none" viewBox="0 0 420 30
+" width="420" height="30"
+  xmlns="http://www.w3.org/2000/svg">
+  <foreignObject class="base" width="100%" height="100%">
+    <body class="body"
+      xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+      ul,
+li,
+body {
+  margin: 0;
+  padding: 0;
+  color: #f43f5e;
+}
+
+      svg:not(:root) {
+  overflow: hidden;
+}
+
+li {
+   border-right: 2px rgba(255, 0, 0, 1) solid
+   margin-left: 6px;
+}
+
+.body {
+ height: 25px;
+ color: #f43f5e;
+ background: #000;
+}
+
+.base {
+  border: 2px solid red;
+  box-sizing: border-box;
+  font-size: 0.6rem; 
+  line-height: 1.0rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .body {
+    color: white;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .body {
+    color: black;
+  }
+}
+
+.type, .hype {
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.type > ul, .hype > ul {
+  display: grid;
+  overflow: hidden;
+  height: 1.2em;
+}
+
+.type li, .hype li {
+  width: 0%;
+  max-width: max-content;
+  overflow: hidden;
+  height: inherit;
+  word-break: break-all;
+  animation: c 0.5s infinite steps(1),
+    t var(--d) linear infinite alternate,
+    m calc(var(--d) * 2 * var(--n)) steps(var(--n)) infinite;
+}
+
+.hype li {
+  color: blue;  
+  width: 100%;
+  animation: c 0.5s infinite steps(1),
+    t var(--d) linear infinite alternate,
+}
+
+.type li:before, .hype li:before{
+  content: " ";
+  display: inline-block;
+}
+
+@keyframes t {
+  90%,
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes c {
+  0%,
+  100% {
+    border-color: rgba(255, 0, 0, 0);
+  }
+  50% {
+    border-color: rgba(255, 0, 0, 1);
+  }
+}
+
+@keyframes m {
+  100% {
+    transform: translateY(calc(-100% * var(--n)));
+  }
+}
+      </style>
+
+      <div class="body">
+        <div class="type" style="--n: 10; --d: 2s">
+          <ul class="type">
+            <li>1. (Rhymes with 'William')</li>
+            <li>2. I am a Fullstack Software Developer</li>
+            <li>3. An Open Source Contributor</li>
+            <li>3. Named after a flower (it's true)</li>
+            <li>4. It's not a number, that's trillion</li>
+            <li>5. Trillion, 1,000,000,000</li>
+            <li>6. It's not a 200-s chat app, that's Trillian</li>
+            <li>7. It's not from Hitchhiker's Guide, that's Trillian</li>
+            <li>8. There is a Trillium in Star Wars, but it aint me</li>
+            <li>9. Fun trillium flower facts</li>
+            <li>10. Trillium seeds are dispersed by ants!</li>
+          </ul>
+        </div>
+      </div>
+    </body>
+  </foreignObject>
+</svg>
+
