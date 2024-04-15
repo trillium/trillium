@@ -1,4 +1,4 @@
-<svg fill="none" viewBox="0 0 420 18" width="420" height="18"
+<svg fill="none" viewBox="0 0 420 25" width="420" height="25"
   xmlns="http://www.w3.org/2000/svg">
   <foreignObject width="100%" height="100%">
     <div xmlns="http://www.w3.org/1999/xhtml">
@@ -9,14 +9,14 @@
         }
         @media (prefers-color-scheme: dark) {
         .body {
-          position: relative;
+          <!-- position: relative; -->
           --color-main: white;
           --color-primary: #f43f5e;
           }
         }
         .container {
-          left: 6px;
-          position: relative; 
+          <!-- left: 6px; -->
+          <!-- position: relative;  -->
         }
 
         .type {
@@ -28,8 +28,8 @@
         .type > span {
           display:grid;
           overflow: hidden;
-          line-height: 1;
-          height:1em;
+          line-height: 1 !important;
+          height:1em !important;
         }
 
         .type span span {
