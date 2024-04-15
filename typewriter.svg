@@ -8,12 +8,16 @@
             --color-primary: #f43f5e;
         }
         @media (prefers-color-scheme: dark) {
-        .body {
-          <!-- position: relative; -->
-          --color-main: white;
-          --color-primary: #f43f5e;
+          .body {
+            <!-- position: relative; -->
+            --color-main: white;
+            --color-primary: #f43f5e;
+          }
+          .type span span {
+          color: white;
           }
         }
+
         .container {
           <!-- left: 6px; -->
           <!-- position: relative;  -->
