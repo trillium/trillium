@@ -1,4 +1,15 @@
-<h1 align="center">I'm Trillium! (Rhymes with 'William')</h1>
+<h1 align="center">
+ Hey there, I'm Trillium!
+ <br>
+ <small><aside align="center">
+  <span style="font-size:0.5em;">
+   (Rhymes with 'William')</aside>
+  </span> 
+ </small>
+</h1>
+
+
+
 <h3 align="center">Fullstack Software Engineer and Web Developer based in Los Angeles, CA</h3>
 
 I build robust, scalable web applications as well as fun one-offs and tiny tools. 
@@ -10,9 +21,26 @@ I'm reachable at via email at: Trillium@trilliumsmith.com
 
 Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
 
+## Portfolio
+
+<h3 align="center">
+ <strong>wwww.trilliumsmith.com</strong> | <a href="https://github.com/Spiteless/trilliumsmith--devsite">Repo</a> | <a href="trilliumsmith.com">Live Site</a>
+</h3>
+
+<div align="center">
+ <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/Spiteless/Spiteless/assets/5898009/bf77213a-ee2a-41b8-aa36-8277b099e990">
+  <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/b7213131-7bb3-4d05-a99c-59d0f7f53b4c">
+ </picture>
+</div>
+
+As the lead developer of the Volunteer Resource Management System (VRMS), I oversee the strategic enhancement and modernization of this legacy application to align with contemporary application architecture standards. Constructed using Create React App for the frontend and an Express backend hosted on AWS, VRMS has undergone consistent refinement and growth since its inception in 2019. My responsibilities encompass delineating the technical direction, crafting software architecture, code composition and review, team management, and assuring the application's quality through rigorous testing measures.
+
+*Stack*: [React](https://react.dev/) | [ExpressJS](https://expressjs.com/) | [MongoDB](https://www.mongodb.com/)  |  [Docker](https://www.docker.com/) | [AWS ECS](https://aws.amazon.com/ecs/) | [GitHub Actions](https://github.com/features/actions)
+
+---
+
 ## Projects
-
-
 
 <h3 align="center">
  <strong>VRMS</strong> - Lead Developer | <a href="https://github.com/hackforla/VRMS/">Repo</a> | <a href="https://www.vrms.io/">Live Site</a>
@@ -49,7 +77,10 @@ I've had the luxury of assisting in Front End Development, Dev Ops, and QA testi
 </h3>
 
 <div align="center">
- <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/70064ac2-d836-498d-97aa-d4ec7cf2d393">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/Spiteless/Spiteless/assets/5898009/2953e699-1f0d-4041-bb04-1ded74260e64">
+    <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/83519a1b-86fc-4662-ae97-bd37af78f2e9">
+  </picture>
 </div>
 
 A simplistic scheduling tool built in typescript to allow for clients to book appointments with a service provider, coach, business owner, etc.
@@ -65,7 +96,10 @@ This tool is built to function for both in-person and online meetings, serving a
 </h3>
 
 <div align="center">
-  <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/62ec4930-edfe-4d55-885c-0a1f111582e4">
+  <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/Spiteless/Spiteless/assets/5898009/3ad389c7-5ac7-4480-aaf7-b437e5369617">
+   <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/62ec4930-edfe-4d55-885c-0a1f111582e4">
+  </picture>
 </div>
 
 
