@@ -1,12 +1,13 @@
-<h1 align="center">
+<div>
+<div>
+<svg fill="none" viewBox="0 0 300 18" width="300" height="18" ></svg>
+<h1>
  Hey there, I'm Trillium!
- <br>
- <small><aside align="center">
-  <span style="font-size:0.5em;">
-   (Rhymes with 'William')</aside>
-  </span> 
- </small>
 </h1>
+ <img src="typewriter.svg" style="width: 100%;" alt="Click to see the source">
+
+</div>
+</div>
 
 
 
