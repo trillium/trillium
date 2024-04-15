@@ -3,7 +3,7 @@
   <h1>
    Hey there, I'm Trillium!
   </h1>
-  <img src="typewriter.svg" style="width: 100%;" alt="Click to see the source">
+  <img src="2.svg" style="width: 100%;" alt="Click to see the source">
   </div>
 </div>
 
