@@ -12,7 +12,7 @@
 
 
 
-<h3 align="center">Fullstack Software Engineer and Web Developer based in Los Angeles, CA</h3>
+<h3 align="center">Software Engineer and Web Developer based in Los Angeles, CA</h3>
 
 I build robust, scalable web applications as well as fun one-offs and tiny tools. 
 I enjoy getting into the knitty gritty of elusive bugs and errors, taking a larger scoped view to help design and architect systems, or finding the exact right css to make a website really shine.
