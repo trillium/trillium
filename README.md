@@ -5,8 +5,10 @@
  Hey there, I'm Trillium!
 </h1>
 
-<img src="https://readme-typing-svg.demolab.com?font=roboto&size=14&duration=2500&pause=1500&color=F43F5E&random=false&width=435&height=25&lines=Hey+%F0%9F%91%8B%2C+I'm+Trillium+(Rhymes+with+'William');I'm+a+Software+Engineer+based+in+Los+Angeles+%F0%9F%8C%87;%E2%9C%85+Open+Source+Contributor;%E2%9C%85+Lover+of+espresso.+Mmm+mmm+coffee!+%F0%9F%A4%8E;%E2%9C%85+Partner+dancer%3A+salsa%2C+tango%2C+swing%2C+fusion+%F0%9F%92%83%F0%9F%95%BA;Trillium+is+not+a+big+number+--+that's+trillion;Trillion%3A+a+million+millions%2C+1%2C000%2C000%2C000%2C000;Not+from+The+Hitchhiker's+Guide+--+that's+Trillian;Not+a+2000s+chat+app+--+that's+also+Trillian;I'm+named+after+a+flower+%F0%9F%8C%B7+(it's+a+lily)+;Fun+facts+about+trillium+the+flower%3A;Trilliums+are+myrmecochorous%2C+their+seeds+are+dispersed+by+ants!;mur-muh-koh-KOR-ee%3A+dispersal+of+fruits%2Fseeds+by+ants.;Picking+parts+off+a+trillium+plant+can+kill+it!+Don't+do+it!+;Are+you+really+still+reading+this+%3F+.+.+.+;.+.+.+.+.+.+.+.+.+.+" alt="Typing SVG" />
-
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=14&duration=2500&pause=1500&color=F43F5E&random=false&width=435&height=25&lines=Hey%2C+I'm+Trillium+(Rhymes+with+'William')+%F0%9F%91%8B;I'm+a+Software+Engineer+based+in+Los+Angeles;%E2%9C%85+Open+Source+Contributor;%E2%9C%85+Lover+of+espresso.+Mmm+mmm+coffee!+%F0%9F%A4%8E;%E2%9C%85+Partner+dancer%3A+salsa%2C+tango%2C+swing%2C+fusion+%F0%9F%92%83%F0%9F%95%BA;%E2%9D%8C+Not+from+The+Hitchhiker's+Guide+--+that's+Trillian;%E2%9D%8C+Not+a+2000s+chat+app+--+that's+also+Trillian;%E2%9D%8C+Trillium+is+not+a+big+number+--+that's+trillion;Trillion%3A+a+million+millions%2C+1%2C000%2C000%2C000%2C000;%F0%9F%8C%B7+I'm+named+after+a+flower+(it's+a+lily)+;%F0%9F%92%A1+Fun+facts+about+trillium+the+flower%3A;The+seeds+of+the+trillium+are+dispered+by+ants!+%F0%9F%90%9C;Picking+parts+off+a+trillium+plant+can+kill+it!;Are+you+really+still+reading+this+%3F+.+.+.+;.+.+.+.+.+.+.+.+.+.+" alt="Typing SVG" />
+</p>
+ Trilliums+are+myrmecochorous.+which+means+their-;seeds+are+dispersed+by+ants.+%F0%9F%90%9C%F0%9F%92%AA;Picking+parts+off+a+trillium+plant+can+kill+it!;Are+you+really+still+reading+this+%3F+.+.+.+;.+.+.+.+.+.+.+.+.+.+" alt="Typing SVG" />
 </div>
 </div>
 
