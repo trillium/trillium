@@ -35,6 +35,9 @@ Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
  </picture>
 </div>
 
+*Stack*: [TypeScript](https://www.typescriptlang.org/) | [NextJs](https://nextjs.org/) | [Tailwind.css](https://tailwindcss.com/) | [Netlify](https://www.netlify.com/)
+
+
 ---
 
 ## Projects
