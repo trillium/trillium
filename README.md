@@ -23,7 +23,7 @@ Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
 ## Portfolio
 
 <h3 align="center">
- <strong>wwww.trilliumsmith.com</strong> | <a href="https://github.com/Spiteless/trilliumsmith--devsite">Repo</a> | <a href="https://trilliumsmith.com">Live Site</a>
+ <strong>wwww.trilliumsmith.com</strong> | <a href="https://github.com/Spiteless/trilliumsmith.com">Repo</a> | <a href="https://trilliumsmith.com">Live Site</a>
 </h3>
 
 <div align="center">
