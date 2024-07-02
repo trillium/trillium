@@ -1,3 +1,5 @@
+<a name="readme-top"></a>
+
 <div>
 <div>
 <svg fill="none" viewBox="0 0 300 18" width="300" height="18" ></svg>
@@ -37,7 +39,7 @@ Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
 
 _Stack_: [TypeScript](https://www.typescriptlang.org/) | [NextJs](https://nextjs.org/) | [Tailwind.css](https://tailwindcss.com/) | [Netlify](https://www.netlify.com/)
 
----
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Projects
 
@@ -56,6 +58,8 @@ _Stack_: [TypeScript](https://www.typescriptlang.org/) | [NextJs](https://nextjs
 As the lead developer of the Volunteer Resource Management System (VRMS), I oversee the strategic enhancement and modernization of this legacy application to align with contemporary application architecture standards. Constructed using Create React App for the frontend and an Express backend hosted on AWS, VRMS has undergone consistent refinement and growth since its inception in 2019. My responsibilities encompass delineating the technical direction, crafting software architecture, code composition and review, team management, and assuring the application's quality through rigorous testing measures.
 
 _Stack_: [React](https://react.dev/) | [ExpressJS](https://expressjs.com/) | [MongoDB](https://www.mongodb.com/) | [Docker](https://www.docker.com/) | [AWS ECS](https://aws.amazon.com/ecs/) | [GitHub Actions](https://github.com/features/actions)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -76,6 +80,8 @@ Made with a team of skilled developers, project managers, UI designers, and UX r
 I've had the luxury of assisting in Front End Development, Dev Ops, and QA testing roles for this project.
 
 _Stack_: [AWS](https://aws.amazon.com/) | [Swagger Open API](https://swagger.io/specification/) | [NextJs](https://nextjs.org/) | [MaterialUI](https://mui.com/) | [Docker](https://www.docker.com/) | [GitHub Actions](https://github.com/features/actions)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -98,6 +104,8 @@ This tool is built to function for both in-person and online meetings, serving a
 
 _Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang.org/) | [Tailwind.css](https://tailwindcss.com/) | [Vercel](https://vercel.com/d)
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 <h3 align="center">
@@ -118,3 +126,5 @@ Kwdz.app is a blogging productivity tool that counts the number of occurances of
  <!-- * Utilized higher order functions to limit the execution of the application's most resource intensive tasks  -->
 
 _Stack_: [NextJs](https://nextjs.org/) | [MaterialUI](https://mui.com/) | [Netlify](https://www.netlify.com/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
