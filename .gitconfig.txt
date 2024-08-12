@@ -1,6 +1,6 @@
 [user]
     name = Trillium Smith
-    email = spiteless@gmail.com
+    email = trillium@trilliumsmith.com
 [core]
     autocrlf = false
     filemode = false

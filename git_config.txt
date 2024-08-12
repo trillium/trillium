@@ -1,5 +1,5 @@
 user.name=Trillium Smith
-user.email=spiteless@gmail.com
+user.email=trillium@trilliumsmith.com
 core.autocrlf=false
 core.filemode=false
 core.editor=code --wait
