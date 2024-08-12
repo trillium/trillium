@@ -25,14 +25,14 @@ Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
 ## Portfolio
 
 <h3 align="center">
- <strong>wwww.trilliumsmith.com</strong> | <a href="https://github.com/Spiteless/trilliumsmith.com">Repo</a> | <a href="https://trilliumsmith.com">Live Site</a>
+ <strong>wwww.trilliumsmith.com</strong> | <a href="https://github.com/trillium/trilliumsmith.com">Repo</a> | <a href="https://trilliumsmith.com">Live Site</a>
 </h3>
 
 <div align="center">
 <a href="https://trilliumsmith.com">
  <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/Spiteless/Spiteless/assets/5898009/bf77213a-ee2a-41b8-aa36-8277b099e990">
-  <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/b7213131-7bb3-4d05-a99c-59d0f7f53b4c">
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/trillium/trillium/assets/5898009/bf77213a-ee2a-41b8-aa36-8277b099e990">
+  <img width="561" alt="image" src="https://github.com/trillium/trillium/assets/5898009/b7213131-7bb3-4d05-a99c-59d0f7f53b4c">
  </picture>
  </a>
 </div>
@@ -50,7 +50,7 @@ _Stack_: [TypeScript](https://www.typescriptlang.org/) | [NextJs](https://nextjs
 <div align="center">
   <a href="https://www.vrms.io/">
   <picture>
-    <img width="561" alt="VRMS site screenshot" src="https://github.com/Spiteless/Spiteless/assets/5898009/feb1b3fc-04f3-4dd5-ab0d-9956e1423140">
+    <img width="561" alt="VRMS site screenshot" src="https://github.com/trillium/trillium/assets/5898009/feb1b3fc-04f3-4dd5-ab0d-9956e1423140">
   </picture>
  </a>
 </div>
@@ -70,7 +70,7 @@ _Stack_: [React](https://react.dev/) | [ExpressJS](https://expressjs.com/) | [Mo
 <div align="center">
   <a href="https://fridgefinder.app/">
     <picture>
-      <img width="561" alt="Fridge Finder screenshot" src="https://github.com/Spiteless/Spiteless/assets/5898009/7f768fd5-effc-4724-b024-c00a21502e12">
+      <img width="561" alt="Fridge Finder screenshot" src="https://github.com/trillium/trillium/assets/5898009/7f768fd5-effc-4724-b024-c00a21502e12">
     </picture>
   </a>
 </div>
@@ -86,14 +86,14 @@ _Stack_: [AWS](https://aws.amazon.com/) | [Swagger Open API](https://swagger.io/
 ---
 
 <h3 align="center">
- <strong>Trillium Massage</strong> | <a href="https://github.com/Spiteless/www-massage/">Repo</a> | <a href="https://trilliummassage.la/">Live Site</a>
+ <strong>Trillium Massage</strong> | <a href="https://github.com/trillium/www-massage/">Repo</a> | <a href="https://trilliummassage.la/">Live Site</a>
 </h3>
 
 <div align="center">
     <a href="https://trilliummassage.la/">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://github.com/Spiteless/Spiteless/assets/5898009/2953e699-1f0d-4041-bb04-1ded74260e64">
-        <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/83519a1b-86fc-4662-ae97-bd37af78f2e9">
+        <source media="(prefers-color-scheme: dark)" srcset="https://github.com/trillium/trillium/assets/5898009/2953e699-1f0d-4041-bb04-1ded74260e64">
+        <img width="561" alt="image" src="https://github.com/trillium/trillium/assets/5898009/83519a1b-86fc-4662-ae97-bd37af78f2e9">
       </picture>
   </a>
 </div>
@@ -109,14 +109,14 @@ _Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang
 ---
 
 <h3 align="center">
- <strong>Kwdz.app</strong> | <a href="https://github.com/Spiteless/kwdz">Repo</a> | <a href="https://kwdz.app/">Live Site</a>
+ <strong>Kwdz.app</strong> | <a href="https://github.com/trillium/kwdz">Repo</a> | <a href="https://kwdz.app/">Live Site</a>
 </h3>
 
 <div align="center">
   <a href="https://kwdz.app/">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/Spiteless/Spiteless/assets/5898009/3ad389c7-5ac7-4480-aaf7-b437e5369617">
-      <img width="561" alt="image" src="https://github.com/Spiteless/Spiteless/assets/5898009/62ec4930-edfe-4d55-885c-0a1f111582e4">
+      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/trillium/trillium/assets/5898009/3ad389c7-5ac7-4480-aaf7-b437e5369617">
+      <img width="561" alt="image" src="https://github.com/trillium/trillium/assets/5898009/62ec4930-edfe-4d55-885c-0a1f111582e4">
     </picture>
   </a>
 </div>
