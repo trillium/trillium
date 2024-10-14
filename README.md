@@ -1,5 +1,6 @@
 <a name="readme-top"></a>
 
+
 <div>
 <div>
 <svg fill="none" viewBox="0 0 300 18" width="300" height="18" ></svg>
@@ -21,6 +22,12 @@ Outside of software development work, I'm an avid social dancer, massage therapi
 I'm reachable at via email at: Trillium@trilliumsmith.com
 
 Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
+
+<p>
+<img src="https://trillium-github-readme-stats.vercel.app/api/?username=trillium&show_icons=true&count_private=true&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10&rank_icon=github&include_all_commits=true" height="192" />
+<img alt="NirmalNaveen20 Top Languages" src="https://trillium-github-readme-stats.vercel.app/api/top-langs/?username=trillium&langs_count=8&layout=compact&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10" height="192px" />
+</p>
+
 
 ## Portfolio
 
