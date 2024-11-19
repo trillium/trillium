@@ -109,7 +109,7 @@ A simplistic scheduling tool built in typescript to allow for clients to book ap
 This tool integrates with the Google Calendar API and Gmail API to provide up to date booking information.
 This tool is built to function for both in-person and online meetings, serving as a simpler, more customizable version of a Calendly like service.
 
-_Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang.org/) | [Tailwind.css](https://tailwindcss.com/) | [Vercel](https://vercel.com/d)
+_Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang.org/) | [Tailwind.css](https://tailwindcss.com/) | [Vercel](https://vercel.com/d) | [Redux](https://redux.js.org/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
