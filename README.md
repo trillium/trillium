@@ -38,8 +38,8 @@ Or via my LinkedIn: https://www.linkedin.com/in/trilliumsmith/
 <div align="center">
 <a href="https://trilliumsmith.com">
  <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/trillium/trillium/assets/5898009/bf77213a-ee2a-41b8-aa36-8277b099e990">
-  <img width="561" alt="image" src="https://github.com/trillium/trillium/assets/5898009/b7213131-7bb3-4d05-a99c-59d0f7f53b4c">
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/d773d9e0-25b6-4888-9594-369cfaa8c9e4">
+  <img width="561" alt="image" src="https://github.com/user-attachments/assets/e9bc6e54-96fa-4fd7-877f-e7ab95898387">
  </picture>
  </a>
 </div>
