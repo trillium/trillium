@@ -4,6 +4,9 @@ This document describes every project Trillium is working on. After completing t
 main setup (see `SETUP.md`), clone these repos and restore the working state described
 below.
 
+**Target machine**: macOS (Mac). All paths below use `/Users/trillium/` (macOS home).
+Homebrew binaries are at `/opt/homebrew/bin/` (Apple Silicon).
+
 All dirty working trees have been committed with `WIP:` prefixed commit messages as
 of 2026-02-19 so that no work is lost during migration. Some repos that couldn't push
 to their upstream (forks of org repos) were pushed to `migration/*` branches on
@@ -367,10 +370,21 @@ git clone https://github.com/trillium/speak.git ~/code/speak
 
 1. **Install system dependencies**:
    ```bash
-   # uv should already be installed via brew (section 2b of SETUP.md)
-   # aplay comes with alsa-utils (usually pre-installed on Linux Mint)
-   sudo apt install -y alsa-utils
+   # uv should already be installed via brew (section 2 of SETUP.md)
+   # On macOS, aplay doesn't exist. Install sox for raw PCM playback:
+   brew install sox
    ```
+
+   **macOS audio adaptation**: The speak script uses `aplay` (Linux ALSA) for audio.
+   On macOS, edit `~/.local/bin/speak` and replace all instances of:
+   ```
+   aplay -r 24000 -f S16_LE -c 1 -t raw -q
+   ```
+   with:
+   ```
+   play -r 24000 -b 16 -e signed -c 1 -t raw -
+   ```
+   (The `play` command comes from `sox`.)
 
 2. **Symlink the speak CLI**:
    ```bash
@@ -443,7 +457,7 @@ git clone https://github.com/trillium/CCometixLine.git ~/code/CCometixLine
 | Upstream | https://github.com/Haleclipse/CCometixLine |
 | Language | Rust |
 | What | High-performance status line with git integration, usage tracking, TUI config |
-| Build | `cargo build --release`, copy binary to `~/.claude/ccline/ccline` |
+| Build | `cargo build --release`, copy binary to `~/.claude/ccline/ccline` (must build on macOS — the Linux binary won't work) |
 
 ---
 
