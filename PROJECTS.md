@@ -359,7 +359,74 @@ git clone https://github.com/trillium/speak.git ~/code/speak
 | Branch | `main` |
 | What | `speak "hello"` — daemon-based TTS with voice selection, speed control |
 | Install | Run `./install.sh` to symlink scripts to `~/.local/bin/` |
-| Voice models | Stored in `~/.local/share/speak/` (not in repo — download on first use) |
+| Engines | **Kokoro** (default, higher quality) and **Piper** (fallback) |
+| Dependencies | `uv` (Python package runner), `aplay` (ALSA audio), `jq` (Piper only) |
+| Voice models | Stored in `~/.local/share/speak/` (not in repo — see setup below) |
+
+#### Full speak setup
+
+1. **Install system dependencies**:
+   ```bash
+   # uv should already be installed via brew (section 2b of SETUP.md)
+   # aplay comes with alsa-utils (usually pre-installed on Linux Mint)
+   sudo apt install -y alsa-utils
+   ```
+
+2. **Symlink the speak CLI**:
+   ```bash
+   cd ~/code/speak && ./install.sh
+   ```
+
+3. **Download Kokoro model files** (~336MB total):
+   ```bash
+   mkdir -p ~/.local/share/speak/kokoro
+   cd ~/.local/share/speak/kokoro
+
+   # Download from HuggingFace (onnx-community/Kokoro-82M-v1.0-ONNX)
+   wget https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX/resolve/main/onnx/model.onnx -O kokoro-v1.0.onnx
+   wget https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX/resolve/main/voices.bin -O voices-v1.0.bin
+   ```
+
+   If the above URLs have changed, search for `Kokoro-82M-v1.0-ONNX` on
+   https://huggingface.co and download `model.onnx` and `voices.bin`, renaming
+   them to `kokoro-v1.0.onnx` and `voices-v1.0.bin`.
+
+4. **Verify Kokoro works**:
+   ```bash
+   speak "Hello, this is a test of the text to speech system."
+   ```
+   On first run, `uv` will auto-install the `kokoro-onnx` Python package.
+   The daemon starts automatically and stays loaded for 5 minutes of idle time.
+
+5. **(Optional) Download Piper voices** — these download automatically on first use
+   when you specify `--engine piper`, but you can pre-download them:
+   ```bash
+   mkdir -p ~/.local/share/speak/voices
+   speak --engine piper --voice en_US-ryan-high "Testing Piper"
+   ```
+
+   Piper voices previously installed on the old machine (464MB total):
+   - `en_US-ryan-high` (default, 116MB)
+   - `en_US-lessac-high` (109MB)
+   - `en_US-libritts-high` (131MB)
+   - `en_US-ljspeech-high` (109MB)
+
+#### speak usage
+
+```bash
+speak "Hello world"                              # Kokoro, default voice (af_heart)
+speak --voice am_adam "Male voice"               # American male
+speak --engine piper "Using Piper engine"        # Piper fallback
+speak --speed 1.2 "Faster speech"                # Adjust speed
+speak --save output.wav "Save to file"           # Save instead of play
+echo "piped text" | speak                        # Pipe from stdin
+speak --voices                                   # List available voices
+speak --daemon                                   # Check/start the daemon
+speak --stop                                     # Stop the daemon
+```
+
+The daemon auto-starts on first `speak` call and shuts down after 5 minutes
+idle. It keeps the Kokoro model loaded in memory for instant response.
 
 ### CCometixLine (Claude Code status line)
 
