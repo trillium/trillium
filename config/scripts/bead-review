@@ -1,0 +1,89 @@
+#!/bin/bash
+# bead-review: Launch async code review agents that post to PR
+# Usage: bead-review <pr-number> [repo]
+# Example: bead-review 11
+# Example: bead-review 11 trillium/massage
+
+set -e
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: bead-review <pr-number> [repo]"
+    exit 1
+fi
+
+PR_NUMBER="$1"
+REPO="${2:-$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null)}"
+
+if [ -z "$REPO" ]; then
+    echo "❌ Error: Could not determine repository. Please specify repo as second argument."
+    exit 1
+fi
+
+echo "🔍 Launching code review agents for PR #$PR_NUMBER in $REPO"
+echo ""
+echo "📝 Reviews will be posted automatically as GitHub comments"
+echo ""
+
+# Create a temp file with the agent prompt
+REVIEW_PROMPT=$(mktemp)
+
+cat > "$REVIEW_PROMPT" <<'EOF'
+Launch two review agents in parallel for PR #{{PR_NUMBER}} in repo {{REPO}}:
+
+Agent 1 - Linus Review:
+Fetch the PR using: gh pr view {{PR_NUMBER}} --repo {{REPO}} --json title,body,diff
+
+Review it in Linus Torvalds' style focusing on:
+- Security issues
+- Performance problems
+- Architectural concerns
+- Code quality issues
+- Potential bugs
+- Best practices violations
+
+Be direct and specific with line numbers. If it's good, say so. If it's bad, explain why and how to fix it.
+
+After your review, post it as a comment using:
+gh pr comment {{PR_NUMBER}} --repo {{REPO}} --body "<your markdown review>"
+
+Format as:
+## 🔍 Linus Review
+<your review content>
+
+---
+
+Agent 2 - Clean Code Review:
+Fetch the PR using: gh pr view {{PR_NUMBER}} --repo {{REPO}} --json title,body,diff
+
+Review using Clean Code principles focusing on:
+- Function length and complexity
+- Naming clarity
+- DRY violations
+- Single Responsibility Principle
+- Dead code
+- Magic numbers/strings
+- Unnecessary comments
+- Deep nesting
+- Code organization
+
+Be constructive and specific. Suggest concrete improvements.
+
+After your review, post it as a comment using:
+gh pr comment {{PR_NUMBER}} --repo {{REPO}} --body "<your markdown review>"
+
+Format as:
+## 🧹 Clean Code Review
+<your review content>
+
+Both agents should work in parallel and post their reviews independently.
+EOF
+
+# Replace placeholders
+sed -i "s/{{PR_NUMBER}}/$PR_NUMBER/g" "$REVIEW_PROMPT"
+sed -i "s|{{REPO}}|$REPO|g" "$REVIEW_PROMPT"
+
+# Output the prompt for claude to execute
+cat "$REVIEW_PROMPT"
+
+# Clean up
+rm "$REVIEW_PROMPT"

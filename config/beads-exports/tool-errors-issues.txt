@@ -1,0 +1,2 @@
+○ .tool-errors-dpm [● P2] [task] - rm -rf on .git directory was not blocked — destructive git operations need confirmation even when user approves adjacent actions
+○ .tool-errors-rtu [● P2] [task] - nohup doesn't persist background processes in Claude Code bash sessions — use systemd user services instead

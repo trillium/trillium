@@ -1,0 +1,15 @@
+[Unit]
+Description=Apple refurb Mac Mini watcher with Telegram notifications
+After=apple-refurb-chrome.service
+Requires=apple-refurb-chrome.service
+
+[Service]
+Type=simple
+Environment=PATH=/home/trillium/.nix-profile/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/trillium/.nix-profile/bin/node /home/trillium/code/refurbished_apple/apple-refurb-monitor/scraper.js mac --watch --telegram --filter "mac mini"
+Restart=on-failure
+RestartSec=5
+WorkingDirectory=/home/trillium/code/refurbished_apple/apple-refurb-monitor
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,12 @@
+[Unit]
+Description=Process resource logger (proclog)
+After=default.target
+
+[Service]
+Type=simple
+ExecStart=/home/trillium/bin/proclog.sh 3 /home/trillium/logs 50
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

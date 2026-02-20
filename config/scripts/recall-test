@@ -1,0 +1,166 @@
+#!/bin/bash
+# recall-test — Swap to standalone recall for testing, auto-revert after timeout
+#
+# Usage:
+#   recall-test start          Start test (swaps user dir, 5min auto-revert)
+#   recall-test start 10       Start test with 10min timeout
+#   recall-test extend          Reset the timer (another 5min from now)
+#   recall-test extend 10       Reset with custom minutes
+#   recall-test stop            Revert to normal user dir (cancel timer)
+#   recall-test status          Show if test is active and time remaining
+
+TALON_DIR="$HOME/.talon"
+USER_DIR="$TALON_DIR/user"
+BACKUP_DIR="$TALON_DIR/user.recall-test-backup"
+STANDALONE="$HOME/code/recall"
+TIMER_PID_FILE="/tmp/recall-test-timer.pid"
+START_FILE="/tmp/recall-test-start"
+TIMEOUT_FILE="/tmp/recall-test-timeout"
+
+DEFAULT_TIMEOUT=5  # minutes
+
+_kill_timer() {
+    if [ -f "$TIMER_PID_FILE" ]; then
+        pid=$(cat "$TIMER_PID_FILE")
+        kill "$pid" 2>/dev/null
+        rm -f "$TIMER_PID_FILE"
+    fi
+}
+
+_start_timer() {
+    local minutes="${1:-$DEFAULT_TIMEOUT}"
+    _kill_timer
+
+    # Record when the timeout will fire
+    local expire_at=$(($(date +%s) + minutes * 60))
+    echo "$expire_at" > "$TIMEOUT_FILE"
+
+    # Background: sleep then auto-revert
+    (
+        sleep "$((minutes * 60))"
+        echo "[recall-test] Timer expired after ${minutes}m — auto-reverting"
+        "$0" stop
+    ) &
+    echo $! > "$TIMER_PID_FILE"
+    disown
+}
+
+_is_active() {
+    [ -d "$BACKUP_DIR" ] && [ -f "$TIMER_PID_FILE" ]
+}
+
+_do_revert() {
+    _kill_timer
+    rm -f "$START_FILE" "$TIMEOUT_FILE"
+
+    if [ ! -d "$BACKUP_DIR" ]; then
+        echo "[recall-test] No backup found — nothing to revert"
+        return 1
+    fi
+
+    # Remove test user dir
+    rm -rf "$USER_DIR"
+
+    # Restore backup
+    mv "$BACKUP_DIR" "$USER_DIR"
+
+    echo "[recall-test] Reverted to normal user dir"
+
+    # Restart Talon
+    pkill -f "$HOME/talon/talon" 2>/dev/null
+    sleep 2
+    nohup "$HOME/talon/talon" >/dev/null 2>&1 &
+    disown
+    echo "[recall-test] Talon restarting"
+}
+
+case "${1:-}" in
+    start)
+        if _is_active; then
+            echo "[recall-test] Already active. Use 'recall-test extend' or 'recall-test stop'"
+            exit 1
+        fi
+
+        if [ -d "$BACKUP_DIR" ]; then
+            echo "[recall-test] Stale backup exists at $BACKUP_DIR"
+            echo "Run 'recall-test stop' first to clean up"
+            exit 1
+        fi
+
+        if [ ! -d "$STANDALONE" ]; then
+            echo "[recall-test] Standalone repo not found at $STANDALONE"
+            exit 1
+        fi
+
+        minutes="${2:-$DEFAULT_TIMEOUT}"
+
+        # Backup current user dir
+        mv "$USER_DIR" "$BACKUP_DIR"
+
+        # Create test user dir with just the standalone recall
+        mkdir -p "$USER_DIR"
+        ln -s "$STANDALONE" "$USER_DIR/recall"
+
+        # Also copy saved_windows.json so your window names carry over
+        if [ -f "$BACKUP_DIR/talon_community/plugin/recall/saved_windows.json" ]; then
+            cp "$BACKUP_DIR/talon_community/plugin/recall/saved_windows.json" "$STANDALONE/saved_windows.json"
+            echo "[recall-test] Copied saved_windows.json to standalone"
+        fi
+
+        date +%s > "$START_FILE"
+
+        # Start auto-revert timer
+        _start_timer "$minutes"
+
+        echo "[recall-test] Started — standalone recall only"
+        echo "[recall-test] Auto-revert in ${minutes} minutes"
+        echo "[recall-test] Use 'recall-test extend' to add time, 'recall-test stop' to revert now"
+
+        # Restart Talon
+        pkill -f "talon/talon" 2>/dev/null
+        sleep 1
+        nohup "$HOME/talon/talon" >/dev/null 2>&1 &
+        disown
+        echo "[recall-test] Talon restarting"
+        ;;
+
+    extend)
+        if ! _is_active; then
+            echo "[recall-test] Not active"
+            exit 1
+        fi
+        minutes="${2:-$DEFAULT_TIMEOUT}"
+        _start_timer "$minutes"
+        echo "[recall-test] Timer reset — auto-revert in ${minutes} minutes"
+        ;;
+
+    stop)
+        _do_revert
+        ;;
+
+    status)
+        if ! _is_active; then
+            echo "[recall-test] Not active"
+            exit 0
+        fi
+        if [ -f "$TIMEOUT_FILE" ]; then
+            expire_at=$(cat "$TIMEOUT_FILE")
+            now=$(date +%s)
+            remaining=$(( (expire_at - now) / 60 ))
+            secs=$(( (expire_at - now) % 60 ))
+            echo "[recall-test] Active — auto-revert in ${remaining}m ${secs}s"
+        else
+            echo "[recall-test] Active — no timer info"
+        fi
+        ;;
+
+    *)
+        echo "Usage: recall-test {start [minutes]|extend [minutes]|stop|status}"
+        echo ""
+        echo "  start [N]    Swap to standalone recall, auto-revert in N minutes (default: 5)"
+        echo "  extend [N]   Reset timer to N more minutes (default: 5)"
+        echo "  stop         Revert to normal user dir immediately"
+        echo "  status       Show if test is active and time remaining"
+        exit 1
+        ;;
+esac

@@ -1,0 +1,10 @@
+[Unit]
+Description=Poll Anthropic API usage for mode indicator
+
+[Service]
+ExecStart=/usr/bin/python3 /home/trillium/.talon/user/talon_community/trillium/plugin/mode_indicator/poll_usage.py
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=default.target

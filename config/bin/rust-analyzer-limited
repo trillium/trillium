@@ -1,0 +1,8 @@
+#!/bin/bash
+# rust-analyzer wrapper with memory cap via cgroup
+# MemoryHigh=3G  — soft limit, kernel starts reclaiming aggressively
+# MemoryMax=4G   — hard kill if exceeded
+exec systemd-run --user --scope \
+  -p MemoryHigh=3G \
+  -p MemoryMax=4G \
+  /home/trillium/.rustup/toolchains/1.93-x86_64-unknown-linux-gnu/bin/rust-analyzer "$@"

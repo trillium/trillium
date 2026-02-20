@@ -1,12 +1,56 @@
 # New Computer Setup — Agent Instructions
 
 You are setting up a new Linux workstation for Trillium (trillium@trilliumsmith.com).
-This document describes everything that was on the previous machine. Your job is to
-reproduce this environment as completely as possible on the new machine.
+This repo contains all the config files, scripts, and data needed to reproduce the
+previous environment. Everything referenced below is committed to this repo under `config/`.
 
 **Previous machine**: Linux Mint 22.3 (Cinnamon desktop) on x86_64.
 
 Work through each section in order. Ask before making substitutions or skipping anything.
+
+## Repo Layout
+
+```
+config/
+├── bashrc_additions.sh          # Append to ~/.bashrc
+├── profile_additions.sh         # Append to ~/.profile
+├── scripts/                     # → copy to ~/.local/bin/
+│   ├── friction                 # Beads alias for friction log
+│   ├── idea                     # Beads alias for idea capture
+│   ├── tool-errors              # Beads alias for agent self-reporting
+│   ├── ops                      # Beads alias for ops
+│   ├── bead-review              # Beads review helper
+│   ├── bead-ship                # Beads ship helper
+│   ├── recall-test              # Talon recall test script
+│   ├── rotate-wallpaper.sh      # Cinnamon wallpaper rotator
+│   └── speak                    # Local TTS (Kokoro/Piper)
+├── bin/                         # → copy to ~/bin/
+│   ├── memwatch.sh              # OOM prevention watchdog
+│   ├── proclog.sh               # Process resource logger
+│   ├── proclog-query.sh         # Query process logs
+│   └── rust-analyzer-limited    # Resource-limited rust-analyzer
+├── systemd/                     # → copy to ~/.config/systemd/user/
+│   ├── apple-refurb-chrome.service
+│   ├── apple-refurb-watcher.service
+│   ├── memwatch.service
+│   ├── openclaw-gateway.service  # NOTE: token placeholder, needs real value
+│   ├── poll-usage.service
+│   └── proclog.service
+├── claude/                      # → copy to ~/.claude/
+│   ├── CLAUDE.md                # Global Claude Code instructions
+│   ├── settings.json            # Claude Code settings
+│   ├── settings.local.json      # Local permission settings
+│   └── commands/                # Custom slash commands
+│       ├── clean-code-review.md
+│       └── linus-review.md
+└── beads-exports/               # Beads issue tracking databases
+    ├── friction-beads/          # → copy to ~/.friction/.beads/
+    ├── idea-beads/              # → copy to ~/.idea/.beads/
+    ├── tool-errors-beads/       # → copy to ~/.tool-errors/.beads/
+    ├── friction-issues.txt      # Human-readable friction log (20 issues)
+    ├── idea-issues.txt          # Human-readable idea list (28 issues)
+    └── tool-errors-issues.txt   # Human-readable tool-errors (2 issues)
+```
 
 ---
 
@@ -27,7 +71,6 @@ Nix is the primary package manager for dev tools.
 
 ```bash
 sh <(curl -L https://nixos.org/nix/install) --no-daemon
-# Then source the profile:
 . ~/.nix-profile/etc/profile.d/nix.sh
 ```
 
@@ -128,7 +171,7 @@ sudo systemctl enable --now tailscaled
 sudo tailscale up
 ```
 
-After login, Tailscale also serves the OpenClaw gateway (see section 10).
+After login, Tailscale also serves the OpenClaw gateway (see section 12).
 Enable `tailscale serve` once the openclaw-gateway service is running:
 
 ```bash
@@ -139,63 +182,25 @@ sudo tailscale serve --bg --https=443 http://127.0.0.1:18789
 
 ## 4. Shell Configuration
 
-Shell is **bash** (default). Set up `~/.bashrc` with these additions at the end
-(after the default Mint bashrc content):
+Shell is **bash** (default).
 
 ```bash
-# Homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+# Append the bashrc additions from this repo:
+cat config/bashrc_additions.sh >> ~/.bashrc
 
-# Local bin
-export PATH="$HOME/.local/bin:$PATH"
+# Append the profile additions:
+cat config/profile_additions.sh >> ~/.profile
 
-# Go
-export PATH="$HOME/go/bin:$PATH"
-
-# pnpm
-export PNPM_HOME="/home/trillium/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
-# Bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# Nix
-export PATH="$HOME/.nix-profile/bin:$PATH"
-
-# Rust
-. "$HOME/.cargo/env"
-
-# pkg-config
-export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}
-
-# Happy / Claude aliases
-alias yolo='happy --yolo'
-alias Yolo='happy --yolo'
-alias forced_yolo='unset CLAUDECODE CLAUDE_CODE_ENTRYPOINT && happy --yolo'
-
-# Safe rm — move to trash instead of permanent delete
-alias rm='trash-put'
-
-# Directory navigation
-alias ..='cd .. && ls'
-alias ...='cd ../.. && ls'
-alias ....='cd ../../.. && ls'
-alias .....='cd ../../../.. && ls'
+source ~/.bashrc
 ```
 
-Set up `~/.profile` to source Nix and Cargo:
+The file `config/bashrc_additions.sh` includes:
+- PATH entries for Nix, Brew, Bun, Go, pnpm, Cargo, `~/.local/bin`
+- Aliases: `yolo`/`Yolo` (happy --yolo), `rm` (trash-put), `..`/`...`/etc
+- pkg-config paths
 
-```bash
-# (after default content)
-if [ -e /home/trillium/.nix-profile/etc/profile.d/nix.sh ]; then
-  . /home/trillium/.nix-profile/etc/profile.d/nix.sh
-fi
-. "$HOME/.cargo/env"
-```
+**IMPORTANT**: After appending, manually add any secret tokens (Supabase, etc.)
+to the bottom of `~/.bashrc`. They are NOT in the committed file.
 
 ---
 
@@ -217,8 +222,6 @@ gh auth login
 
 ## 6. SSH Keys
 
-Generate a new SSH key and add to GitHub:
-
 ```bash
 ssh-keygen -t ed25519 -C "trillium@trilliumsmith.com"
 gh ssh-key add ~/.ssh/id_ed25519.pub --title "new-machine"
@@ -228,7 +231,7 @@ gh ssh-key add ~/.ssh/id_ed25519.pub --title "new-machine"
 
 ## 7. VS Code
 
-VS Code is installed via Nix (see section 2a). Install these extensions:
+VS Code is installed via Nix (section 2a). Install these extensions:
 
 ```bash
 code --install-extension anthropic.claude-code
@@ -241,7 +244,7 @@ code --install-extension pokey.parse-tree
 
 ## 8. Talon (Voice Control)
 
-Talon is the voice control system — this is critical infrastructure.
+Talon is the voice control system — this is **critical infrastructure**.
 
 ### 8a. Install Talon
 
@@ -275,168 +278,68 @@ git clone https://github.com/cursorless-dev/cursorless-talon.git cursorless-talo
 
 ### 8d. Cursorless settings
 
-The `cursorless-settings/` directory in `talon_community` has settings — it should work as-is after cloning.
+The `cursorless-settings/` directory in `talon_community` has settings — it works as-is after cloning.
 
 ---
 
 ## 9. Claude Code Configuration
 
-### 9a. Config files
+Copy config files from this repo:
 
-Create `~/.claude/CLAUDE.md` with these global instructions:
-
-```markdown
-# Claude Code Instructions
-
-## Research First
-When asked about APIs, behavior, conventions, or any technical claim — always verify
-on the web (wiki, docs, search) before acting. Do not rely on trained knowledge or
-make assumptions. Look it up first.
-
-## Forbidden Tools
-**NEVER** use the `AskUserQuestion` tool. Just ask questions directly in your response text.
-
-## Beads (Issue Tracking)
-[Beads](https://github.com/steveyegge/beads) is installed at `~/.local/bin/bd` (v0.49.6).
-It's an AI-native issue tracker that lives in the repo.
-
-- **Data**: `.beads/issues.jsonl` + `beads.db` (SQLite)
-- **WARNING**: `bd edit` opens vim — doesn't work non-interactively. Use `bd update` instead.
-
-**Core commands:**
-- `bd list` / `bd ready` / `bd blocked` — find work
-- `bd show <id>` — issue details
-- `bd create "Title" -d "desc" -p 2 -l "label1,label2"` — create issue
-- `bd update <id> --status <status>` — update (also: --title, -d, --notes, --add-label)
-- `bd close <id>` — close (supports multiple: `bd close <id1> <id2>`)
-
-**Dependencies:**
-- `bd dep <blocker> -b <blocked>` — blocker blocks blocked
-- `bd dep add <issue> <depends-on>` — issue depends on depends-on
-- `bd dep tree <id>` — dependency tree
-
-**Epics & Parent-Child:**
-- `bd create "Title" -t epic` — create an epic
-- `bd create "Child" --parent <full-id>` — create child (**MUST use full ID with prefix**)
-- `bd children <id>` — list children
-- `bd epic status <id>` — epic completion progress
-
-### Beads Aliases
-| Command | Database location | Purpose |
-|---------|------------------|---------|
-| `bd` | `.beads/` in current repo | Default beads in current project |
-| `ops` | `.ops/` in current repo | Ops-flavored beads |
-| `friction` | `~/.friction/.beads/` | Personal friction log |
-| `idea` | `~/.idea/.beads/` | Idea capture |
-| `tool-errors` | `~/.tool-errors/.beads/` | Agent self-reporting |
-
-### tool-errors: Agent Self-Reporting
-Use `tool-errors` proactively to log issues with your own tooling and environment.
+```bash
+mkdir -p ~/.claude/commands
+cp config/claude/CLAUDE.md ~/.claude/CLAUDE.md
+cp config/claude/settings.json ~/.claude/settings.json
+cp config/claude/settings.local.json ~/.claude/settings.local.json
+cp config/claude/commands/*.md ~/.claude/commands/
 ```
 
-### 9b. Settings
+### Plugins
 
-Create `~/.claude/settings.json`:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/ccline/ccline",
-    "padding": 0
-  },
-  "enabledPlugins": {
-    "ralph-loop@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
-  },
-  "alwaysThinkingEnabled": false,
-  "skipDangerousModePermissionPrompt": true,
-  "promptSuggestionEnabled": false
-}
-```
-
-### 9c. Claude Plugins
-
-Install from the official marketplace:
+After Claude Code is running, install these plugins from the official marketplace:
 - **ralph-loop** — Ralph Loop agent plugin
 - **context7** — Documentation lookup via Context7
 - **frontend-design** — Frontend design generation
 - **rust-analyzer-lsp** — Rust LSP integration
 
-### 9d. Custom slash commands
+### CCLine status bar
 
-Create `~/.claude/commands/clean-code-review.md` and `~/.claude/commands/linus-review.md`
-(these are PR review commands — copy from the old machine or from this repo).
-
-### 9e. CCLine status bar
-
-CCLine is a compiled binary for the Claude Code status line. It needs to be built or
-copied to `~/.claude/ccline/ccline`. Check if it's available as a Nix package or
-build from source.
+CCLine is a compiled binary for the Claude Code status line (`~/.claude/ccline/ccline`).
+It needs to be built or installed separately — check if it's available as a package
+or build from source. The settings.json already references it.
 
 ---
 
-## 10. Custom Scripts (`~/.local/bin/`)
+## 10. Install Scripts
 
-Create these scripts:
-
-### `~/.local/bin/friction`
-```bash
-#!/bin/sh
-exec env BEADS_DIR="$HOME/.friction/.beads" BD_NAME=friction bd "$@"
-```
-
-### `~/.local/bin/idea`
-```bash
-#!/bin/sh
-exec env BEADS_DIR="$HOME/.idea/.beads" BD_NAME=idea bd "$@"
-```
-
-### `~/.local/bin/tool-errors`
-```bash
-#!/bin/sh
-exec env BEADS_DIR="$HOME/.tool-errors/.beads" BD_NAME=tool-errors bd "$@"
-```
-
-### `~/.local/bin/ops`
-```bash
-#!/bin/bash
-export BEADS_DIR=.ops
-exec bd "$@"
-```
-
-### `~/.local/bin/rotate-wallpaper.sh`
-```bash
-#!/bin/bash
-DIR="$HOME/Pictures/wallpapers"
-WALLPAPER=$(find "$DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | shuf -n 1)
-if [ -n "$WALLPAPER" ]; then
-  gsettings set org.cinnamon.desktop.background picture-uri "file://$WALLPAPER"
-fi
-```
-
-Make all scripts executable:
+### `~/.local/bin/` scripts (from this repo)
 
 ```bash
-chmod +x ~/.local/bin/{friction,idea,tool-errors,ops,rotate-wallpaper.sh}
+mkdir -p ~/.local/bin
+cp config/scripts/* ~/.local/bin/
+chmod +x ~/.local/bin/*
 ```
 
-### `bd` (beads binary)
+This installs: `friction`, `idea`, `tool-errors`, `ops`, `bead-review`, `bead-ship`,
+`recall-test`, `rotate-wallpaper.sh`, `speak`
 
-The `bd` binary is compiled from https://github.com/steveyegge/beads. Install it:
+### `bd` / `beads` binary
+
+The `bd` binary is NOT in this repo (it's a compiled Go binary, ~50MB).
+Install from https://github.com/steveyegge/beads/releases:
 
 ```bash
-# Check if there's a release binary, otherwise build from source
-# Place the binary at ~/.local/bin/bd
+# Download the latest linux-amd64 release
+# Place at ~/.local/bin/bd
+# Optionally symlink: ln -s ~/.local/bin/bd ~/.local/bin/beads
+chmod +x ~/.local/bin/bd
 ```
 
-### `speak` (TTS utility)
+### `speak` dependencies
 
-The `speak` script is a local TTS tool using **Kokoro** (default) or **Piper** engines.
-Copy it from the old machine or from `~/code/speak/`. It lives at `~/.local/bin/speak`
-and stores voice models in `~/.local/share/speak/`.
+The `speak` TTS script uses **Kokoro** (default engine). Voice models are stored
+in `~/.local/share/speak/kokoro/`. Run `speak --daemon` to set up on first use.
+It also supports **Piper** as an alternative engine.
 
 ---
 
@@ -444,131 +347,30 @@ and stores voice models in `~/.local/share/speak/`.
 
 ```bash
 mkdir -p ~/bin
+cp config/bin/* ~/bin/
+chmod +x ~/bin/*
 ```
 
-These utility scripts were in `~/bin/`:
-- `memwatch.sh` — Kills runaway processes before OOM
-- `proclog.sh` — Logs process resource usage
-- `proclog-query.sh` — Query process logs
-- `rust-analyzer-limited` — Wrapper to run rust-analyzer with resource limits
-
-Copy these from the old machine.
+This installs: `memwatch.sh`, `proclog.sh`, `proclog-query.sh`, `rust-analyzer-limited`
 
 ---
 
 ## 12. Systemd User Services
 
-Create these service files in `~/.config/systemd/user/`:
-
-### `apple-refurb-chrome.service`
-```ini
-[Unit]
-Description=Headless Chrome for Apple refurb scraper
-
-[Service]
-Type=simple
-ExecStart=/home/trillium/.nix-profile/bin/google-chrome-stable --remote-debugging-port=9222 --headless=new --no-sandbox --disable-gpu
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=default.target
-```
-
-### `apple-refurb-watcher.service`
-```ini
-[Unit]
-Description=Apple refurb Mac Mini watcher with Telegram notifications
-After=apple-refurb-chrome.service
-Requires=apple-refurb-chrome.service
-
-[Service]
-Type=simple
-Environment=PATH=/home/trillium/.nix-profile/bin:/usr/local/bin:/usr/bin:/bin
-ExecStart=/home/trillium/.nix-profile/bin/node /home/trillium/code/refurbished_apple/apple-refurb-monitor/scraper.js mac --watch --telegram --filter "mac mini"
-Restart=on-failure
-RestartSec=5
-WorkingDirectory=/home/trillium/code/refurbished_apple/apple-refurb-monitor
-
-[Install]
-WantedBy=default.target
-```
-
-### `openclaw-gateway.service`
-```ini
-[Unit]
-Description=OpenClaw Gateway
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-ExecStart=/home/linuxbrew/.linuxbrew/bin/node /home/trillium/openclaw/dist/index.js gateway --port 18789 --bind loopback --tailscale serve
-Restart=always
-RestartSec=5
-KillMode=process
-Environment=HOME=/home/trillium
-Environment=OPENCLAW_GATEWAY_PORT=18789
-Environment="OPENCLAW_SYSTEMD_UNIT=openclaw-gateway.service"
-Environment=OPENCLAW_SERVICE_MARKER=openclaw
-Environment=OPENCLAW_SERVICE_KIND=gateway
-
-[Install]
-WantedBy=default.target
-```
-
-**Note**: The `OPENCLAW_GATEWAY_TOKEN` environment variable needs to be set — ask Trillium for the token value. Do NOT hardcode it.
-
-### `poll-usage.service`
-```ini
-[Unit]
-Description=Poll Anthropic API usage for mode indicator
-
-[Service]
-ExecStart=/usr/bin/python3 /home/trillium/.talon/user/talon_community/trillium/plugin/mode_indicator/poll_usage.py
-Restart=on-failure
-RestartSec=30
-
-[Install]
-WantedBy=default.target
-```
-
-### `memwatch.service`
-```ini
-[Unit]
-Description=Memory watchdog — kill runaway processes before OOM
-After=default.target
-
-[Service]
-Type=simple
-ExecStart=/home/trillium/bin/memwatch.sh 5
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=default.target
-```
-
-### `proclog.service`
-```ini
-[Unit]
-Description=Process resource logger (proclog)
-After=default.target
-
-[Service]
-Type=simple
-ExecStart=/home/trillium/bin/proclog.sh 3 /home/trillium/logs 50
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=default.target
-```
-
-Enable and start all services:
-
 ```bash
 mkdir -p ~/.config/systemd/user
-# (copy all .service files above)
+cp config/systemd/*.service ~/.config/systemd/user/
+```
+
+**IMPORTANT**: Before enabling, edit `openclaw-gateway.service` and replace
+`__REPLACE_WITH_TOKEN__` with the actual `OPENCLAW_GATEWAY_TOKEN` value.
+Ask Trillium for the token.
+
+```bash
+# Edit the token:
+nano ~/.config/systemd/user/openclaw-gateway.service
+
+# Then enable all services:
 systemctl --user daemon-reload
 systemctl --user enable --now apple-refurb-chrome apple-refurb-watcher
 systemctl --user enable --now openclaw-gateway
@@ -582,24 +384,44 @@ systemctl --user enable --now proclog
 ## 13. Crontab
 
 ```bash
-crontab -e
-# Add:
-*/15 * * * * DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus /home/trillium/.local/bin/rotate-wallpaper.sh
+(crontab -l 2>/dev/null; echo '*/15 * * * * DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus /home/trillium/.local/bin/rotate-wallpaper.sh') | crontab -
 ```
 
 ---
 
-## 14. Applications to Install (non-package-manager)
+## 14. Restore Beads Databases
 
-These may need manual installation:
+These are the issue tracking databases — friction log, ideas, and tool-errors.
+
+```bash
+mkdir -p ~/.friction ~/.idea ~/.tool-errors
+cp -r config/beads-exports/friction-beads ~/.friction/.beads
+cp -r config/beads-exports/idea-beads ~/.idea/.beads
+cp -r config/beads-exports/tool-errors-beads ~/.tool-errors/.beads
+```
+
+Verify:
+```bash
+friction list   # Should show 20 issues
+idea list       # Should show 28 issues
+tool-errors list # Should show 2 issues
+```
+
+Human-readable exports are also in `config/beads-exports/*.txt` for reference.
+
+---
+
+## 15. Applications to Install (non-package-manager)
+
+These need manual installation:
 
 - **Zoom** — Download from https://zoom.us/download
-- **Talon** — Download from https://talonvoice.com
+- **Talon** — Download from https://talonvoice.com (see section 8)
 - **Min browser** — https://minbrowser.org
 
 ---
 
-## 15. Clone All Projects
+## 16. Clone All Projects
 
 ```bash
 mkdir -p ~/code
@@ -624,52 +446,42 @@ cd ~/code/zed && git checkout feature/decoration-api
 
 # Cursorless fork
 git clone https://github.com/cursorless-dev/cursorless.git ~/code/cursorless
-cd ~/code/cursorless && git remote add trillium https://github.com/trillium/cursorless.git
-git checkout feature/zed-integration
+cd ~/code/cursorless && git remote add trillium https://github.com/trillium/cursorless.git && git checkout feature/zed-integration
 
 # VRMS (Hack for LA)
 git clone https://github.com/hackforla/VRMS.git ~/code/vrms
 git clone https://github.com/hackforla/VRMS.git ~/VRMS
+
+# Apple refurb monitor (needed for systemd service)
+mkdir -p ~/code/refurbished_apple
+git clone https://github.com/kanishkaverma/apple-refurb-monitor.git ~/code/refurbished_apple/apple-refurb-monitor
 ```
-
----
-
-## 16. Beads Databases
-
-These contain issue tracking data. Copy from the old machine:
-
-```bash
-# On old machine, tar them up:
-tar czf beads-data.tar.gz ~/.friction/.beads ~/.idea/.beads ~/.tool-errors/.beads
-
-# On new machine:
-tar xzf beads-data.tar.gz -C /
-```
-
-Counts on old machine:
-- `~/.friction/.beads/` — 20 issues (personal friction log)
-- `~/.idea/.beads/` — 28 issues (idea capture)
-- `~/.tool-errors/.beads/` — 2 issues (agent self-reporting)
 
 ---
 
 ## 17. Wallpapers
 
-Copy `~/Pictures/wallpapers/` from the old machine. The crontab rotates through
-these every 15 minutes.
+Copy `~/Pictures/wallpapers/` from the old machine or transfer separately.
+The crontab (section 13) rotates through these every 15 minutes.
+
+```bash
+mkdir -p ~/Pictures/wallpapers
+# Transfer wallpaper files here
+```
 
 ---
 
 ## 18. Secrets & Tokens (ask Trillium)
 
-These need to be manually configured — do NOT copy from this file:
+These need to be manually configured — they are NOT in this repo:
 
 - **Anthropic API key** — needed for `poll-usage.py` (Talon mode indicator)
-- **OPENCLAW_GATEWAY_TOKEN** — for the openclaw-gateway systemd service
+- **OPENCLAW_GATEWAY_TOKEN** — replace placeholder in `openclaw-gateway.service`
 - **SUPABASE_ACCESS_TOKEN** — add to `~/.bashrc` if still needed
 - **Telegram bot token** — for the apple-refurb-watcher notifications
 - **`gh auth login`** — GitHub CLI authentication
 - **`tailscale up`** — Tailscale login
+- **`claude auth login`** — Claude Code authentication (if needed)
 
 ---
 
@@ -687,8 +499,9 @@ After setup, verify each of these works:
 - [ ] `claude --version` → Claude Code runs
 - [ ] `happy --version` → Happy runs
 - [ ] `bd --version` → Beads runs
-- [ ] `friction list` → shows friction log issues
-- [ ] `idea list` → shows idea issues
+- [ ] `friction list` → shows 20 issues
+- [ ] `idea list` → shows 28 issues
+- [ ] `tool-errors list` → shows 2 issues
 - [ ] Talon is running and responding to voice
 - [ ] Cursorless works in VS Code
 - [ ] `systemctl --user status apple-refurb-watcher` → active
@@ -699,3 +512,4 @@ After setup, verify each of these works:
 - [ ] Slack opens
 - [ ] Ulauncher launches with its hotkey
 - [ ] Wallpaper rotates (run `~/.local/bin/rotate-wallpaper.sh` manually to test)
+- [ ] `speak "hello world"` → speaks aloud

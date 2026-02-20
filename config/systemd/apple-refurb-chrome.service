@@ -1,0 +1,11 @@
+[Unit]
+Description=Headless Chrome for Apple refurb scraper
+
+[Service]
+Type=simple
+ExecStart=/home/trillium/.nix-profile/bin/google-chrome-stable --remote-debugging-port=9222 --headless=new --no-sandbox --disable-gpu
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

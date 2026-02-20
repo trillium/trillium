@@ -1,0 +1,2 @@
+#!/bin/sh
+exec env BEADS_DIR="$HOME/.idea/.beads" BD_NAME=idea bd "$@"

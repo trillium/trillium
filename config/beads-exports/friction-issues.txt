@@ -1,0 +1,20 @@
+○ friction-xra [● P2] [task] - Talon frequently misrecognizes words - manual correction workflow is tedious
+✓ friction-w3b [P2] [task] [friction hardware keyboard] - Function keys sticking/stuck on keyboard
+○ friction-66d [● P2] [task] - Implement frontend login form (blocked by: friction-pwt)
+○ friction-pwt [● P2] [task] - Build login API with rate limiting (blocked by: friction-e5w, friction-x0r, friction-bm3, blocks: friction-66d)
+○ friction-w7x.3 [● P2] [task] - Set up OAuth integration (blocked by: friction-w7x)
+○ friction-6i1 [● P2] [task] - Create user registration API endpoint (blocked by: friction-e5w, friction-x0r)
+○ friction-w7x.2 [● P2] [task] - Add password reset flow (blocked by: friction-w7x)
+❄ friction-nix [● P2] [task] @Trillium Smith - Update documentation for new REST API
+○ friction-bm3 [● P2] [task] - Implement OAuth integration (blocked by: friction-bvj, friction-e5w, blocks: friction-pwt)
+○ friction-w7x.1 [● P2] [task] - Implement login form (blocked by: friction-w7x)
+○ friction-dzk [● P2] [task] @Trillium Smith - Write unit tests for API endpoints
+○ friction-x0r [● P2] [task] - Build JWT token service (blocked by: friction-bvj, blocks: friction-pwt, friction-6i1)
+✓ friction-ccp [P2] [task] @Trillium Smith [status:completed] - Implement user authentication feature
+○ friction-w7x [● P2] [epic] - User Authentication System
+○ friction-e5w [● P2] [task] - Implement database schema for users (blocks: friction-pwt, friction-6i1, friction-bm3)
+○ friction-bvj [● P2] [task] - Design authentication system architecture (blocks: friction-x0r, friction-bm3)
+○ friction-d1j [● P2] [task] - Test ticket for demonstration
+○ friction-cp3 [● P2] [task] [test] - Test ticket with an idea
+✓ friction-ccp.2 [P4] [event] - State change: status → completed (blocked by: friction-ccp)
+✓ friction-ccp.1 [P4] [event] - State change: status → in-progress (blocked by: friction-ccp)

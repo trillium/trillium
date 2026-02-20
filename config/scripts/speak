@@ -1,0 +1,290 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+KOKORO_DIR="${HOME}/.local/share/speak/kokoro"
+PIPER_VOICES_DIR="${HOME}/.local/share/speak/voices"
+SOCK_PATH="/tmp/speak-${USER}.sock"
+ENGINE="kokoro"
+DEFAULT_KOKORO_VOICE="af_heart"
+DEFAULT_PIPER_VOICE="en_US-ryan-high"
+SPEED="1.0"
+SAVE_FILE=""
+VOICE=""
+
+usage() {
+    cat <<'EOF'
+Usage: speak [OPTIONS] [TEXT...]
+
+Speak text aloud using local TTS (Kokoro or Piper).
+
+Text can be provided as arguments or piped via stdin.
+
+Options:
+  --engine ENGINE   TTS engine: kokoro (default) or piper
+  --voice NAME      Voice name (default: af_heart for kokoro, en_US-ryan-high for piper)
+  --speed FLOAT     Speech speed (default: 1.0)
+  --save FILE       Save to WAV file instead of playing
+  --voices          List available voices for the selected engine
+  --daemon          Show daemon status / start it
+  --stop            Stop the daemon
+  -h, --help        Show this help
+
+Kokoro voices (prefix: af_=American female, am_=American male, bf_/bm_=British):
+  af_heart, af_sarah, af_bella, af_nova, af_sky, af_nicole, af_alloy, ...
+  am_adam, am_michael, am_eric, am_liam, am_onyx, am_puck, am_fenrir, ...
+
+Examples:
+  speak "Hello world"
+  echo "piped text" | speak
+  speak --voice am_adam "Male voice"
+  speak --engine piper --voice en_US-lessac-high "Using Piper"
+  speak --speed 1.2 "Faster speech"
+  speak --save output.wav "Saved to file"
+  speak --voices
+EOF
+    exit 0
+}
+
+# --- Dependency checks ---
+missing=()
+command -v uv    >/dev/null 2>&1 || missing+=(uv)
+command -v aplay >/dev/null 2>&1 || missing+=(aplay)
+
+if [[ ${#missing[@]} -gt 0 ]]; then
+    echo "speak: missing required tools: ${missing[*]}" >&2
+    echo "Install them and try again." >&2
+    exit 1
+fi
+
+# --- Daemon management helpers ---
+daemon_is_running() {
+    [[ -S "${SOCK_PATH}" ]] && [[ -f "${SOCK_PATH}.pid" ]] && kill -0 "$(cat "${SOCK_PATH}.pid")" 2>/dev/null
+}
+
+start_daemon() {
+    if daemon_is_running; then
+        return 0
+    fi
+
+    local model="${KOKORO_DIR}/kokoro-v1.0.onnx"
+    local voices="${KOKORO_DIR}/voices-v1.0.bin"
+
+    if [[ ! -f "${model}" || ! -f "${voices}" ]]; then
+        echo "speak: kokoro model files not found in ${KOKORO_DIR}" >&2
+        return 1
+    fi
+
+    echo "speak: starting daemon..." >&2
+    uv run --with kokoro-onnx -- \
+        python3 "${SCRIPT_DIR}/speak-daemon" \
+            --model "${model}" --voices "${voices}" &
+    disown
+
+    # Wait for socket to appear
+    local tries=0
+    while [[ ! -S "${SOCK_PATH}" ]] && [[ $tries -lt 30 ]]; do
+        sleep 0.5
+        tries=$((tries + 1))
+    done
+
+    if [[ ! -S "${SOCK_PATH}" ]]; then
+        echo "speak: daemon failed to start" >&2
+        return 1
+    fi
+    echo "speak: daemon ready." >&2
+}
+
+stop_daemon() {
+    if [[ -f "${SOCK_PATH}.pid" ]]; then
+        local pid
+        pid="$(cat "${SOCK_PATH}.pid")"
+        if kill -0 "${pid}" 2>/dev/null; then
+            kill "${pid}"
+            echo "speak: daemon stopped (pid ${pid})" >&2
+        else
+            echo "speak: daemon not running (stale pid file)" >&2
+        fi
+        rm -f "${SOCK_PATH}" "${SOCK_PATH}.pid"
+    else
+        echo "speak: daemon not running" >&2
+    fi
+}
+
+# --- Parse arguments ---
+LIST_VOICES=false
+DAEMON_CMD=""
+TEXT_ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)    usage ;;
+        --engine)     ENGINE="$2"; shift 2 ;;
+        --voice)      VOICE="$2"; shift 2 ;;
+        --speed)      SPEED="$2"; shift 2 ;;
+        --save)       SAVE_FILE="$2"; shift 2 ;;
+        --voices)     LIST_VOICES=true; shift ;;
+        --daemon)     DAEMON_CMD="status"; shift ;;
+        --stop)       DAEMON_CMD="stop"; shift ;;
+        --)           shift; TEXT_ARGS+=("$@"); break ;;
+        *)            TEXT_ARGS+=("$1"); shift ;;
+    esac
+done
+
+# --- Handle daemon commands ---
+if [[ "${DAEMON_CMD}" == "stop" ]]; then
+    stop_daemon
+    exit 0
+fi
+
+if [[ "${DAEMON_CMD}" == "status" ]]; then
+    if daemon_is_running; then
+        echo "speak: daemon running (pid $(cat "${SOCK_PATH}.pid"))" >&2
+    else
+        echo "speak: daemon not running, starting..." >&2
+        start_daemon
+    fi
+    exit 0
+fi
+
+# --- Set default voice for engine ---
+if [[ -z "${VOICE}" ]]; then
+    case "${ENGINE}" in
+        kokoro) VOICE="${DEFAULT_KOKORO_VOICE}" ;;
+        piper)  VOICE="${DEFAULT_PIPER_VOICE}" ;;
+        *)      echo "speak: unknown engine '${ENGINE}' (use kokoro or piper)" >&2; exit 1 ;;
+    esac
+fi
+
+# --- List voices ---
+if [[ "${LIST_VOICES}" == true ]]; then
+    case "${ENGINE}" in
+        kokoro)
+            uv run --with kokoro-tts -- kokoro-tts \
+                --model "${KOKORO_DIR}/kokoro-v1.0.onnx" \
+                --voices "${KOKORO_DIR}/voices-v1.0.bin" \
+                --help-voices 2>&1 | grep -v "^Consider"
+            ;;
+        piper)
+            uv run --with piper-tts --with pathvalidate -- \
+                python3 -m piper.download_voices 2>&1 | grep "^en_"
+            ;;
+    esac
+    exit 0
+fi
+
+# --- Collect text ---
+if [[ ${#TEXT_ARGS[@]} -gt 0 ]]; then
+    TEXT="${TEXT_ARGS[*]}"
+elif [[ ! -t 0 ]]; then
+    TEXT="$(cat)"
+else
+    echo "speak: no text provided" >&2
+    echo "Usage: speak [OPTIONS] TEXT  or  echo TEXT | speak" >&2
+    exit 1
+fi
+
+if [[ -z "${TEXT}" ]]; then
+    echo "speak: empty text" >&2
+    exit 1
+fi
+
+# =============================================================================
+# Kokoro engine (daemon-backed)
+# =============================================================================
+speak_kokoro() {
+    # Auto-start daemon if not running
+    if ! daemon_is_running; then
+        start_daemon || {
+            echo "speak: falling back to direct mode (no daemon)" >&2
+            speak_kokoro_direct
+            return
+        }
+    fi
+
+    if [[ -n "${SAVE_FILE}" ]]; then
+        # For --save, use kokoro-tts CLI directly (produces proper WAV headers)
+        local model="${KOKORO_DIR}/kokoro-v1.0.onnx"
+        local voices="${KOKORO_DIR}/voices-v1.0.bin"
+        printf '%s' "${TEXT}" | uv run --with kokoro-tts -- kokoro-tts - "${SAVE_FILE}" \
+            --voice "${VOICE}" --speed "${SPEED}" \
+            --model "${model}" --voices "${voices}" 2>&1 | grep -v "^Consider"
+        echo "speak: saved to ${SAVE_FILE}" >&2
+    else
+        # Stream via daemon -> speak-client -> aplay
+        printf '%s' "${TEXT}" | python3 "${SCRIPT_DIR}/speak-client" \
+                --voice "${VOICE}" --speed "${SPEED}" \
+        | aplay -r 24000 -f S16_LE -c 1 -t raw -q
+    fi
+}
+
+# Fallback: direct mode without daemon (cold start each time)
+speak_kokoro_direct() {
+    local model="${KOKORO_DIR}/kokoro-v1.0.onnx"
+    local voices="${KOKORO_DIR}/voices-v1.0.bin"
+
+    if [[ ! -f "${model}" || ! -f "${voices}" ]]; then
+        echo "speak: kokoro model files not found in ${KOKORO_DIR}" >&2
+        exit 1
+    fi
+
+    printf '%s' "${TEXT}" | uv run --with kokoro-onnx -- \
+        python3 "${SCRIPT_DIR}/kokoro-stream" \
+            --model "${model}" --voices "${voices}" \
+            --voice "${VOICE}" --speed "${SPEED}" \
+    | aplay -r 24000 -f S16_LE -c 1 -t raw -q
+}
+
+# =============================================================================
+# Piper engine
+# =============================================================================
+speak_piper() {
+    command -v jq >/dev/null 2>&1 || { echo "speak: piper engine requires jq" >&2; exit 1; }
+
+    local model="${PIPER_VOICES_DIR}/${VOICE}.onnx"
+    local config="${model}.json"
+
+    # Download voice if needed
+    if [[ ! -f "${model}" ]]; then
+        echo "speak: downloading piper voice '${VOICE}'..." >&2
+        mkdir -p "${PIPER_VOICES_DIR}"
+        uv run --with piper-tts --with pathvalidate -- \
+            python3 -m piper.download_voices --download-dir "${PIPER_VOICES_DIR}" "${VOICE}"
+        if [[ ! -f "${model}" ]]; then
+            echo "speak: failed to download voice '${VOICE}'" >&2
+            exit 1
+        fi
+        echo "speak: voice ready." >&2
+    fi
+
+    if [[ ! -f "${config}" ]]; then
+        echo "speak: missing config ${config}" >&2
+        exit 1
+    fi
+
+    local sample_rate
+    sample_rate="$(jq -r '.audio.sample_rate' "${config}")"
+    if [[ -z "${sample_rate}" || "${sample_rate}" == "null" ]]; then
+        sample_rate=22050
+    fi
+
+    if [[ -n "${SAVE_FILE}" ]]; then
+        printf '%s' "${TEXT}" | uv run --with piper-tts --with pathvalidate -- \
+            piper -m "${model}" -c "${config}" \
+                  --length-scale "${SPEED}" \
+                  --output_file "${SAVE_FILE}"
+        echo "speak: saved to ${SAVE_FILE}" >&2
+    else
+        printf '%s' "${TEXT}" | uv run --with piper-tts --with pathvalidate -- \
+            piper -m "${model}" -c "${config}" \
+                  --length-scale "${SPEED}" \
+                  --output-raw \
+        | aplay -r "${sample_rate}" -f S16_LE -c 1 -t raw -q
+    fi
+}
+
+# --- Dispatch to engine ---
+case "${ENGINE}" in
+    kokoro) speak_kokoro ;;
+    piper)  speak_piper ;;
+    *)      echo "speak: unknown engine '${ENGINE}' (use kokoro or piper)" >&2; exit 1 ;;
+esac

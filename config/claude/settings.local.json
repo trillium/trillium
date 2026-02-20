@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nix-env:*)",
+      "Bash(gtk-update-icon-cache:*)",
+      "Bash(update-desktop-database:*)",
+      "Bash(nemo:*)",
+      "Bash(dbus-send:*)",
+      "Bash(npm install:*)",
+      "Bash(gh:*)",
+      "Bash(brew install:*)",
+      "Bash(rustup default:*)",
+      "Bash(rustc:*)",
+      "Bash(cargo --version:*)",
+      "Bash(go version:*)",
+      "Bash(tar:*)",
+      "Bash(ls:*)",
+      "Bash(ps:*)",
+      "Bash(curl:*)",
+      "Bash(gsettings set:*)",
+      "WebSearch",
+      "Bash(git clone:*)",
+      "Bash(chmod:*)",
+      "Bash(~/.local/bin/rotate-wallpaper.sh:*)",
+      "Bash(lsusb:*)",
+      "Bash(pactl list sources:*)",
+      "Bash(pactl get-default-source:*)",
+      "Bash(pactl set-default-source:*)",
+      "Bash(pactl get-source-volume:*)"
+    ]
+  }
+}

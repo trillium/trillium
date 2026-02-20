@@ -1,0 +1,18 @@
+○ idea-fo1 [● P0] [feature] [api authentication backend critical oauth2 security] - Implement user authentication system
+○ idea-492 [● P1] [bug] [backend urgent] - Database connection timeout in production
+○ idea-dm9 [● P1] [task] [backend urgent] - Implement user authentication API
+○ idea-00l [● P2] [task] [automation marketplace monitoring] - Facebook Marketplace monitor — local area product search via ai-marketplace-monitor
+○ idea-xne [● P2] [task] [internals performance speech talon] - Talon speech pipeline internals — VAD config, decoder opts, and tuning knobs
+○ idea-66v [● P2] [task] - Local TTS system for AI agent speech — Piper HTTP server + bash speak wrapper + optional MCP tool for reading summaries aloud
+○ idea-pnf [● P2] [feature] - Find My Repo — personalized command comparison on /commands page
+○ idea-7g7 [● P2] [task] - Dictation coach: auto-detect misrecognition patterns and suggest words_to_replace corrections
+○ idea-51v [● P2] [epic] - Talon command discovery engine — crawl community .talon repos, parse voice command bindings, index alternatives across forks. Inspired by stolen-sugar (archived). Could be a new page on awesome-talon site or standalone project. See https://github.com/stolen-sugar/stolen-sugar
+✓ idea-sv1 [P2] [feature] [authentication backend] - Add user login functionality
+○ idea-anp [● P2] [task] - Deploy to staging (blocked by: idea-ov6)
+○ idea-cw4 [● P2] [task] [backend tech-debt] - Refactor legacy payment processing code
+○ idea-ov6 [● P2] [task] - Write API tests (blocked by: idea-5gg, blocks: idea-anp)
+○ idea-w9z [● P2] [feature] [frontend] - Add dark mode to user interface
+○ idea-vxu [● P2] [task] - Implement database schema (blocks: idea-5gg)
+○ idea-5gg [● P2] [task] - Design API endpoints (blocked by: idea-vxu, blocks: idea-ov6)
+○ idea-uql [● P3] [task] - Record short demo video for recall README
+○ idea-qgn [● P3] [feature] [frontend] - Add export functionality for user reports

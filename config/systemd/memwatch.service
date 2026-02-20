@@ -1,0 +1,12 @@
+[Unit]
+Description=Memory watchdog — kill runaway processes before OOM
+After=default.target
+
+[Service]
+Type=simple
+ExecStart=/home/trillium/bin/memwatch.sh 5
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

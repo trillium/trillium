@@ -1,0 +1,21 @@
+[Unit]
+Description=OpenClaw Gateway (v2026.2.13)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/home/linuxbrew/.linuxbrew/Cellar/node/25.6.1/bin/node "/home/trillium/openclaw/dist/index.js" gateway --port 18789 --bind loopback --tailscale serve
+Restart=always
+RestartSec=5
+KillMode=process
+Environment=HOME=/home/trillium
+Environment="PATH=/home/trillium/.local/share/pnpm:/home/trillium/.bun/bin:/home/trillium/.local/bin:/home/trillium/.npm-global/bin:/home/trillium/bin:/home/trillium/.nvm/current/bin:/home/trillium/.fnm/current/bin:/home/trillium/.volta/bin:/home/trillium/.asdf/shims:/usr/local/bin:/usr/bin:/bin"
+Environment=OPENCLAW_GATEWAY_PORT=18789
+Environment=OPENCLAW_GATEWAY_TOKEN=__REPLACE_WITH_TOKEN__
+Environment="OPENCLAW_SYSTEMD_UNIT=openclaw-gateway.service"
+Environment=OPENCLAW_SERVICE_MARKER=openclaw
+Environment=OPENCLAW_SERVICE_KIND=gateway
+Environment=OPENCLAW_SERVICE_VERSION=2026.2.13
+
+[Install]
+WantedBy=default.target
