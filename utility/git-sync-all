@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+# git-sync-all: fetch/ff all git repos, then report stale ones
+set -euo pipefail
+
+SCAN_DIRS=(
+    "$HOME/.talon"
+    "/code"
+)
+MAX_DEPTH=4
+LOG_DIR="$HOME/.local/log"
+LOG="$LOG_DIR/git-sync-all.log"
+REPORT="$LOG_DIR/git-sync-report.md"
+
+mkdir -p "$LOG_DIR"
+
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "$LOG"; }
+
+# Collect repos
+repos=()
+while IFS= read -r gitdir; do
+    repos+=("$(dirname "$gitdir")")
+done < <(find "${SCAN_DIRS[@]}" -maxdepth "$MAX_DEPTH" -name .git -type d 2>/dev/null)
+
+log "=== sync started (${#repos[@]} repos) ==="
+
+# --- Phase 1: Sync ---
+for repo in "${repos[@]}"; do
+    log "syncing $repo"
+    cd "$repo" || continue
+
+    if ! git fetch --all --quiet 2>>"$LOG"; then
+        log "  WARN: fetch failed for $repo"
+        continue
+    fi
+
+    branch="$(git symbolic-ref --short HEAD 2>/dev/null || true)"
+    [ -z "$branch" ] && { log "  skip pull: detached HEAD"; continue; }
+
+    upstream="$(git rev-parse --abbrev-ref "@{upstream}" 2>/dev/null || true)"
+    [ -z "$upstream" ] && { log "  skip pull: no upstream for $branch"; continue; }
+
+    if git pull --ff-only --quiet 2>>"$LOG"; then
+        log "  OK: $branch fast-forwarded"
+    else
+        log "  skip: $branch diverged or has local changes"
+    fi
+done
+
+log "=== sync finished ==="
+
+# --- Phase 2: Stale repo report ---
+no_remotes=()
+uncommitted=()
+unpushed_branches=()
+
+for repo in "${repos[@]}"; do
+    cd "$repo" || continue
+
+    # No remotes configured
+    if [ -z "$(git remote 2>/dev/null)" ]; then
+        no_remotes+=("$repo")
+        continue
+    fi
+
+    # Uncommitted changes (staged, unstaged, or untracked)
+    if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+        dirty_details="$(git status --porcelain 2>/dev/null | head -5)"
+        count="$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')"
+        uncommitted+=("$repo|$count|$dirty_details")
+    fi
+
+    # Local branches with no upstream or ahead of upstream
+    while IFS= read -r branch; do
+        upstream="$(git rev-parse --abbrev-ref "$branch@{upstream}" 2>/dev/null || true)"
+        if [ -z "$upstream" ]; then
+            last_commit="$(git log -1 --format='%cr' "$branch" 2>/dev/null || echo "unknown")"
+            unpushed_branches+=("$repo|$branch|no upstream|$last_commit")
+        else
+            ahead="$(git rev-list --count "$upstream..$branch" 2>/dev/null || echo 0)"
+            if [ "$ahead" -gt 0 ]; then
+                unpushed_branches+=("$repo|$branch|$ahead ahead|")
+            fi
+        fi
+    done < <(git for-each-ref --format='%(refname:short)' refs/heads/)
+done
+
+# --- Write report ---
+{
+    echo "# Git Sync Report"
+    echo "_Generated $(date '+%Y-%m-%d %H:%M:%S')_"
+    echo ""
+    echo "Scanned **${#repos[@]}** repos in: ${SCAN_DIRS[*]}"
+    echo ""
+
+    # No remotes
+    echo "## Repos with no remotes (${#no_remotes[@]})"
+    if [ ${#no_remotes[@]} -eq 0 ]; then
+        echo "None"
+    else
+        for r in "${no_remotes[@]}"; do
+            echo "- \`$r\`"
+        done
+    fi
+    echo ""
+
+    # Uncommitted changes
+    echo "## Repos with uncommitted changes (${#uncommitted[@]})"
+    if [ ${#uncommitted[@]} -eq 0 ]; then
+        echo "None"
+    else
+        for entry in "${uncommitted[@]}"; do
+            IFS='|' read -r r count details <<< "$entry"
+            echo "### \`$r\` ($count dirty files)"
+            echo '```'
+            echo "$details"
+            [ "$count" -gt 5 ] && echo "... and $((count - 5)) more"
+            echo '```'
+            echo ""
+        done
+    fi
+
+    # Unpushed branches
+    echo "## Unpushed branches (${#unpushed_branches[@]})"
+    if [ ${#unpushed_branches[@]} -eq 0 ]; then
+        echo "None"
+    else
+        current_repo=""
+        for entry in "${unpushed_branches[@]}"; do
+            IFS='|' read -r r branch status last_commit <<< "$entry"
+            if [ "$r" != "$current_repo" ]; then
+                echo "### \`$r\`"
+                current_repo="$r"
+            fi
+            if [ -n "$last_commit" ]; then
+                echo "- **$branch** — $status (last commit: $last_commit)"
+            else
+                echo "- **$branch** — $status"
+            fi
+        done
+    fi
+} > "$REPORT"
+
+log "report written to $REPORT"
+
+# Print summary to stdout
+clean=$((${#repos[@]} - ${#no_remotes[@]} - ${#uncommitted[@]}))
+echo "Synced ${#repos[@]} repos. Report: $REPORT"
+[ ${#no_remotes[@]} -gt 0 ] && echo "  ${#no_remotes[@]} repos with no remotes"
+[ ${#uncommitted[@]} -gt 0 ] && echo "  ${#uncommitted[@]} repos with uncommitted changes"
+[ ${#unpushed_branches[@]} -gt 0 ] && echo "  ${#unpushed_branches[@]} unpushed branches"
