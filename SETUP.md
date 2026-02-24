@@ -20,15 +20,19 @@ config/
 ├── bashrc_additions.sh          # Shell config additions (adapt for macOS — see section 4)
 ├── profile_additions.sh         # Login shell additions (adapt for macOS)
 ├── scripts/                     # → copy to ~/.local/bin/
-│   ├── friction                 # Beads alias for friction log
-│   ├── idea                     # Beads alias for idea capture
-│   ├── tool-errors              # Beads alias for agent self-reporting
-│   ├── ops                      # Beads alias for ops
 │   ├── bead-review              # Beads review helper
 │   ├── bead-ship                # Beads ship helper
+│   ├── friction                 # Beads alias for friction log
+│   ├── fumble                   # Error capture (reads last failed command)
+│   ├── idea                     # Beads alias for idea capture
+│   ├── ops                      # Beads alias for ops
+│   ├── recall-set-path          # Talon recall path setter
 │   ├── recall-test              # Talon recall test script
 │   ├── rotate-wallpaper.sh      # Wallpaper rotator (needs macOS adaptation)
-│   └── speak                    # Local TTS (Kokoro/Piper)
+│   ├── speak                    # Local TTS (Kokoro/Piper)
+│   ├── talon                    # Talon voice control integration
+│   ├── task                     # System-wide beads tracker (~/.task/.beads/)
+│   └── tool-errors              # Beads alias for agent self-reporting
 ├── bin/                         # → copy to ~/bin/
 │   ├── memwatch.sh              # OOM prevention watchdog
 │   ├── proclog.sh               # Process resource logger
@@ -65,6 +69,17 @@ macOS should already be installed. Ensure:
 - Xcode Command Line Tools are installed: `xcode-select --install`
 - The user account name is `trillium` (or adapt paths below accordingly)
 
+### Full Xcode (required for Zed/Cursorless development)
+
+After Homebrew is installed (section 2a), install the full Xcode via `xcodes`:
+
+```bash
+brew install xcodes
+xcodes install --latest
+sudo xcode-select -s /Applications/Xcode-*.app/Contents/Developer
+sudo xcodebuild -license accept
+```
+
 ---
 
 ## 2. Package Managers
@@ -84,13 +99,16 @@ Install Brew packages:
 
 ```bash
 brew install \
+  antigen \
   bat \
+  chruby \
   claude-code \
   cmake \
   curl \
   difftastic \
   fd \
   ffmpeg \
+  fnm \
   gcc \
   gh \
   go \
@@ -104,18 +122,21 @@ brew install \
   pnpm \
   python@3.14 \
   ripgrep \
+  ruby-install \
   rustup \
   sdl2 \
   sdl2_gfx \
   sdl2_image \
   sdl2_mixer \
   sdl2_ttf \
+  thefuck \
   trash-cli \
   tree \
   uv \
   vercel-cli \
   vim \
   wget \
+  xcodes \
   yarn
 ```
 
@@ -123,6 +144,12 @@ After Brew is set up, initialize Rust:
 
 ```bash
 rustup default stable
+```
+
+Install Ruby via ruby-install (managed by chruby):
+
+```bash
+ruby-install ruby 3.2.2
 ```
 
 ### 2b. Nix (optional — was primary on Linux, now supplementary)
@@ -148,8 +175,12 @@ brew install --cask \
   discord \
   firefox \
   google-chrome \
+  karabiner-elements \
   min \
+  obs \
   qutebrowser \
+  raycast \
+  rode-connect \
   slack \
   visual-studio-code \
   zoom
@@ -174,7 +205,7 @@ brew install --cask tailscale
 
 Then open Tailscale from Applications and sign in.
 
-After login, Tailscale also serves the OpenClaw gateway (see section 12).
+After login, Tailscale also serves the OpenClaw gateway (see section 13).
 Enable `tailscale serve` once the openclaw-gateway service is running:
 
 ```bash
@@ -192,6 +223,10 @@ Use `config/bashrc_additions.sh` as a reference but adapt paths for macOS:
 
 ```bash
 # Append to ~/.zshrc (or ~/.bashrc if using bash):
+
+# Ensure system paths are always present (VS Code terminal can start with minimal PATH)
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+export PATH="$HOME/bin:$PATH"
 
 # Homebrew (Apple Silicon path)
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -212,16 +247,64 @@ esac
 # Bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Nix (if installed)
 [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 
-# Rust
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+# Rust (rustup is keg-only on macOS)
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+
+# trash-cli (keg-only on macOS)
+export PATH="/opt/homebrew/opt/trash-cli/bin:$PATH"
+
+# fnm (fast node manager) — reads .nvmrc, auto-switches on cd
+eval "$(fnm env --use-on-cd --shell zsh)"
+
+# chruby (Ruby version manager)
+source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+source /opt/homebrew/opt/chruby/share/chruby/auto.sh
+chruby ruby-3.2.2
+
+# thefuck — command correction (cached alias generation)
+_thefuck_cache=~/.cache/thefuck-aliases.zsh
+_thefuck_bin=$(command -v thefuck)
+if [[ ! -f "$_thefuck_cache" || "$_thefuck_bin" -nt "$_thefuck_cache" ]]; then
+  thefuck --alias FUCK > "$_thefuck_cache" && thefuck --alias fuck >> "$_thefuck_cache"
+fi
+source "$_thefuck_cache"
+unset _thefuck_cache _thefuck_bin
+
+# Antigen (zsh plugin manager)
+source /opt/homebrew/share/antigen/antigen.zsh
+antigen init ~/.antigenrc
+
+# Worktree Wrangler — git worktree management
+mkdir -p ~/.local/share/zsh/site-functions
+fpath=(~/.local/share/zsh/site-functions $fpath)
+if [[ -f ~/.local/share/worktree-wrangler/worktree-wrangler.zsh ]]; then
+    source ~/.local/share/worktree-wrangler/worktree-wrangler.zsh
+fi
+
+# OpenClaw completions
+[[ -f ~/.openclaw/completions/openclaw.zsh ]] && source ~/.openclaw/completions/openclaw.zsh
+export OPS_DIR="$HOME/.openclaw/.ops"
+
+# Gas Town shell hook integration
+[[ -f "$HOME/.config/gastown/shell-hook.sh" ]] && source "$HOME/.config/gastown/shell-hook.sh"
+
+# Terminal title: show full working directory for Talon recall path detection
+_talon_title_precmd() { printf '\e]1;%s\a' "${PWD/#$HOME/~}"; }
+autoload -U add-zsh-hook
+add-zsh-hook precmd _talon_title_precmd
 
 # Happy / Claude aliases
-alias yolo='happy --yolo'
-alias Yolo='happy --yolo'
+yolo() {
+  unset CLAUDECODE CLAUDE_CODE_ENTRYPOINT
+  happy --yolo "$@"
+}
+Yolo() { yolo "$@"; }
 alias forced_yolo='unset CLAUDECODE CLAUDE_CODE_ENTRYPOINT && happy --yolo'
 
 # Safe rm — move to trash instead of permanent delete
@@ -264,7 +347,25 @@ gh ssh-key add ~/.ssh/id_ed25519.pub --title "macbook"
 
 ---
 
-## 7. VS Code
+## 7. Karabiner-Elements (Keyboard Remapping)
+
+Karabiner-Elements is installed via Brew Cask (section 2d). It's used to remap
+Capslock to a Super key (acts as hyper modifier).
+
+Configuration lives at `~/.config/karabiner/`. If a config is backed up in this
+repo under `config/karabiner/`, copy it:
+
+```bash
+mkdir -p ~/.config/karabiner
+cp -r config/karabiner/* ~/.config/karabiner/
+```
+
+Open Karabiner-Elements from Applications and grant the required accessibility
+permissions when prompted.
+
+---
+
+## 8. VS Code
 
 VS Code is installed via Brew Cask (section 2d). Install these extensions:
 
@@ -277,7 +378,7 @@ code --install-extension pokey.parse-tree
 
 ---
 
-## 8. Talon (Voice Control)
+## 9. Talon (Voice Control)
 
 Talon is the voice control system — this is **critical infrastructure**.
 
@@ -322,7 +423,7 @@ The `cursorless-settings/` directory in `talon_community` has settings — it wo
 
 ---
 
-## 9. Claude Code Configuration
+## 10. Claude Code Configuration
 
 Copy config files from this repo:
 
@@ -350,7 +451,7 @@ See PROJECTS.md section on CCometixLine for build instructions.
 
 ---
 
-## 10. Install Scripts
+## 11. Install Scripts
 
 ### `~/.local/bin/` scripts (from this repo)
 
@@ -360,8 +461,8 @@ cp config/scripts/* ~/.local/bin/
 chmod +x ~/.local/bin/*
 ```
 
-This installs: `friction`, `idea`, `tool-errors`, `ops`, `bead-review`, `bead-ship`,
-`recall-test`, `rotate-wallpaper.sh`, `speak`
+This installs: `friction`, `fumble`, `idea`, `ops`, `recall-set-path`, `recall-test`,
+`rotate-wallpaper.sh`, `speak`, `talon`, `task`, `tool-errors`, `bead-review`, `bead-ship`
 
 **Note on `rotate-wallpaper.sh`**: The Linux version uses `gsettings` for Cinnamon.
 On macOS, replace the wallpaper command with:
@@ -377,6 +478,19 @@ afplay
 Or use `sox` (`brew install sox`) with `play -r 24000 -b 16 -e signed -c 1 -t raw -`.
 See PROJECTS.md for full speak setup instructions.
 
+### Worktree Wrangler
+
+Worktree Wrangler provides git worktree management via zsh. Clone and install:
+
+```bash
+git clone https://github.com/trillium/worktree-wrangler.git ~/code/worktree-wrangler
+cd ~/code/worktree-wrangler
+./install.sh
+```
+
+This installs to `~/.local/share/worktree-wrangler/` and is sourced from `~/.zshrc`
+(see section 4).
+
 ### `bd` / `beads` binary
 
 The `bd` binary is NOT in this repo (it's a compiled Go binary).
@@ -391,7 +505,7 @@ chmod +x ~/.local/bin/bd
 
 ---
 
-## 11. Helper Scripts (`~/bin/`)
+## 12. Helper Scripts (`~/bin/`)
 
 ```bash
 mkdir -p ~/bin
@@ -406,7 +520,7 @@ This installs: `memwatch.sh`, `proclog.sh`, `proclog-query.sh`, `rust-analyzer-l
 
 ---
 
-## 12. Background Services (launchd — replaces systemd)
+## 13. Background Services (launchd — replaces systemd)
 
 macOS uses **launchd** instead of systemd. The `config/systemd/` directory contains
 Linux service files that need to be converted to launchd plist files.
@@ -543,12 +657,23 @@ launchctl load ~/Library/LaunchAgents/com.trillium.openclaw-gateway.plist
 launchctl load ~/Library/LaunchAgents/com.trillium.poll-usage.plist
 ```
 
+### `com.trillium.system-monitor` (from system-monitor repo)
+
+The system-monitor service is installed separately from its own repo:
+
+```bash
+cd ~/code/system-monitor
+./install.sh
+```
+
+This copies the plist to `~/Library/LaunchAgents/` and bootstraps it via `launchctl`.
+
 **Note**: `memwatch` and `proclog` services are Linux-specific and may not be needed
 on macOS (macOS has its own memory pressure handling). Skip unless Trillium asks for them.
 
 ---
 
-## 13. Wallpaper Rotation (launchd cron equivalent)
+## 14. Wallpaper Rotation (launchd cron equivalent)
 
 On macOS, use a launchd plist instead of crontab. Create
 `~/Library/LaunchAgents/com.trillium.rotate-wallpaper.plist`:
@@ -577,11 +702,11 @@ launchctl load ~/Library/LaunchAgents/com.trillium.rotate-wallpaper.plist
 ```
 
 Remember to also update `rotate-wallpaper.sh` to use macOS's `osascript` instead
-of `gsettings` (see section 10 note).
+of `gsettings` (see section 11 note).
 
 ---
 
-## 14. Restore Beads Databases
+## 15. Restore Beads Databases
 
 These are the issue tracking databases — friction log, ideas, and tool-errors.
 
@@ -603,27 +728,27 @@ Human-readable exports are also in `config/beads-exports/*.txt` for reference.
 
 ---
 
-## 15. Applications to Install (non-package-manager)
+## 16. Applications to Install (non-package-manager)
 
 These may need manual installation if not covered by Brew Cask:
 
-- **Talon** — Download from https://talonvoice.com (see section 8)
+- **Talon** — Download from https://talonvoice.com (see section 9)
 
 Most other apps are covered by `brew install --cask` in section 2d.
 
 ---
 
-## 16. Clone All Projects
+## 17. Clone All Projects
 
 See **PROJECTS.md** for the full list of projects with clone commands, branch info,
 remote configuration, and a single clone-everything script.
 
 ---
 
-## 17. Wallpapers
+## 18. Wallpapers
 
 Copy `~/Pictures/wallpapers/` from the old machine or transfer separately.
-The launchd agent (section 13) rotates through these every 15 minutes.
+The launchd agent (section 14) rotates through these every 15 minutes.
 
 ```bash
 mkdir -p ~/Pictures/wallpapers
@@ -632,7 +757,7 @@ mkdir -p ~/Pictures/wallpapers
 
 ---
 
-## 18. Secrets & Tokens (ask Trillium)
+## 19. Secrets & Tokens (ask Trillium)
 
 These need to be manually configured — they are NOT in this repo:
 
@@ -646,7 +771,7 @@ These need to be manually configured — they are NOT in this repo:
 
 ---
 
-## 19. Verification Checklist
+## 20. Verification Checklist
 
 After setup, verify each of these works:
 
@@ -654,20 +779,28 @@ After setup, verify each of these works:
 - [ ] `python3 --version` → 3.14.x
 - [ ] `rustc --version` → 1.93+
 - [ ] `go version` → 1.25+
+- [ ] `ruby --version` → 3.2.2
 - [ ] `gh auth status` → logged in
 - [ ] `tailscale status` → shows all devices
 - [ ] `code --version` → VS Code runs
 - [ ] `claude --version` → Claude Code runs
 - [ ] `happy --version` → Happy runs
 - [ ] `bd --version` → Beads runs
+- [ ] `task list` → system-wide task tracker works
 - [ ] `friction list` → shows 20 issues
 - [ ] `idea list` → shows 28 issues
 - [ ] `tool-errors list` → shows 2 issues
+- [ ] `fumble view` → error capture works
 - [ ] Talon is running and responding to voice
 - [ ] Cursorless works in VS Code
+- [ ] Karabiner-Elements running (Capslock → Super key)
+- [ ] Raycast opens (launcher)
 - [ ] `launchctl list | grep trillium` → shows loaded services
 - [ ] Chrome opens
 - [ ] Discord opens
 - [ ] Slack opens
+- [ ] OBS opens
 - [ ] Wallpaper rotates (run `~/.local/bin/rotate-wallpaper.sh` manually to test)
 - [ ] `speak "hello world"` → speaks aloud
+- [ ] `thefuck` corrects a typo'd command
+- [ ] Worktree Wrangler zsh functions available
