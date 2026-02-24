@@ -1,0 +1,203 @@
+/code Repositories
+=================
+
+100devs/
+  ├── banki-brunch
+  ├── django
+  ├── homework
+  ├── starter-javascript-cookbook
+  └── voice_driven_practice
+agentic-guardrails
+ai-interaction
+anki
+aaron
+ashley/
+  └── sacred-ground
+autaly.ai
+autoprefixer
+badgen/
+  └── badgen.net
+beads
+beads-bak/
+  └── explore
+bluesky/
+  └── DaniAkash
+boggle/
+  └── boggle
+bookback/
+  ├── bookback
+  ├── english-words
+  └── trie
+calendar-merge-service
+calendar/
+  └── calendar_demo
+cc-conversation-search
+CCometixLine/
+  └── CCometixLine
+ChatFight/
+  └── app
+claude-history
+codex
+coding_interview_university
+concept2/
+  ├── pm5-emulator
+  └── Py3Row
+cursorless
+cursorless-dev/
+  ├── 3rd
+  └── cursorless_temp
+cv-generator/
+  ├── cv-generator
+  └── pii
+cv-generator/cv-generator
+cv-generator/pii
+dane
+django-hello-world/
+  └── django-hello-world
+django/
+  ├── django-backend-reddit
+  └── nextjs-frontend-reddit
+find-my-phone
+fridge_finder/
+  └── CFM_Frontend
+gastown
+getHired/
+  └── getHired
+gmail-massage
+habit_track/
+  └── habit_app
+hack4la/
+  └── incubator
+hackathon_aws/
+  ├── hackathon_aws
+  └── mcp-for-next.js
+hackforla/
+  ├── tdm-calculator
+  └── tdm-calculator-duplicate
+happier
+happy
+hard75/
+  └── hard75
+huntober
+ics/
+  └── ics-file-chunker
+jubbly/
+  ├── jubbly-card-creator
+  └── jubbly-next
+kwdz/
+  └── kwdz
+map/
+  └── openfreemap-examples
+massage_tracker
+massage/
+  ├── flyer
+  └── massage
+mcp-server
+meet/
+  ├── meet
+  └── meet_copy_2024_07_09
+minesweeper/
+  └── minesweeper
+minify-tailwind/
+  └── tailwind-css
+nextjs-repo/
+  └── next.js
+nextjs14/
+  └── nextjs-dashboard
+nivo/
+  └── recordings-nivo
+note
+obs/
+  └── obs-listener
+openclaw
+opencode/
+  └── opencode
+parrot/
+  └── parrot.py
+petitesirah
+pixel_search
+pm5/
+  ├── ErgometerJS
+  └── pm5-base
+portfolio/
+  └── youttube-guide-portfolio
+qrcode/
+  ├── next-qr
+  ├── next-qr-2024-06-24
+  └── qr-app
+ralph-cli
+raycast-extensions
+react_react_react_app_test/
+  └── test_app
+readme-typing-svg/
+  └── readme-typing-svg
+reddit
+rode_connect_exploration
+rode/
+  └── rodecaster-control
+rouge/
+  ├── rouge
+  └── spiteless_rouge
+rowing_tracker/
+  └── rowing_tracker
+rust/
+  └── grrs
+scratch/
+  ├── flutterby-test
+  └── gastown-boundary-scope
+share-screen
+shiki/
+  └── next-shiki
+Spiteless
+talon_recordings_db
+talon-talk/
+  └── talon-talk
+talon/
+  ├── andreas-talon
+  ├── my-next-app
+  ├── talon_deck
+  ├── talon_docs
+  ├── talon_wiki
+  └── trillium_talon
+tdd-guard
+temp/
+  └── tailwind-nextjs-starter-blog
+test_runner_vitest
+things-that-made-me-happy/
+  ├── blank-app
+  └── my-blank-app
+tiger_touch/
+  └── tiger-touch-massage
+tminus.me
+todo_app
+torc
+trillium.is/
+  ├── findthat.at
+  ├── netlify-shortener
+  └── trillium.is
+trillium/
+  ├── trillium
+  └── trillium2
+trilliumsmith.com/
+  └── current
+twitch
+update-therapist-zoom-link
+verbi/
+  ├── FastWhisperAPI
+  └── Verbi
+virtualcoffee/
+  └── virtualcoffee.io
+vite_test_express/
+  └── react-vite-express-setup
+VRMS/
+  ├── test_default_packagesjon
+  ├── VRMS
+  ├── VRMS2
+  └── VRMS3
+worktree-test
+worktree-wrangler
+zed
+
+=================
+Total Repositories: 120+
+Last Updated: 2026-02-23
