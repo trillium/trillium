@@ -1,0 +1,2 @@
+#!/bin/sh
+exec env BEADS_DIR="$HOME/.task/.beads" BD_NAME=task bd "$@"

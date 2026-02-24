@@ -1,0 +1,115 @@
+#!/bin/bash
+# bead-ship: Commit changes, close bead, and create PR
+# Usage: bead-ship <bead-command> <bead-id> [commit-message]
+# Example: bead-ship massage massage-o36 "Fixed rate limiter IP validation"
+
+set -e
+
+if [ "$#" -lt 2 ]; then
+    echo "Usage: bead-ship <bead-command> <bead-id> [commit-message]"
+    echo "Example: bead-ship massage massage-o36 'Fixed rate limiter IP validation'"
+    exit 1
+fi
+
+BEAD_CMD="$1"
+BEAD_ID="$2"
+CUSTOM_MSG="$3"
+
+# Get bead details
+echo "📋 Fetching bead details..."
+BEAD_JSON=$($BEAD_CMD show "$BEAD_ID" --json 2>/dev/null || echo "")
+
+if [ -z "$BEAD_JSON" ]; then
+    echo "❌ Error: Could not find bead $BEAD_ID"
+    exit 1
+fi
+
+# Parse title from JSON (handle both array and object formats)
+BEAD_TITLE=$(echo "$BEAD_JSON" | jq -r '.[0].title // .title' 2>/dev/null || echo "")
+
+if [ -z "$BEAD_TITLE" ]; then
+    echo "❌ Error: Could not parse bead title from JSON"
+    exit 1
+fi
+
+echo "📦 Bead: $BEAD_ID - $BEAD_TITLE"
+
+# Determine commit message
+if [ -n "$CUSTOM_MSG" ]; then
+    COMMIT_MSG="$CUSTOM_MSG"
+else
+    COMMIT_MSG="Fix: $BEAD_TITLE"
+fi
+
+# Create branch name from bead ID
+BRANCH_NAME="fix/$BEAD_ID"
+
+echo ""
+echo "🔀 Creating branch: $BRANCH_NAME"
+git checkout -b "$BRANCH_NAME" 2>/dev/null || git checkout "$BRANCH_NAME"
+
+# Stage changes
+echo "📝 Staging changes..."
+git add .
+
+# Check if there are changes to commit
+if git diff --cached --quiet; then
+    echo "⚠️  No changes to commit. Skipping commit step."
+else
+    # Commit with bead reference
+    echo "💾 Committing changes..."
+    git commit -m "$(cat <<EOF
+$COMMIT_MSG
+
+Closes $BEAD_ID
+
+Generated with [Claude Code](https://claude.ai/code)
+via [Happy](https://happy.engineering)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+Co-Authored-By: Happy <yesreply@happy.engineering>
+EOF
+)"
+fi
+
+# Close the bead
+echo "✅ Closing bead..."
+$BEAD_CMD close "$BEAD_ID" --reason "Fixed and merged"
+
+# Push branch
+echo "🚀 Pushing branch..."
+git push -u origin "$BRANCH_NAME"
+
+# Create PR
+echo "🎯 Creating pull request..."
+PR_URL=$(gh pr create --title "$COMMIT_MSG" --body "$(cat <<EOF
+## Summary
+$COMMIT_MSG
+
+## Changes
+<!-- Describe your changes here -->
+
+## Closes
+- $BEAD_ID
+
+## Test Plan
+<!-- How did you test this? -->
+
+---
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+via [Happy](https://happy.engineering)
+EOF
+)" --head "$BRANCH_NAME" | tail -1)
+
+# Extract PR number from URL
+PR_NUMBER=$(echo "$PR_URL" | grep -o '[0-9]*$')
+
+# Get repo name
+REPO_NAME=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || echo "")
+
+echo ""
+echo "✨ Done! Bead $BEAD_ID closed and PR created: $PR_URL"
+echo ""
+echo "🤖 Launching automated code reviews..."
+echo "BEAD_SHIP_REVIEW:$PR_NUMBER:$REPO_NAME"

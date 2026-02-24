@@ -1,0 +1,97 @@
+#!/usr/bin/env zsh
+# fumble - capture and view command errors across all shell environments
+# Hardcoded store path so it works in Claude Code, Talon, etc.
+
+_FUMBLE_STORE="$HOME/.fumble_last"
+
+_fumble_no_run() {
+    local cmd=$(fc -ln -1 2>/dev/null | sed 's/^[[:space:]]*//')
+    local code=$?
+    if [[ -z "$cmd" ]]; then
+        return 1
+    fi
+    local branch=$(git branch --show-current 2>/dev/null)
+    local host=$(hostname -s 2>/dev/null)
+    local dir=$(pwd)
+    local ts=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "[$ts | $dir | ${branch:-no-git} | $host]"
+    echo '```'
+    echo "$ \t $cmd"
+    echo '```'
+    echo "Exit code: ${code:-unknown}"
+}
+
+_fumble_scrape_terminal() {
+    if [[ "$TERM_PROGRAM" != "Apple_Terminal" ]]; then
+        return 1
+    fi
+    osascript -e '
+        tell application "Terminal"
+            set t to selected tab of front window
+            set c to contents of t
+        end tell
+        return c
+    ' 2>/dev/null
+}
+
+case "$1" in
+    view)
+        if [[ -f "$_FUMBLE_STORE" ]]; then
+            cat "$_FUMBLE_STORE"
+        else
+            echo "No fumble saved yet."
+            return 1 2>/dev/null || exit 1
+        fi
+        ;;
+    --no-run|--dry)
+        local result
+        result=$(_fumble_no_run)
+        if [[ -z "$result" ]]; then
+            echo "No recent command found."
+            return 1 2>/dev/null || exit 1
+        fi
+        echo "$result" > "$_FUMBLE_STORE"
+        echo "$result" | pbcopy
+        echo "$result"
+        echo ""
+        echo "Copied to clipboard."
+        ;;
+    --terminal|--scrape)
+        local result
+        result=$(_fumble_scrape_terminal)
+        if [[ -z "$result" ]]; then
+            echo "Could not scrape terminal. Are you in Apple Terminal?"
+            return 1 2>/dev/null || exit 1
+        fi
+        echo "$result" > "$_FUMBLE_STORE"
+        echo "$result" | pbcopy
+        echo "$result"
+        echo ""
+        echo "Copied to clipboard."
+        ;;
+    --help|-h)
+        echo "Usage: fumble [view | --no-run | --terminal]"
+        echo "  (default)    Auto-detect: scrape terminal if possible, else command + exit code"
+        echo "  view         Print the most recent fumble (works from any shell)"
+        echo "  --no-run     Just copy the command + exit code (works anywhere)"
+        echo "  --terminal   Force Apple Terminal scrape mode"
+        ;;
+    *)
+        local result=""
+        if [[ "$TERM_PROGRAM" == "Apple_Terminal" ]]; then
+            result=$(_fumble_scrape_terminal)
+        fi
+        if [[ -z "$result" ]]; then
+            result=$(_fumble_no_run)
+        fi
+        if [[ -z "$result" ]]; then
+            echo "No recent command found."
+            return 1 2>/dev/null || exit 1
+        fi
+        echo "$result" > "$_FUMBLE_STORE"
+        echo "$result" | pbcopy
+        echo "$result"
+        echo ""
+        echo "Copied to clipboard."
+        ;;
+esac

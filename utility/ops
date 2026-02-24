@@ -1,0 +1,4 @@
+#!/bin/bash
+# ops - wrapper for bd with .ops directory
+export BEADS_DIR=.ops
+exec bd "$@"

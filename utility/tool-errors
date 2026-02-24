@@ -1,0 +1,2 @@
+#!/bin/sh
+exec env BEADS_DIR="$HOME/.tool-errors/.beads" BD_NAME=tool-errors bd "$@"
