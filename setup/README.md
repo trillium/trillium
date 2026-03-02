@@ -33,6 +33,14 @@ For detailed setup instructions for your operating system, see:
 - **[macOS Setup](./MACOS.md)** - Homebrew, Node.js via Homebrew, M-series troubleshooting
 - **[Linux Setup](./LINUX.md)** - Ubuntu/Debian, Fedora, Arch, and NVM options
 
+## Satellite Machines
+
+For setting up headless compute nodes controlled from the MacBook:
+
+- **[Satellite Overview](./satellites/README.md)** - Fleet architecture and approach
+- **[Mac Mini Satellite](./satellites/MAC-MINI-SATELLITE.md)** - Headless macOS setup
+- **[Linux Satellite](./satellites/LINUX-SATELLITE.md)** - Headless Linux Mint setup
+
 ## Prerequisites
 
 For development or contributions, ensure you have:
