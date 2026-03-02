@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# git-repo-sync: fetch and fast-forward repos
+# Usage: git-repo-sync -r <path>       (single repo, for xargs -P)
+#        git-repo-sync [--done <file>]  (reads paths from stdin)
+# Outputs one JSONL line per repo with sync results.
+set -euo pipefail
+
+repo_path=""
+done_file=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -r) repo_path="$2"; shift 2 ;;
+        --done) done_file="$2"; shift 2 ;;
+        --help|-h)
+            echo "Usage: git-repo-sync -r <path>"
+            echo "       git-repo-sync [--done <file>] < paths.txt"
+            exit 0
+            ;;
+        *) shift ;;
+    esac
+done
+
+sync_repo() {
+    local repo="$1"
+    cd "$repo" || return 1
+
+    local now fetch_result pull_result
+    now="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+
+    # Fetch
+    if git fetch --all --quiet 2>/dev/null; then
+        fetch_result="ok"
+    else
+        fetch_result="failed"
+        jq -nc \
+            --arg path "$repo" \
+            --arg synced_at "$now" \
+            --arg fetch "$fetch_result" \
+            --arg pull "skipped" \
+            '{path: $path, synced_at: $synced_at, fetch: $fetch, pull: $pull}'
+        return 0
+    fi
+
+    # Check HEAD state
+    local branch upstream
+    branch="$(git symbolic-ref --short HEAD 2>/dev/null || true)"
+    if [[ -z "$branch" ]]; then
+        pull_result="detached"
+        jq -nc \
+            --arg path "$repo" \
+            --arg synced_at "$now" \
+            --arg fetch "$fetch_result" \
+            --arg pull "$pull_result" \
+            '{path: $path, synced_at: $synced_at, fetch: $fetch, pull: $pull}'
+        return 0
+    fi
+
+    upstream="$(git rev-parse --abbrev-ref "@{upstream}" 2>/dev/null || true)"
+    if [[ -z "$upstream" ]]; then
+        pull_result="skipped"
+        jq -nc \
+            --arg path "$repo" \
+            --arg synced_at "$now" \
+            --arg fetch "$fetch_result" \
+            --arg pull "$pull_result" \
+            '{path: $path, synced_at: $synced_at, fetch: $fetch, pull: $pull}'
+        return 0
+    fi
+
+    # Pull --ff-only
+    if git pull --ff-only --quiet 2>/dev/null; then
+        pull_result="ok"
+    else
+        pull_result="diverged"
+    fi
+
+    jq -nc \
+        --arg path "$repo" \
+        --arg synced_at "$now" \
+        --arg fetch "$fetch_result" \
+        --arg pull "$pull_result" \
+        '{path: $path, synced_at: $synced_at, fetch: $fetch, pull: $pull}'
+}
+
+# Single repo mode
+if [[ -n "$repo_path" ]]; then
+    sync_repo "$repo_path"
+    exit 0
+fi
+
+# Stdin mode
+while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+
+    # Resumability: skip if path already in done file
+    if [[ -n "$done_file" && -f "$done_file" ]]; then
+        if jq -e --arg p "$path" 'select(.path == $p)' "$done_file" >/dev/null 2>&1; then
+            continue
+        fi
+    fi
+
+    sync_repo "$path" || echo "{\"path\":\"$path\",\"error\":\"sync failed\"}" >&2
+done

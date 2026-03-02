@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# git-repo-audit: inspect repo state, output JSONL
+# Usage: git-repo-audit -r <path>       (single repo, for xargs -P)
+#        git-repo-audit [--done <file>]  (reads paths from stdin)
+# Outputs one JSONL line per repo. No network calls.
+set -euo pipefail
+
+repo_path=""
+done_file=""
+paths=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -r) repo_path="$2"; shift 2 ;;
+        --done) done_file="$2"; shift 2 ;;
+        --help|-h)
+            echo "Usage: git-repo-audit -r <path>"
+            echo "       git-repo-audit [--done <file>] < paths.txt"
+            exit 0
+            ;;
+        *) shift ;;
+    esac
+done
+
+audit_repo() {
+    local repo="$1"
+    cd "$repo" || return 1
+
+    local now
+    now="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+
+    # Remotes
+    local remotes_raw has_remotes remotes_json
+    remotes_raw="$(git remote 2>/dev/null || true)"
+    if [[ -n "$remotes_raw" ]]; then
+        has_remotes=true
+        remotes_json="$(echo "$remotes_raw" | jq -Rc '.' | jq -sc '.')"
+    else
+        has_remotes=false
+        remotes_json="[]"
+    fi
+
+    # HEAD
+    local head_branch head_detached
+    head_branch="$(git symbolic-ref --short HEAD 2>/dev/null || true)"
+    if [[ -n "$head_branch" ]]; then
+        head_detached=false
+    else
+        head_branch="$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")"
+        head_detached=true
+    fi
+
+    # Dirty files
+    local dirty_output dirty_count dirty_files_json
+    dirty_output="$(git status --porcelain 2>/dev/null || true)"
+    if [[ -n "$dirty_output" ]]; then
+        dirty_count="$(echo "$dirty_output" | wc -l | tr -d ' ')"
+        dirty_files_json="$(echo "$dirty_output" | head -20 | jq -Rc '.' | jq -sc '.')"
+    else
+        dirty_count=0
+        dirty_files_json="[]"
+    fi
+
+    # Branches
+    local branches_json="[]"
+    local branch_entries=()
+    while IFS= read -r branch; do
+        [[ -z "$branch" ]] && continue
+        local upstream ahead behind last_commit entry
+        upstream="$(git rev-parse --abbrev-ref "$branch@{upstream}" 2>/dev/null || true)"
+        if [[ -n "$upstream" ]]; then
+            ahead="$(git rev-list --count "$upstream..$branch" 2>/dev/null || echo 0)"
+            behind="$(git rev-list --count "$branch..$upstream" 2>/dev/null || echo 0)"
+            entry="$(jq -nc \
+                --arg name "$branch" \
+                --arg upstream "$upstream" \
+                --argjson ahead "$ahead" \
+                --argjson behind "$behind" \
+                '{name: $name, upstream: $upstream, ahead: $ahead, behind: $behind}')"
+        else
+            last_commit="$(git log -1 --format='%cr' "$branch" 2>/dev/null || echo "unknown")"
+            entry="$(jq -nc \
+                --arg name "$branch" \
+                --arg last_commit "$last_commit" \
+                '{name: $name, upstream: null, last_commit: $last_commit}')"
+        fi
+        branch_entries+=("$entry")
+    done < <(git for-each-ref --format='%(refname:short)' refs/heads/)
+
+    if [[ ${#branch_entries[@]} -gt 0 ]]; then
+        branches_json="$(printf '%s\n' "${branch_entries[@]}" | jq -sc '.')"
+    fi
+
+    # Assemble output
+    jq -nc \
+        --arg path "$repo" \
+        --arg audited_at "$now" \
+        --argjson has_remotes "$has_remotes" \
+        --argjson remotes "$remotes_json" \
+        --arg head_branch "$head_branch" \
+        --argjson head_detached "$head_detached" \
+        --argjson dirty_count "$dirty_count" \
+        --argjson dirty_files "$dirty_files_json" \
+        --argjson branches "$branches_json" \
+        '{
+            path: $path,
+            audited_at: $audited_at,
+            has_remotes: $has_remotes,
+            remotes: $remotes,
+            head_branch: $head_branch,
+            head_detached: $head_detached,
+            dirty_count: $dirty_count,
+            dirty_files: $dirty_files,
+            branches: $branches
+        }'
+}
+
+# Single repo mode
+if [[ -n "$repo_path" ]]; then
+    audit_repo "$repo_path"
+    exit 0
+fi
+
+# Stdin mode
+while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+
+    # Resumability: skip if path already in done file
+    if [[ -n "$done_file" && -f "$done_file" ]]; then
+        if jq -e --arg p "$path" 'select(.path == $p)' "$done_file" >/dev/null 2>&1; then
+            continue
+        fi
+    fi
+
+    audit_repo "$path" || echo "{\"path\":\"$path\",\"error\":\"audit failed\"}" >&2
+done

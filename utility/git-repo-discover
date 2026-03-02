@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# git-repo-discover: find git repos on disk, register them in the registry
+# Usage: git-repo-discover [--all] [dir ...]
+# Outputs JSONL for newly discovered repos to stdout (or all with --all)
+# Appends new entries to the registry automatically
+set -euo pipefail
+
+REGISTRY_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/git-registry"
+REGISTRY="$REGISTRY_DIR/repos.jsonl"
+MAX_DEPTH=4
+DEFAULT_DIRS=("$HOME/.talon" "$HOME/code")
+
+show_all=false
+scan_dirs=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --all) show_all=true; shift ;;
+        --help|-h)
+            echo "Usage: git-repo-discover [--all] [dir ...]"
+            echo "  --all   Output all repos (new + existing), not just new"
+            echo "  dir     Directories to scan (default: ~/.talon ~/code)"
+            exit 0
+            ;;
+        *) scan_dirs+=("$1"); shift ;;
+    esac
+done
+
+[[ ${#scan_dirs[@]} -eq 0 ]] && scan_dirs=("${DEFAULT_DIRS[@]}")
+
+mkdir -p "$REGISTRY_DIR"
+touch "$REGISTRY"
+
+# Extract known paths into a temp file for fast lookup
+known_paths_file="$(mktemp)"
+trap 'rm -f "$known_paths_file"' EXIT
+jq -r '.path' "$REGISTRY" > "$known_paths_file" 2>/dev/null || true
+
+# Prune: remove registry entries whose .git dir no longer exists
+if [[ -s "$REGISTRY" ]]; then
+    pruned="$(mktemp)"
+    while IFS= read -r line; do
+        p="$(echo "$line" | jq -r '.path // empty')"
+        if [[ -n "$p" && -d "$p/.git" ]]; then
+            echo "$line"
+        fi
+    done < "$REGISTRY" > "$pruned"
+    mv "$pruned" "$REGISTRY"
+    # Refresh known paths after prune
+    jq -r '.path' "$REGISTRY" > "$known_paths_file" 2>/dev/null || true
+fi
+
+# Discover repos
+now="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+new_count=0
+
+for dir in "${scan_dirs[@]}"; do
+    [[ -d "$dir" ]] || continue
+    while IFS= read -r gitdir; do
+        repo="$(dirname "$gitdir")"
+        if ! grep -qxF "$repo" "$known_paths_file" 2>/dev/null; then
+            entry="$(jq -nc --arg path "$repo" --arg ts "$now" \
+                '{path: $path, discovered_at: $ts}')"
+            echo "$entry" >> "$REGISTRY"
+            echo "$entry"
+            echo "$repo" >> "$known_paths_file"
+            new_count=$((new_count + 1))
+        elif [[ "$show_all" == true ]]; then
+            jq -c --arg path "$repo" 'select(.path == $path)' "$REGISTRY"
+        fi
+    done < <(find "$dir" -maxdepth "$MAX_DEPTH" -name .git -type d 2>/dev/null | sort)
+done
+
+echo "Discovered $new_count new repos ($(wc -l < "$REGISTRY" | tr -d ' ') total in registry)" >&2

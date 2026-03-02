@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+# git-repo-report: convert audit JSONL → markdown report
+# Usage: git-repo-report < audit.jsonl > report.md
+#        git-repo-report audit.jsonl
+set -euo pipefail
+
+input_file=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --help|-h)
+            echo "Usage: git-repo-report < audit.jsonl"
+            echo "       git-repo-report audit.jsonl"
+            exit 0
+            ;;
+        *) input_file="$1"; shift ;;
+    esac
+done
+
+# Read all JSONL into a temp file if coming from stdin
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+if [[ -n "$input_file" ]]; then
+    cp "$input_file" "$tmp"
+else
+    cat > "$tmp"
+fi
+
+total="$(wc -l < "$tmp" | tr -d ' ')"
+
+# Extract categories using jq
+no_remotes="$(jq -r 'select(.has_remotes == false) | .path' "$tmp")"
+no_remotes_count="$(echo "$no_remotes" | grep -c . || true)"
+
+dirty_repos="$(jq -c 'select(.dirty_count > 0)' "$tmp")"
+dirty_count="$(echo "$dirty_repos" | grep -c . || true)"
+
+# Branches: find unpushed (no upstream or ahead > 0)
+unpushed="$(jq -c '
+    select(.branches != null) |
+    {path, branches: [.branches[] | select(.upstream == null or .ahead > 0)]} |
+    select(.branches | length > 0)
+' "$tmp")"
+unpushed_count="$(echo "$unpushed" | grep -c . || true)"
+
+# Count total unpushed branches
+unpushed_branch_total=0
+if [[ -n "$unpushed" ]]; then
+    unpushed_branch_total="$(echo "$unpushed" | jq '[.branches | length] | add' | jq -s 'add // 0')"
+fi
+
+# --- Write report ---
+echo "# Git Sync Report"
+echo "_Generated $(date '+%Y-%m-%d %H:%M:%S')_"
+echo ""
+echo "Scanned **$total** repos"
+echo ""
+
+# No remotes
+echo "## Repos with no remotes ($no_remotes_count)"
+if [[ "$no_remotes_count" -eq 0 ]]; then
+    echo "None"
+else
+    echo "$no_remotes" | while IFS= read -r r; do
+        [[ -n "$r" ]] && echo "- \`$r\`"
+    done
+fi
+echo ""
+
+# Uncommitted changes
+echo "## Repos with uncommitted changes ($dirty_count)"
+if [[ "$dirty_count" -eq 0 ]]; then
+    echo "None"
+else
+    echo "$dirty_repos" | while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        r="$(echo "$line" | jq -r '.path')"
+        dc="$(echo "$line" | jq -r '.dirty_count')"
+        files="$(echo "$line" | jq -r '.dirty_files[:5][]')"
+        echo "### \`$r\` ($dc dirty files)"
+        echo '```'
+        echo "$files"
+        if [[ "$dc" -gt 5 ]]; then
+            echo "... and $((dc - 5)) more"
+        fi
+        echo '```'
+        echo ""
+    done
+fi
+
+# Unpushed branches
+echo "## Unpushed branches ($unpushed_branch_total)"
+if [[ "$unpushed_branch_total" -eq 0 ]]; then
+    echo "None"
+else
+    echo "$unpushed" | while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        r="$(echo "$line" | jq -r '.path')"
+        echo "### \`$r\`"
+        echo "$line" | jq -r '.branches[] |
+            if .upstream == null then
+                "- **\(.name)** — no upstream (last commit: \(.last_commit))"
+            else
+                "- **\(.name)** — \(.ahead) ahead"
+            end'
+    done
+fi
