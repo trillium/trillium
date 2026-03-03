@@ -31,8 +31,12 @@ The satellites are **headless compute nodes** in service to the MacBook. They ar
 
 ## Guides
 
+### Hardware & OS Setup
 - **[Mac Mini Satellite](./MAC-MINI-SATELLITE.md)** — headless macOS setup (SSH, Screen Sharing, dummy plug)
 - **[Linux Satellite](./LINUX-SATELLITE.md)** — headless Linux Mint setup (SSH, VNC)
+
+### Software Stack
+- **[Gas Town Node](./GAS-TOWN-NODE.md)** — install gt, bd, Dolt, register rigs, connect to central Dolt server
 
 ## Why Not Universal Control?
 

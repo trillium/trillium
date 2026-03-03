@@ -40,6 +40,7 @@ For setting up headless compute nodes controlled from the MacBook:
 - **[Satellite Overview](./satellites/README.md)** - Fleet architecture and approach
 - **[Mac Mini Satellite](./satellites/MAC-MINI-SATELLITE.md)** - Headless macOS setup
 - **[Linux Satellite](./satellites/LINUX-SATELLITE.md)** - Headless Linux Mint setup
+- **[Gas Town Node](./satellites/GAS-TOWN-NODE.md)** - Gas Town software stack (gt, bd, Dolt, polecats)
 
 ## Prerequisites
 
