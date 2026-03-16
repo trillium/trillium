@@ -1,36 +1,5 @@
 <a id="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/trillium/trillium">
-    <img src="images/TrilliumSmith_headshot.jpeg" alt="Logo" width="80" height="80">
-  </a>
-
-  <h3 align="center">Trillium's Portfolio</h3>
-
-  <p align="center">
-    Software Engineer and Web Developer based in Los Angeles, CA
-    <br />
-    <a href="https://github.com/trillium/trillium"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://trilliumsmith.com">View Portfolio</a>
-    ·
-    <a href="https://github.com/trillium/trillium/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/trillium/trillium/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
-  </p>
-</div>
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
