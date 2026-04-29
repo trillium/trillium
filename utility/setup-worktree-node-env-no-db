@@ -1,0 +1,59 @@
+#!/bin/bash
+# setup-worktree-node-env-no-db.sh — Generic worktree setup for Node.js projects without a database.
+#
+# Created: 2025-11-24
+#
+# WHY
+#   Many Node.js projects just need deps installed, .env copied, and .claude
+#   config carried over. This is the generic version — no database copy, no
+#   port hashing, no project-specific logic. Auto-detects package manager
+#   (pnpm > yarn > npm).
+#
+# WHAT IT DOES
+#   1. Detects package manager and runs install
+#   2. Copies .env files from root checkout
+#   3. Copies .claude/ folder (MCP server config)
+#
+# EXPECTS
+#   Environment variables set by the worktree tool:
+#     W_WORKSPACE_NAME — name of the worktree
+#     W_WORKSPACE_PATH — absolute path to the new worktree
+#     W_ROOT_PATH      — absolute path to the main checkout
+#
+# DEPENDENCIES
+#   - pnpm, yarn, or npm (whichever the project uses)
+
+set -e
+
+echo "🚀 Setting up worktree: $W_WORKSPACE_NAME"
+echo "📁 Path: $W_WORKSPACE_PATH"
+echo "🏠 Root: $W_ROOT_PATH"
+
+# Install dependencies
+if [[ -f pnpm-lock.yaml ]]; then
+    echo "📦 Installing dependencies with pnpm..."
+    pnpm install
+elif [[ -f yarn.lock ]]; then
+    echo "📦 Installing dependencies with yarn..."
+    yarn install
+elif [[ -f package-lock.json ]]; then
+    echo "📦 Installing dependencies with npm..."
+    npm install
+elif [[ -f package.json ]]; then
+    echo "📦 Installing dependencies with npm (no lock file detected)..."
+    npm install
+fi
+
+# Copy environment files
+echo "🔧 Copying environment files..."
+cp "$W_ROOT_PATH/.env"* . 2>/dev/null || true
+
+# Copy .claude folder (MCP server configurations)
+if [[ -d "$W_ROOT_PATH/.claude" ]]; then
+    echo "🤖 Copying .claude folder..."
+    cp -r "$W_ROOT_PATH/.claude" . 2>/dev/null || true
+else
+    echo "⚠️  No .claude folder found in root repository"
+fi
+
+echo "✅ Worktree setup complete!"

@@ -1,0 +1,57 @@
+#!/bin/bash
+# teardown-worktree-node-env-no-db.sh — Generic worktree teardown for Node.js projects.
+#
+# Created: 2025-09-29
+#
+# WHY
+#   When removing a git worktree, leftover node_modules, .env files, build
+#   artifacts, and coverage reports waste disk space and can confuse tools
+#   that scan the filesystem. This script cleans up before the worktree
+#   directory is removed.
+#
+# WHAT IT DOES
+#   1. Removes node_modules/
+#   2. Removes .env
+#   3. Removes .next/ (Next.js build artifacts)
+#   4. Removes coverage/ (test coverage reports)
+#
+# EXPECTS
+#   Environment variables set by the worktree tool:
+#     W_WORKSPACE_NAME — name of the worktree
+#     W_WORKSPACE_PATH — absolute path to the worktree being removed
+#     W_ROOT_PATH      — absolute path to the main checkout
+#
+# DEPENDENCIES
+#   None
+
+set -e
+
+echo "🧹 Tearing down worktree: $W_WORKSPACE_NAME"
+echo "📁 Path: $W_WORKSPACE_PATH"
+echo "🏠 Root: $W_ROOT_PATH"
+
+# Remove dependencies
+if [ -d node_modules ]; then
+    echo "🗑️ Removing node_modules..."
+    rm -rf node_modules
+fi
+
+# Remove environment files
+if [ -f .env ]; then
+    echo "🗑️ Removing .env file..."
+    rm .env
+fi
+
+# Remove Next.js build artifacts
+if [ -d .next ]; then
+    echo "🗑️ Removing .next build directory..."
+    rm -rf .next
+fi
+
+# Remove test coverage
+if [ -d coverage ]; then
+    echo "🗑️ Removing coverage directory..."
+    rm -rf coverage
+fi
+
+echo "✅ Worktree teardown complete!"

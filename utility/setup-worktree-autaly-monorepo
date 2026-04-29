@@ -1,0 +1,56 @@
+#!/bin/bash
+# setup-worktree-autaly-monorepo.sh — Worktree setup hook for the Autaly monorepo.
+#
+# Created: 2025-10-23
+#
+# WHY
+#   Autaly is a Yarn workspaces monorepo. When creating a git worktree for
+#   parallel feature work, the worktree needs its own .env files and a fresh
+#   yarn install. This script is called automatically by the worktree tool
+#   (W_WORKSPACE_NAME, W_WORKSPACE_PATH, W_ROOT_PATH are set by the caller).
+#
+# WHAT IT DOES
+#   1. Copies .env files from apps/czero-webapp/ in the root checkout
+#   2. Runs yarn install (workspaces-aware, single install at root)
+#
+# EXPECTS
+#   Environment variables set by the worktree tool:
+#     W_WORKSPACE_NAME — name of the worktree
+#     W_WORKSPACE_PATH — absolute path to the new worktree
+#     W_ROOT_PATH      — absolute path to the main checkout
+#
+# DEPENDENCIES
+#   - yarn
+
+set -e
+
+echo "🚀 Setting up worktree: $W_WORKSPACE_NAME"
+echo "📁 Path: $W_WORKSPACE_PATH"
+echo "🏠 Root: $W_ROOT_PATH"
+
+# Copy environment files from apps/czero-webapp
+echo "🔧 Copying .env file from apps/czero-webapp..."
+if [ -f "$W_ROOT_PATH/apps/czero-webapp/.env" ]; then
+    mkdir -p apps/czero-webapp
+    cp "$W_ROOT_PATH/apps/czero-webapp/.env" ./apps/czero-webapp/.env
+    echo "✓ Copied .env to apps/czero-webapp/"
+else
+    echo "⚠️  Warning: No .env file found at $W_ROOT_PATH/apps/czero-webapp/.env"
+fi
+
+# Copy any additional .env variants if they exist
+cp "$W_ROOT_PATH/apps/czero-webapp/.env"* ./apps/czero-webapp/ 2>/dev/null || true
+
+# Install dependencies using Yarn workspaces (single install at root)
+if [ -f yarn.lock ]; then
+    echo "📦 Installing dependencies with yarn (workspaces)..."
+    yarn install
+else
+    echo "⚠️  Warning: No yarn.lock found"
+fi
+
+echo "✅ Worktree setup complete!"
+echo ""
+echo "💡 Next steps:"
+echo "   • Run 'yarn dev' to start development"
+echo "   • Run 'yarn build' to build all packages"

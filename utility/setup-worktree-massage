@@ -1,0 +1,74 @@
+#!/bin/bash
+# setup-worktree-massage.sh — Worktree setup hook for the massage app.
+#
+# Created: 2026-01-14
+#
+# WHY
+#   The massage scheduling app uses pnpm. Worktrees need their own
+#   dependencies, .env files, .claude config, and .planning docs.
+#   Simpler than massage-tracker (no database copy, no port hashing).
+#
+# WHAT IT DOES
+#   1. Runs pnpm install
+#   2. Copies .env files from root checkout
+#   3. Copies .claude/ folder (MCP server config)
+#   4. Copies .planning/ folder
+#
+# EXPECTS
+#   Environment variables set by the worktree tool:
+#     W_WORKSPACE_NAME — name of the worktree
+#     W_WORKSPACE_PATH — absolute path to the new worktree
+#     W_ROOT_PATH      — absolute path to the main checkout
+#
+# DEPENDENCIES
+#   - pnpm
+
+set -e
+
+echo "🚀 Setting up worktree: $W_WORKSPACE_NAME"
+echo "📁 Path: $W_WORKSPACE_PATH"
+echo "🏠 Root: $W_ROOT_PATH"
+
+# Install dependencies with pnpm
+if [[ -f pnpm-lock.yaml ]]; then
+    echo "📦 Installing dependencies with pnpm..."
+    pnpm install
+else
+    echo "⚠️  Warning: No pnpm-lock.yaml found"
+fi
+
+# Copy environment files
+echo "🔧 Copying environment files..."
+if ls "$W_ROOT_PATH/.env"* 1> /dev/null 2>&1; then
+    cp "$W_ROOT_PATH/.env"* .
+    echo "✓ Copied .env files"
+else
+    echo "⚠️  Warning: No .env files found at $W_ROOT_PATH/"
+fi
+
+# Copy .claude folder (MCP server configurations)
+if [[ -d "$W_ROOT_PATH/.claude" ]]; then
+    echo "🤖 Copying .claude folder..."
+    cp -r "$W_ROOT_PATH/.claude" .
+    echo "✓ Copied .claude/ folder"
+else
+    echo "⚠️  No .claude folder found in root repository"
+fi
+
+# Copy .planning folder
+echo "📋 Copying .planning/ folder..."
+if [ -d "$W_ROOT_PATH/.planning" ]; then
+    cp -r "$W_ROOT_PATH/.planning" .
+    echo "✓ Copied .planning/ folder"
+else
+    echo "⚠️  Warning: No .planning/ folder found at $W_ROOT_PATH/.planning"
+fi
+
+echo ""
+echo "✅ Worktree setup complete!"
+echo ""
+echo "💡 Next steps:"
+echo "   • Run 'pnpm dev' to start the dev server (port 9876)"
+echo "   • Run 'pnpm build' to build the project"
+echo "   • Run 'pnpm test' to run tests"
+echo ""

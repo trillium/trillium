@@ -1,0 +1,48 @@
+#!/bin/bash
+# setup-worktree-vmrs-monorep.sh — Worktree setup hook for VRMS (Volunteer Relationship
+# Management System).
+#
+# Created: 2025-10-20
+#
+# WHY
+#   VRMS is a Yarn monorepo with separate client/ and backend/ directories,
+#   each with their own .env files and node_modules. Worktrees need both
+#   sides set up independently.
+#
+# WHAT IT DOES
+#   1. Copies .env files into client/ and backend/
+#   2. Runs yarn install in client/
+#   3. Runs yarn install in backend/
+#
+# EXPECTS
+#   Environment variables set by the worktree tool:
+#     W_WORKSPACE_NAME — name of the worktree
+#     W_WORKSPACE_PATH — absolute path to the new worktree
+#     W_ROOT_PATH      — absolute path to the main checkout
+#
+# DEPENDENCIES
+#   - yarn
+
+set -e
+
+echo "🚀 Setting up worktree: $W_WORKSPACE_NAME"
+echo "📁 Path: $W_WORKSPACE_PATH"
+echo "🏠 Root: $W_ROOT_PATH"
+
+echo "🔧 Copying environment files to client/ and backend/..."
+cp "$W_ROOT_PATH/client/.env"* ./client/ 2>/dev/null || true
+cp "$W_ROOT_PATH/backend/.env"* ./backend/ 2>/dev/null || true
+
+# Install dependencies in client/
+if [ -d "client" ]; then
+    echo "📦 Installing dependencies in client/ with yarn..."
+    (cd client && yarn install)
+fi
+
+# Install dependencies in backend/
+if [ -d "backend" ]; then
+    echo "📦 Installing dependencies in backend/ with yarn..."
+    (cd backend && yarn install)
+fi
+
+echo "✅ Worktree setup complete!"

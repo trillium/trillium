@@ -1,0 +1,126 @@
+#!/bin/bash
+# setup-worktree-massage-tracker.sh — Worktree setup hook for massage-tracker.
+#
+# Created: 2026-01-14
+#
+# WHY
+#   massage-tracker is a pnpm + Prisma (SQLite) app. Worktrees need their own
+#   dependencies, .env files, database copies, planning docs, and .claude
+#   config. This script also assigns a unique dev server port per worktree
+#   (hash of workspace name) so multiple worktrees can run simultaneously.
+#
+# WHAT IT DOES
+#   1. Runs pnpm install
+#   2. Copies .env from root, assigns a unique PORT (base + hash offset)
+#   3. Copies planning/ folder
+#   4. Copies prisma/dev.db and prisma/test.db (SQLite databases)
+#   5. Copies .claude/ folder (MCP server config)
+#
+# EXPECTS
+#   Environment variables set by the worktree tool:
+#     W_WORKSPACE_NAME — name of the worktree
+#     W_WORKSPACE_PATH — absolute path to the new worktree
+#     W_ROOT_PATH      — absolute path to the main checkout
+#
+# DEPENDENCIES
+#   - pnpm
+
+set -e
+
+echo "🚀 Setting up worktree: $W_WORKSPACE_NAME"
+echo "📁 Path: $W_WORKSPACE_PATH"
+echo "🏠 Root: $W_ROOT_PATH"
+
+# Install dependencies with pnpm
+if [[ -f pnpm-lock.yaml ]]; then
+    echo "📦 Installing dependencies with pnpm..."
+    pnpm install
+else
+    echo "⚠️  Warning: No pnpm-lock.yaml found"
+fi
+
+# Copy environment files
+echo "🔧 Copying .env file..."
+if [ -f "$W_ROOT_PATH/.env" ]; then
+    cp "$W_ROOT_PATH/.env" .
+    echo "✓ Copied .env"
+
+    # Generate unique port based on workspace name hash
+    BASE_PORT=$(grep "^PORT=" "$W_ROOT_PATH/.env" | cut -d'=' -f2)
+    if [ ! -z "$BASE_PORT" ]; then
+        # Generate hash from workspace name and convert to offset (1-100)
+        HASH_VALUE=$(echo -n "$W_WORKSPACE_NAME" | cksum | cut -d' ' -f1)
+        PORT_OFFSET=$(( ($HASH_VALUE % 100) + 1 ))
+        NEW_PORT=$(( BASE_PORT + PORT_OFFSET ))
+
+        # Update PORT in the worktree's .env file
+        sed -i.bak "s/^PORT=.*/PORT=$NEW_PORT/" .env && rm .env.bak
+        echo "✓ Assigned unique port: $NEW_PORT (base $BASE_PORT + offset $PORT_OFFSET)"
+    fi
+else
+    echo "⚠️  Warning: No .env file found at $W_ROOT_PATH/.env"
+fi
+
+# No need to copy additional .env variants - we only use .env now
+
+# Copy planning folder
+echo "📋 Copying planning/ folder..."
+if [ -d "$W_ROOT_PATH/planning" ]; then
+    cp -r "$W_ROOT_PATH/planning" .
+    echo "✓ Copied planning/ folder"
+else
+    echo "⚠️  Warning: No planning/ folder found at $W_ROOT_PATH/planning"
+fi
+
+# Copy database files
+echo "🗄️  Copying database files..."
+if [ ! -d "prisma" ]; then
+    echo "⚠️  Warning: prisma/ directory doesn't exist yet (will be created by git)"
+fi
+
+if [ -f "$W_ROOT_PATH/prisma/dev.db" ]; then
+    # Create prisma directory if it doesn't exist
+    mkdir -p prisma
+
+    # Copy dev.db
+    cp "$W_ROOT_PATH/prisma/dev.db" ./prisma/dev.db
+    echo "✓ Copied prisma/dev.db ($(du -h "$W_ROOT_PATH/prisma/dev.db" | cut -f1))"
+
+    # Copy test.db if it exists
+    if [ -f "$W_ROOT_PATH/prisma/test.db" ]; then
+        cp "$W_ROOT_PATH/prisma/test.db" ./prisma/test.db
+        echo "✓ Copied prisma/test.db ($(du -h "$W_ROOT_PATH/prisma/test.db" | cut -f1))"
+    fi
+else
+    echo "⚠️  Warning: No database file found at $W_ROOT_PATH/prisma/dev.db"
+fi
+
+# Copy .claude folder (MCP server configurations)
+if [[ -d "$W_ROOT_PATH/.claude" ]]; then
+    echo "🤖 Copying .claude folder..."
+    cp -r "$W_ROOT_PATH/.claude" .
+    echo "✓ Copied .claude/ folder"
+else
+    echo "⚠️  No .claude folder found in root repository"
+fi
+
+echo ""
+echo "✅ Worktree setup complete!"
+echo ""
+
+# Extract PORT from .env file if it exists (fallback if not set earlier)
+if [ -z "$NEW_PORT" ]; then
+    NEW_PORT="6893"
+    if [ -f ".env" ]; then
+        PORT_LINE=$(grep "^PORT=" .env 2>/dev/null || true)
+        if [ ! -z "$PORT_LINE" ]; then
+            NEW_PORT=$(echo "$PORT_LINE" | cut -d'=' -f2)
+        fi
+    fi
+fi
+
+echo "💡 Next steps:"
+echo "   • Run 'pnpm dev' to start the dev server on port $NEW_PORT"
+echo "   • Run 'pnpm test' to run tests"
+echo "   • Database is ready at prisma/dev.db"
+echo ""

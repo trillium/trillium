@@ -1,0 +1,61 @@
+#!/bin/bash
+# notify-human — Send a message to Trillium via Telegram.
+#
+# Created: 2026-04-29
+# Bead:    ops-qt3o
+#
+# WHY
+#   Reusable notification primitive for any script or agent that needs to
+#   get a human's attention. Decouples "send a message" from the delivery
+#   mechanism so callers don't need to know about Telegram, tokens, or
+#   chat IDs. If the delivery method changes later, only this script needs
+#   to be updated.
+#
+# USAGE
+#   notify-human "something happened"
+#   echo "multiline message" | notify-human
+#
+# CONFIG
+#   Credentials are stored in macOS Keychain (service: "notify-human"):
+#     security add-generic-password -s notify-human -a TELEGRAM_BOT_TOKEN -w "<token>"
+#     security add-generic-password -s notify-human -a TELEGRAM_CHAT_ID -w "<chat-id>"
+#
+# CALLERS
+#   - ~/scripts/auto-rebase-prs.sh (PR rebase notifications)
+#   - Any future script/agent that needs human-in-the-loop alerting
+#
+# DEPENDENCIES
+#   - curl
+#   - macOS Keychain (security command)
+#   - A Telegram bot token (see @BotFather)
+
+set -euo pipefail
+
+TELEGRAM_BOT_TOKEN=$(security find-generic-password -s notify-human -a TELEGRAM_BOT_TOKEN -w 2>/dev/null) || {
+  echo "notify-human: TELEGRAM_BOT_TOKEN not found in Keychain. Add it with:" >&2
+  echo "  security add-generic-password -s notify-human -a TELEGRAM_BOT_TOKEN -w '<token>'" >&2
+  exit 1
+}
+
+TELEGRAM_CHAT_ID=$(security find-generic-password -s notify-human -a TELEGRAM_CHAT_ID -w 2>/dev/null) || {
+  echo "notify-human: TELEGRAM_CHAT_ID not found in Keychain. Add it with:" >&2
+  echo "  security add-generic-password -s notify-human -a TELEGRAM_CHAT_ID -w '<chat-id>'" >&2
+  exit 1
+}
+
+# Message from args or stdin
+if [[ $# -gt 0 ]]; then
+  MESSAGE="$*"
+else
+  MESSAGE=$(cat)
+fi
+
+if [[ -z "$MESSAGE" ]]; then
+  exit 0
+fi
+
+curl -sf "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+  -d chat_id="${TELEGRAM_CHAT_ID}" \
+  -d text="${MESSAGE}" \
+  -d parse_mode=Markdown \
+  > /dev/null

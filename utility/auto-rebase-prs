@@ -1,0 +1,121 @@
+#!/bin/bash
+# auto-rebase-prs.sh — Keep open PRs current across all GitHub repos.
+#
+# Created: 2026-04-29
+# Bead:    ops-qt3o
+#
+# WHY
+#   As an external contributor with PRs on fast-moving repos (e.g. gascity,
+#   VRMS), upstream main drifts constantly. Reviewers shouldn't have to worry
+#   about merge conflicts — that's our problem. This script detects when
+#   upstream moves, syncs our fork, attempts a server-side rebase on each
+#   open PR, and notifies via Telegram so we can handle conflicts manually
+#   when the API can't.
+#
+# HOW IT WORKS
+#   1. Refreshes the list of our open PRs across all of GitHub (cached 30 min)
+#   2. For each upstream repo (skipping our own repos):
+#      a. Detects the default branch (cached per-repo, one API call ever)
+#      b. Polls the repo's Atom feed for the latest commit SHA (no API auth,
+#         no rate limit — github.com/<repo>/commits/<branch>.atom)
+#      c. Compares to the cached SHA — skips if unchanged
+#      d. On change: syncs our fork's main via merge-upstream API
+#      e. Attempts server-side rebase on each PR via update-branch API
+#      f. Sends a Telegram notification listing affected PRs
+#
+# LIMITATIONS
+#   - Server-side rebase (step 2e) requires maintainer access. For repos
+#     where we're an external contributor, it logs CONFLICT and we rebase
+#     locally. The notification (step 2f) still fires so we know to act.
+#   - Atom feed parsing is fragile (grep/sed on XML). If GitHub changes the
+#     feed format, SHA detection breaks silently (logged as WARN).
+#
+# DEPENDENCIES
+#   - gh (GitHub CLI, authenticated)
+#   - jq
+#   - curl
+#   - ~/scripts/notify-human (Telegram notifications, config at
+#     ~/.config/notify-human/config)
+#
+# SCHEDULE
+#   LaunchAgent: com.trillium.auto-rebase (every 10 minutes)
+#   Plist:       ~/Library/LaunchAgents/com.trillium.auto-rebase.plist
+#   Logs:        ~/.cache/auto-rebase/auto-rebase.log
+#                ~/.cache/auto-rebase/launchd-{stdout,stderr}.log
+
+set -euo pipefail
+
+CACHE_DIR="${HOME}/.cache/auto-rebase"
+mkdir -p "$CACHE_DIR"
+LOG="${CACHE_DIR}/auto-rebase.log"
+
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG"; }
+notify() { ~/scripts/notify-human "$*" 2>/dev/null || true; }
+
+# Refresh PR list every 30 minutes
+PR_CACHE="${CACHE_DIR}/open-prs.json"
+PR_MAX_AGE=1800
+if [[ ! -f "$PR_CACHE" ]] || [[ $(( $(date +%s) - $(stat -f %m "$PR_CACHE") )) -gt $PR_MAX_AGE ]]; then
+  gh search prs --author=trillium --state=open --json repository,number,title > "$PR_CACHE"
+  log "Refreshed PR list: $(jq length "$PR_CACHE") open PRs"
+fi
+
+# Get unique upstream repos (exclude own forks — those don't need rebase)
+REPOS=$(jq -r '.[].repository.nameWithOwner' "$PR_CACHE" | sort -u)
+
+for repo in $REPOS; do
+  owner=$(echo "$repo" | cut -d/ -f1)
+
+  # Skip PRs on own repos — no upstream to drift from
+  if [[ "$owner" == "trillium" ]]; then
+    continue
+  fi
+
+  # Determine default branch (cached per repo)
+  branch_file="${CACHE_DIR}/$(echo "$repo" | tr '/' '_').branch"
+  if [[ -f "$branch_file" ]]; then
+    default_branch=$(cat "$branch_file")
+  else
+    default_branch=$(gh api "repos/${repo}" --jq '.default_branch' 2>/dev/null || echo "main")
+    echo "$default_branch" > "$branch_file"
+  fi
+
+  # Check current SHA via Atom feed (no API auth, no rate limit)
+  sha_file="${CACHE_DIR}/$(echo "$repo" | tr '/' '_').sha"
+  current_sha=$(curl -sf "https://github.com/${repo}/commits/${default_branch}.atom" | grep -m1 'Grit::Commit/' | sed 's|.*Grit::Commit/||;s|<.*||' || echo "")
+
+  if [[ -z "$current_sha" ]]; then
+    log "WARN: could not fetch main SHA for ${repo}"
+    continue
+  fi
+
+  # Compare to cached SHA
+  previous_sha=""
+  [[ -f "$sha_file" ]] && previous_sha=$(cat "$sha_file")
+
+  if [[ "$current_sha" == "$previous_sha" ]]; then
+    continue
+  fi
+
+  # Main moved — update cache and notify
+  echo "$current_sha" > "$sha_file"
+  log "CHANGE: ${repo} main moved to ${current_sha:0:8}"
+  pr_list=$(jq -r ".[] | select(.repository.nameWithOwner == \"${repo}\") | \"#\(.number) \(.title)\"" "$PR_CACHE" | tr '\n' ', ')
+  notify "🔄 *${repo}* main moved. Your open PRs may need rebase: ${pr_list%,}"
+
+  # Sync fork main if we have a fork
+  fork_check=$(gh api "repos/trillium/$(basename "$repo")" --jq '.fork' 2>/dev/null || echo "false")
+  if [[ "$fork_check" == "true" ]]; then
+    gh api "repos/trillium/$(basename "$repo")/merge-upstream" -f branch="$default_branch" > /dev/null 2>&1 && \
+      log "SYNC: trillium/$(basename "$repo") main synced" || \
+      log "WARN: failed to sync trillium/$(basename "$repo")"
+  fi
+
+  # Rebase each open PR on this repo
+  pr_numbers=$(jq -r ".[] | select(.repository.nameWithOwner == \"${repo}\") | .number" "$PR_CACHE")
+  for pr in $pr_numbers; do
+    result=$(gh api "repos/${repo}/pulls/${pr}/update-branch" -f update_method=rebase 2>&1) && \
+      log "REBASE: ${repo}#${pr} rebased" || \
+      log "CONFLICT: ${repo}#${pr} rebase failed — $(echo "$result" | head -1)"
+  done
+done
