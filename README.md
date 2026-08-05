@@ -4,6 +4,7 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
+    <li><a href="#get-in-touch">📬 Get in touch</a></li>
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
@@ -45,6 +46,19 @@ I build robust, scalable web applications as well as fun one-offs and tiny tools
 I enjoy getting into the knitty gritty of elusive bugs and errors, taking a larger scoped view to help design and architect systems, or finding the exact right css to make a website really shine.
 
 Outside of software development work, I'm an avid social dancer, massage therapist, and espresso enthusiast.
+
+<!-- CONTACT CTA (top) -->
+<a id="get-in-touch"></a>
+
+### 📬 Get in touch
+
+**Email is the fastest way to reach me.** Open to roles, collaborations, and open source work.
+
+<div>
+<a href="mailto:trillium@trilliumsmith.com"><img src="https://img.shields.io/badge/Email-trillium%40trilliumsmith.com-f40082?style=for-the-badge&logo=maildotru&logoColor=white" alt="Email trillium@trilliumsmith.com" /></a>
+<a href="https://linkedin.com/in/trilliumsmith"><img src="https://img.shields.io/badge/LinkedIn-trilliumsmith-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn: trilliumsmith" /></a>
+<a href="https://trilliumsmith.com"><img src="https://img.shields.io/badge/Portfolio-trilliumsmith.com-ffd200?style=for-the-badge&logo=firefoxbrowser&logoColor=282a36" alt="Portfolio: trilliumsmith.com" /></a>
+</div>
 
 <p>
 <img src="https://trillium-github-readme-stats.vercel.app/api/?username=trillium&show_icons=true&count_private=true&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10&rank_icon=github&include_all_commits=true" height="192" />
@@ -254,9 +268,20 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Trillium Smith - [@your_twitter](https://twitter.com/your_username) - Trillium@trilliumsmith.com
+**Email is the fastest way to reach me.** Open to roles, collaborations, and open source work — say hi and I'll get back to you.
 
-Project Link: [https://github.com/trillium/trillium](https://github.com/trillium/trillium)
+<div>
+<a href="mailto:trillium@trilliumsmith.com"><img src="https://img.shields.io/badge/Email-trillium%40trilliumsmith.com-f40082?style=for-the-badge&logo=maildotru&logoColor=white" alt="Email trillium@trilliumsmith.com" /></a>
+<a href="https://linkedin.com/in/trilliumsmith"><img src="https://img.shields.io/badge/LinkedIn-trilliumsmith-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn: trilliumsmith" /></a>
+<a href="https://trilliumsmith.com"><img src="https://img.shields.io/badge/Portfolio-trilliumsmith.com-ffd200?style=for-the-badge&logo=firefoxbrowser&logoColor=282a36" alt="Portfolio: trilliumsmith.com" /></a>
+</div>
+
+|           |                                                                     |
+| --------- | ------------------------------------------------------------------- |
+| Email     | [trillium@trilliumsmith.com](mailto:trillium@trilliumsmith.com)      |
+| LinkedIn  | [linkedin.com/in/trilliumsmith](https://linkedin.com/in/trilliumsmith) |
+| Portfolio | [trilliumsmith.com](https://trilliumsmith.com)                       |
+| GitHub    | [github.com/trillium](https://github.com/trillium)                   |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
