@@ -1,21 +1,29 @@
 ---
 name: fleet
-description: Read, search, copy, or run commands against files on Trillium's other machines (macbook, mini2, mini3) over SSH/Tailscale. Use whenever the user asks to look at, fetch, or interact with something that lives on another machine in the fleet.
+description: Read, search, copy, or run commands against files on any machine in Trillium's fleet (mini1, mini2, mini3, macbook) over SSH/Tailscale. Use whenever the user asks to look at, fetch, or interact with something that lives on another machine in the fleet.
 ---
 
-# Fleet: working with files on other machines
+# Fleet: working with files across machines
 
-All machines share one Tailscale tailnet with passwordless SSH aliases,
-managed by the `fleet-ssh-sync` block in `~/.ssh/config` (never hand-edit
-that block):
+This skill is distributed to every machine in the fleet — the table below is
+the complete fleet, including whichever machine you are running on. All
+machines share one Tailscale tailnet with passwordless SSH aliases, managed
+by the `fleet-ssh-sync` block in `~/.ssh/config` (never hand-edit that
+block):
 
 | Alias     | Machine           | SSH user      |
 | --------- | ----------------- | ------------- |
-| `macbook` | MacBook Pro       | trilliumsmith |
+| `mini1`   | Mac mini 1        | mini1         |
 | `mini2`   | Mac mini 2        | mini2         |
 | `mini3`   | Mac mini 3 (2020) | 2020mini_2    |
+| `macbook` | MacBook Pro       | trilliumsmith |
 
-Check liveness first if unsure: `tailscale status` (macOS CLI may be at
+**Identify yourself first**: `hostname` (or `whoami`) tells you which row
+you are. When the target is the machine you are already on, work locally
+with normal tools — don't SSH to yourself; the local `fleet-ssh-sync` block
+may not even define a self-alias.
+
+Check peer liveness if unsure: `tailscale status` (macOS CLI may be at
 `/Applications/Tailscale.app/Contents/MacOS/Tailscale`).
 
 ## Recipes

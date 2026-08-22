@@ -11,13 +11,16 @@ Directing one machine to interact with files on another is a frequent
 request; the `fleet` skill (`.claude/skills/fleet/`) has the full recipes
 and caveats. The short version: all machines are on one Tailscale tailnet,
 with SSH aliases managed by the `fleet-ssh-sync` block in `~/.ssh/config`
-on each node:
+on each node. The table is the complete fleet, including the machine you
+are on (`hostname` tells you which); work locally when the target is
+yourself:
 
 | Alias     | Machine          | SSH user      |
 | --------- | ---------------- | ------------- |
-| `macbook` | MacBook Pro      | trilliumsmith |
+| `mini1`   | Mac mini 1       | mini1         |
 | `mini2`   | Mac mini 2       | mini2         |
 | `mini3`   | Mac mini 3 (2020)| 2020mini_2    |
+| `macbook` | MacBook Pro      | trilliumsmith |
 
 `ssh macbook '<command>'` and `scp macbook:path localpath` work directly —
 keys are already in place, no password prompts. Check peer liveness with
