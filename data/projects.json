@@ -1,0 +1,183 @@
+{
+  "_readme": "Project showcase registry. Set `featured: true` to show a project on the profile README, `false` to bench it. Order in this array = display order. Run `node scripts/generate-readme.js` (or let the GitHub Action do it) to re-render README.md. `image` is optional — projects without one render text-only.",
+  "portfolio": {
+    "id": "portfolio",
+    "name": "www.trilliumsmith.com",
+    "links": [
+      { "label": "Repo", "url": "https://github.com/trillium/trilliumsmith.com" },
+      { "label": "Live Site", "url": "https://trilliumsmith.com" }
+    ],
+    "image": {
+      "alt": "Screenshot of trilliumsmith.com",
+      "light": "https://github.com/user-attachments/assets/e9bc6e54-96fa-4fd7-877f-e7ab95898387",
+      "dark": "https://github.com/user-attachments/assets/d773d9e0-25b6-4888-9594-369cfaa8c9e4",
+      "href": "https://trilliumsmith.com"
+    },
+    "description": [],
+    "stack": [
+      { "name": "TypeScript", "url": "https://www.typescriptlang.org/" },
+      { "name": "NextJs", "url": "https://nextjs.org/" },
+      { "name": "Tailwind.css", "url": "https://tailwindcss.com/" },
+      { "name": "Netlify", "url": "https://www.netlify.com/" }
+    ]
+  },
+  "projects": [
+    {
+      "id": "parlay",
+      "featured": true,
+      "name": "Parlay",
+      "role": "Creator",
+      "links": [
+        { "label": "Repo", "url": "https://github.com/trillium/parlay" },
+        { "label": "Blog Post", "url": "https://trilliumsmith.com/blog/parlay-a-chat-server-for-your-ai-agents" }
+      ],
+      "description": [
+        "Parlay is a small event-driven command server for AI agents — talk to your background coding agents from your phone. Every long-running agent gets its own chat channel, with voice-first control and durable identity across restarts.",
+        "Built to scratch my own itch: orchestrating fleets of coding agents by voice while away from the keyboard."
+      ],
+      "stack": [
+        { "name": "Go", "url": "https://go.dev/" }
+      ]
+    },
+    {
+      "id": "awesome-talon",
+      "featured": true,
+      "name": "Awesome Talon",
+      "role": "Creator",
+      "links": [
+        { "label": "Repo", "url": "https://github.com/trillium/awesome-talon" },
+        { "label": "Live Site", "url": "https://awesome-talon.vercel.app" }
+      ],
+      "description": [
+        "A curated directory of Talon Voice resources, plus a website with a command search engine indexed across community Talon repos. I code by voice, and this makes the ecosystem discoverable for everyone else who does too."
+      ],
+      "stack": [
+        { "name": "NextJs", "url": "https://nextjs.org/" },
+        { "name": "TypeScript", "url": "https://www.typescriptlang.org/" },
+        { "name": "Vercel", "url": "https://vercel.com/" }
+      ]
+    },
+    {
+      "id": "zed-cursorless",
+      "featured": true,
+      "name": "Zed × Cursorless",
+      "role": "Systems Integration",
+      "links": [
+        { "label": "Zed Fork", "url": "https://github.com/trillium/zed" },
+        { "label": "Cursorless Fork", "url": "https://github.com/trillium/cursorless" }
+      ],
+      "description": [
+        "Bringing Cursorless voice-coding to the Zed editor: a decoration-rendering API added to Zed in Rust for cursorless hat overlays, a WASM adapter bridging the Cursorless engine to Zed, and new engine-wrapper packages in the Cursorless monorepo."
+      ],
+      "stack": [
+        { "name": "Rust", "url": "https://www.rust-lang.org/" },
+        { "name": "WASM", "url": "https://webassembly.org/" },
+        { "name": "TypeScript", "url": "https://www.typescriptlang.org/" }
+      ]
+    },
+    {
+      "id": "trillium-massage",
+      "featured": true,
+      "name": "Trillium Massage",
+      "role": "Creator",
+      "links": [
+        { "label": "Repo", "url": "https://github.com/trillium/massage" },
+        { "label": "Live Site", "url": "https://trilliummassage.la/" }
+      ],
+      "image": {
+        "alt": "Trillium Massage site screenshot",
+        "light": "https://github.com/trillium/trillium/assets/5898009/83519a1b-86fc-4662-ae97-bd37af78f2e9",
+        "dark": "https://github.com/trillium/trillium/assets/5898009/2953e699-1f0d-4041-bb04-1ded74260e64",
+        "href": "https://trilliummassage.la/"
+      },
+      "description": [
+        "A scheduling tool built in TypeScript that lets clients book appointments with a service provider, coach, or business owner. Integrates with the Google Calendar API and Gmail API for up-to-date booking information, and works for both in-person and online meetings — a simpler, more customizable Calendly alternative."
+      ],
+      "stack": [
+        { "name": "NextJs", "url": "https://nextjs.org/" },
+        { "name": "TypeScript", "url": "https://www.typescriptlang.org/" },
+        { "name": "Tailwind.css", "url": "https://tailwindcss.com/" },
+        { "name": "Vercel", "url": "https://vercel.com/" },
+        { "name": "Redux", "url": "https://redux.js.org/" }
+      ]
+    },
+    {
+      "id": "vrms",
+      "featured": false,
+      "name": "VRMS",
+      "role": "Lead Developer",
+      "links": [
+        { "label": "Repo", "url": "https://github.com/hackforla/VRMS/" },
+        { "label": "Live Site", "url": "https://www.vrms.io/" }
+      ],
+      "image": {
+        "alt": "VRMS site screenshot",
+        "light": "https://github.com/trillium/trillium/assets/5898009/feb1b3fc-04f3-4dd5-ab0d-9956e1423140",
+        "href": "https://www.vrms.io/"
+      },
+      "description": [
+        "As the lead developer of the Volunteer Resource Management System (VRMS), I oversee the strategic enhancement and modernization of this legacy application to align with contemporary application architecture standards. Constructed using Create React App for the frontend and an Express backend hosted on AWS, VRMS has undergone consistent refinement and growth since its inception in 2019. My responsibilities encompass delineating the technical direction, crafting software architecture, code composition and review, team management, and assuring the application's quality through rigorous testing measures."
+      ],
+      "stack": [
+        { "name": "React", "url": "https://react.dev/" },
+        { "name": "Vite", "url": "https://vite.dev" },
+        { "name": "ExpressJS", "url": "https://expressjs.com/" },
+        { "name": "MongoDB", "url": "https://www.mongodb.com/" },
+        { "name": "Docker", "url": "https://www.docker.com/" },
+        { "name": "AWS ECS", "url": "https://aws.amazon.com/ecs/" },
+        { "name": "GitHub Actions", "url": "https://github.com/features/actions" }
+      ]
+    },
+    {
+      "id": "fridge-finder",
+      "featured": false,
+      "name": "Fridge Finder",
+      "role": "Contributor",
+      "links": [
+        { "label": "Org", "url": "https://github.com/CollectiveFocus" },
+        { "label": "Live Site", "url": "https://fridgefinder.app/" }
+      ],
+      "image": {
+        "alt": "Fridge Finder screenshot",
+        "light": "https://github.com/trillium/trillium/assets/5898009/7f768fd5-effc-4724-b024-c00a21502e12",
+        "href": "https://fridgefinder.app/"
+      },
+      "description": [
+        "Fridge Finder is a web app aggregating information on food donation fridges. Businesses and individuals can donate perishable food, allowing those of us who are food insecure to be able to get quality nourishment.",
+        "Made with a team of skilled developers, project managers, UI designers, and UX researchers, this project is the crystallization of months of research and development. I've had the luxury of assisting in Front End Development, Dev Ops, and QA testing roles for this project."
+      ],
+      "stack": [
+        { "name": "AWS", "url": "https://aws.amazon.com/" },
+        { "name": "Swagger Open API", "url": "https://swagger.io/specification/" },
+        { "name": "NextJs", "url": "https://nextjs.org/" },
+        { "name": "MaterialUI", "url": "https://mui.com/" },
+        { "name": "Docker", "url": "https://www.docker.com/" },
+        { "name": "GitHub Actions", "url": "https://github.com/features/actions" }
+      ]
+    },
+    {
+      "id": "kwdz",
+      "featured": false,
+      "name": "Kwdz.app",
+      "role": "Creator",
+      "links": [
+        { "label": "Repo", "url": "https://github.com/trillium/kwdz" },
+        { "label": "Live Site", "url": "https://kwdz.app/" }
+      ],
+      "image": {
+        "alt": "Kwdz.app screenshot",
+        "light": "https://github.com/trillium/trillium/assets/5898009/62ec4930-edfe-4d55-885c-0a1f111582e4",
+        "dark": "https://github.com/trillium/trillium/assets/5898009/3ad389c7-5ac7-4480-aaf7-b437e5369617",
+        "href": "https://kwdz.app/"
+      },
+      "description": [
+        "Kwdz.app is a blogging productivity tool that counts the number of occurrences of keywords within an article or blog post. The tool is simple, versatile, and lightweight, utilizing query strings to store keywords themselves rather than hanging onto user data. This project was originally intended to be an inhouse tool with a very barebones version built, but was later adapted to be more user friendly. Usability features were added such as creating keyword groups, and adding a hotkey accessible command bar."
+      ],
+      "stack": [
+        { "name": "NextJs", "url": "https://nextjs.org/" },
+        { "name": "MaterialUI", "url": "https://mui.com/" },
+        { "name": "Netlify", "url": "https://www.netlify.com/" }
+      ]
+    }
+  ]
+}
