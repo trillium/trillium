@@ -5,10 +5,13 @@ onboarding lives in `SETUP.md`; the full project inventory lives in
 `PROJECTS.md`. Keep entries here concise and point to authoritative files
 rather than duplicating them.
 
-## Reaching other machines (SSH over Tailscale)
+## Reaching other machines (SSH over Tailscale) — common ask
 
-All machines are on one Tailscale tailnet, with SSH aliases managed by the
-`fleet-ssh-sync` block in `~/.ssh/config` on each node:
+Directing one machine to interact with files on another is a frequent
+request; the `fleet` skill (`.claude/skills/fleet/`) has the full recipes
+and caveats. The short version: all machines are on one Tailscale tailnet,
+with SSH aliases managed by the `fleet-ssh-sync` block in `~/.ssh/config`
+on each node:
 
 | Alias     | Machine          | SSH user      |
 | --------- | ---------------- | ------------- |
@@ -22,7 +25,7 @@ keys are already in place, no password prompts. Check peer liveness with
 `/Applications/Tailscale.app/Contents/MacOS/Tailscale` on macOS). Do not
 hand-edit the fleet-ssh-sync block; it is overwritten by the sync tool.
 
-## The rowing tool (`row`) — common ask
+## The rowing tool (`row`)
 
 The rowing tracker CLI **is part of the row_tracker repo**
 (github.com/trillium/row_tracker). It lives on the MacBook:
