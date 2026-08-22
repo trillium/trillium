@@ -120,6 +120,12 @@ _Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang
 _For more examples, please refer to the [Portfolio](https://trilliumsmith.com)_
 <!-- PROJECT-LIST:END -->
 
+## 🚣 Rowing
+
+The last year on the water and the scope of my current streak — generated daily from my [row_tracker](https://github.com/trillium/row_tracker) log:
+
+<img src="images/rowing.svg" alt="Animated heatmap of the last 365 days of rowing, with the current streak span highlighted" />
+
 ## 📊 Stats & Technologies
 
 <p>
