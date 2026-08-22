@@ -11,9 +11,18 @@ Lately my work centers on voice-driven development and AI agent tooling — I co
 
 Outside of software development work, I'm an avid social dancer, massage therapist, and espresso enthusiast.
 
-### 📬 Get in touch
+### 📅 Get in touch — schedule time with me
 
-**Email is the fastest way to reach me.** Open to roles, collaborations, and open source work.
+**The fastest way to connect is to [book time directly](https://cal.com/trillium/) at [cal.com/trillium](https://cal.com/trillium/).** I'm open to sessions for:
+
+<div>
+<a href="https://cal.com/trillium/120m-pair"><img src="https://img.shields.io/badge/Paired_Programming-f40082?style=for-the-badge&logo=caldotcom&logoColor=white" alt="Book a paired programming session" /></a>
+<a href="https://cal.com/trillium/"><img src="https://img.shields.io/badge/Agentic_Orchestration-282a36?style=for-the-badge&logo=caldotcom&logoColor=ffd200" alt="Book time to talk agentic orchestration" /></a>
+<a href="https://cal.com/trillium/"><img src="https://img.shields.io/badge/Voice_Accessibility_Assistance-ffd200?style=for-the-badge&logo=caldotcom&logoColor=282a36" alt="Book voice accessibility assistance" /></a>
+<a href="https://cal.com/trillium/"><img src="https://img.shields.io/badge/Consulting-f40082?style=for-the-badge&logo=caldotcom&logoColor=white" alt="Book a consulting session" /></a>
+</div>
+
+Prefer async? Reach me here:
 
 <div>
 <a href="mailto:trillium@trilliumsmith.com"><img src="https://img.shields.io/badge/Email-trillium%40trilliumsmith.com-f40082?style=for-the-badge&logo=maildotru&logoColor=white" alt="Email trillium@trilliumsmith.com" /></a>
@@ -123,10 +132,11 @@ Technologies I work with:
 
 ## Contact
 
-**Email is the fastest way to reach me.** Open to roles, collaborations, and open source work — say hi and I'll get back to you.
+**The fastest way to connect is to [schedule time with me](https://cal.com/trillium/)** — paired programming, agentic orchestration, voice accessibility assistance, or consulting. Also open to roles, collaborations, and open source work.
 
 |           |                                                                     |
 | --------- | ------------------------------------------------------------------- |
+| Schedule  | [cal.com/trillium](https://cal.com/trillium/)                        |
 | Email     | [trillium@trilliumsmith.com](mailto:trillium@trilliumsmith.com)      |
 | LinkedIn  | [linkedin.com/in/trilliumsmith](https://linkedin.com/in/trilliumsmith) |
 | Portfolio | [trilliumsmith.com](https://trilliumsmith.com)                       |
