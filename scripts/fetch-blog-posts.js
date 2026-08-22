@@ -82,6 +82,17 @@ async function main() {
     recentPosts: posts.slice(0, 10),
     totalPosts: posts.length,
   };
+
+  // Keep the previous `updated` timestamp when the posts themselves are unchanged,
+  // so the daily workflow run doesn't produce a commit just for a new timestamp.
+  if (fs.existsSync(OUT_FILE)) {
+    const previous = JSON.parse(fs.readFileSync(OUT_FILE, 'utf8'));
+    const unchanged =
+      JSON.stringify({ ...previous, updated: null }) === JSON.stringify({ ...output, updated: null });
+    if (unchanged) {
+      output.updated = previous.updated;
+    }
+  }
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
   fs.writeFileSync(OUT_FILE, JSON.stringify(output, null, 2) + '\n');
   console.log(`✓ Wrote ${path.relative(process.cwd(), OUT_FILE)}`);
