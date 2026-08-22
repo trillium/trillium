@@ -126,6 +126,8 @@ The last year on the water and the scope of my current streak — generated dail
 
 <img src="images/rowing.svg" alt="Animated heatmap of the last 365 days of rowing, with the current streak span highlighted" />
 
+<img src="images/rowing-runner.svg" alt="Row Runner: a side-scroller of the last 90 days — the rower rides the pace line while each day's +/~/- glyph scrolls past" />
+
 ## 📊 Stats & Technologies
 
 <p>

@@ -29,8 +29,10 @@ jobs:
       - name: Fetch blog posts from RSS
         run: node scripts/fetch-blog-posts.js
 
-      - name: Generate rowing activity SVG
-        run: node scripts/generate-rowing-svg.js
+      - name: Generate rowing activity SVGs
+        run: |
+          node scripts/generate-rowing-svg.js
+          node scripts/generate-rowing-runner-svg.js
 
       - name: Regenerate README sections and BLOG.md
         run: node scripts/generate-readme.js
@@ -39,7 +41,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md BLOG.md data/blog-posts.json images/rowing.svg
+          git add README.md BLOG.md data/blog-posts.json images/rowing.svg images/rowing-runner.svg
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

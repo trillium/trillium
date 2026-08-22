@@ -1,165 +1,20 @@
 #!/usr/bin/env node
 // Generates images/rowing.svg — an animated heatmap of the last year of rowing,
-// with the most recent streak's span highlighted. Day statuses (rowed / covered
-// rest / missed) are computed the same way `row --dry` does, via the rest-day
-// bank streak rule ported from row_tracker's row.sh (the authority on the rule).
+// with the most recent streak's span highlighted. Day statuses come from
+// scripts/lib/rowing-data.js (rest-day bank rule ported from row.sh).
 // Run by .github/workflows/sync-profile.yml; locally: node scripts/generate-rowing-svg.js
 // Options: --today=YYYY-MM-DD (default: today in America/Los_Angeles)
 //          --rows-file=path   (default: fetch from the row_tracker repo)
 
 const fs = require('fs');
 const path = require('path');
+const {
+  parseDay, dayISO, addDays, diffDays, todayLA, fmtShort,
+  computeStats, loadDays, parseArgs, PALETTE: C,
+} = require('./lib/rowing-data');
 
-const ROWS_URL = 'https://raw.githubusercontent.com/trillium/row_tracker/main/rows.txt';
 const OUT_FILE = path.join(__dirname, '..', 'images', 'rowing.svg');
 const YEAR_WINDOW = 365;
-
-// --- Date helpers (all math on UTC-noon Date objects to dodge DST) ---
-
-function parseDay(iso) {
-  return new Date(`${iso}T12:00:00Z`);
-}
-function dayISO(d) {
-  return d.toISOString().slice(0, 10);
-}
-function addDays(d, n) {
-  return new Date(d.getTime() + n * 86400000);
-}
-function diffDays(a, b) {
-  return Math.round((a - b) / 86400000);
-}
-function todayLA() {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles' }).format(new Date());
-}
-function fmtShort(iso) {
-  return parseDay(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
-}
-
-// --- Log parsing ---
-
-function parseRows(text) {
-  const days = new Map();
-  for (const line of text.split('\n')) {
-    const s = line.trim();
-    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
-      const d = s.slice(0, 10);
-      days.set(d, (days.get(d) || 0) + 1);
-    }
-  }
-  return days;
-}
-
-// --- Streak walk (port of the rest-day bank rule in row.sh) ---
-// Walks the whole log, recording a status for every day in the trailing-year
-// window and the span of the most recent streak (current if alive, otherwise
-// the last completed one).
-
-function computeStats(days, asOfISO) {
-  const asOf = parseDay(asOfISO);
-  const windowStart = addDays(asOf, -(YEAR_WINDOW - 1));
-
-  const st = { ds: 0, rs: 0, bank: 0, prevCred: 0, curCred: 0, year: null };
-  const status = new Map(); // iso -> {status, count}
-  let streakStart = null;   // start of the streak currently being walked
-  let lastStreak = null;    // most recently *completed* streak {start, end, ds, rs}
-  let lastStepped = null;   // last day fed through step()
-
-  function yearReset(y) {
-    if (st.year !== null && y !== st.year) {
-      if (st.ds > 0) lastStreak = { start: streakStart, end: lastStepped, ds: st.ds, rs: st.rs };
-      st.ds = st.rs = st.bank = st.prevCred = st.curCred = 0;
-      streakStart = null;
-    }
-    st.year = y;
-  }
-
-  function step(d, count) {
-    if (count > 0) {
-      if (st.ds === 0) {
-        st.ds = 1;
-        st.rs = count;
-        st.bank = st.prevCred + count - 1;
-        st.curCred = count - 1;
-        st.prevCred = 0;
-        streakStart = d;
-      } else {
-        st.ds += 1;
-        st.rs += count;
-        st.bank += count - 1;
-        st.curCred += count - 1;
-      }
-    } else if (st.ds > 0 && st.bank > 0) {
-      st.bank -= 1;
-      st.ds += 1;
-    } else {
-      if (st.ds > 0) {
-        st.prevCred = st.curCred;
-        st.curCred = 0;
-        lastStreak = { start: streakStart, end: lastStepped, ds: st.ds, rs: st.rs };
-      }
-      st.ds = st.rs = st.bank = 0;
-      streakStart = null;
-    }
-    lastStepped = d;
-  }
-
-  function visit(d, count) {
-    yearReset(dayISO(d).slice(0, 4));
-    if (d >= windowStart && d <= asOf) {
-      const s = count > 0 ? 'rowed' : (st.ds > 0 && st.bank > 0 ? 'rest' : 'missed');
-      status.set(dayISO(d), { status: s, count });
-    }
-    step(d, count);
-  }
-
-  const sorted = [...days.keys()].sort();
-  let prev = null;
-  for (const iso of sorted) {
-    const d = parseDay(iso);
-    if (d > asOf) break;
-    if (prev !== null) {
-      for (let g = addDays(prev, 1); g < d; g = addDays(g, 1)) visit(g, 0);
-    }
-    visit(d, days.get(iso));
-    prev = d;
-  }
-  // Like row.sh, the as-of day itself is not stepped as a miss when it has no
-  // rows — the day isn't over yet.
-  if (prev !== null) {
-    for (let g = addDays(prev, 1); g < asOf; g = addDays(g, 1)) visit(g, 0);
-    if (prev < asOf) status.set(asOfISO, { status: 'pending', count: 0 });
-  }
-
-  const current = st.ds > 0 ? { start: streakStart, end: lastStepped, ds: st.ds, rs: st.rs } : null;
-  const streak = current || lastStreak;
-
-  let windowRows = 0, windowDaysRowed = 0;
-  for (const [, info] of status) {
-    if (info.count > 0) {
-      windowRows += info.count;
-      windowDaysRowed += 1;
-    }
-  }
-
-  return {
-    asOfISO,
-    windowStart: dayISO(windowStart),
-    windowRows,
-    windowDaysRowed,
-    streak,
-    streakActive: current !== null,
-    bank: st.bank,
-    status,
-  };
-}
-
-// --- SVG rendering ---
-
-const C = {
-  bg: '#282a36', border: '#ffd200', title: '#f40082', text: '#f8f8f2',
-  muted: '#9ba0b0', empty: '#363949', green1: '#2f9e4f', green2: '#50fa7b',
-  yellow: '#ffd200', streak: '#f40082',
-};
 
 function renderSVG(s) {
   const cell = 8, pitch = 10, x0 = 16, gridY = 66;
@@ -246,30 +101,11 @@ function renderSVG(s) {
 `;
 }
 
-// --- Main ---
-
 async function main() {
-  const args = Object.fromEntries(
-    process.argv.slice(2).filter((a) => a.startsWith('--')).map((a) => {
-      const [k, v] = a.replace(/^--/, '').split('=');
-      return [k, v ?? true];
-    })
-  );
-
-  let text;
-  if (args['rows-file']) {
-    text = fs.readFileSync(args['rows-file'], 'utf8');
-  } else {
-    const resp = await fetch(ROWS_URL);
-    if (!resp.ok) throw new Error(`Failed to fetch rows.txt: ${resp.status} ${resp.statusText}`);
-    text = await resp.text();
-  }
-
-  const days = parseRows(text);
-  if (days.size === 0) throw new Error('Parsed 0 rowing entries — log format may have changed.');
-
+  const args = parseArgs(process.argv.slice(2));
+  const days = await loadDays(args);
   const asOf = args.today || todayLA();
-  const stats = computeStats(days, asOf);
+  const stats = computeStats(days, asOf, YEAR_WINDOW);
   const sk = stats.streak
     ? `${stats.streakActive ? 'current' : 'last'} streak ${stats.streak.ds}d/${stats.streak.rs}r from ${dayISO(stats.streak.start)} (bank ${stats.bank})`
     : 'no streak';
