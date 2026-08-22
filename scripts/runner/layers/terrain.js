@@ -1,5 +1,6 @@
 // Terrain layer: the pace-standing line the character rides — area fill,
-// polyline, streak-span overlay, and the fixed "on pace" reference line.
+// polyline, streak-span glow (a wide blurred stroke UNDER the line, so the
+// green data line stays visible), and the fixed "on pace" reference line.
 
 module.exports = {
   name: 'terrain',
@@ -10,13 +11,13 @@ module.exports = {
     const terrain = days.map((d) => `${xOf(d.i)},${yOf(d.standing).toFixed(1)}`).join(' ');
     const area = `M ${xOf(0)} ${yBot + 8} L ${terrain.replace(/ /g, ' L ')} L ${xOf(lastI)} ${yBot + 8} Z`;
 
-    let streakOverlay = '';
+    let streakGlow = '';
     if (stats.streak) {
       const sIso = ctx.dayISO(stats.streak.start), eIso = ctx.dayISO(stats.streak.end);
       const seg = days.filter((d) => d.iso >= sIso && d.iso <= eIso);
       if (seg.length > 1) {
         const pts = seg.map((d) => `${xOf(d.i)},${yOf(d.standing).toFixed(1)}`).join(' ');
-        streakOverlay = `<polyline class="terrain-glow" points="${pts}" fill="none" stroke="${C.streak}" stroke-width="3" stroke-linecap="round"/>`;
+        streakGlow = `<polyline class="terrain-glow" points="${pts}" fill="none" stroke="${C.streak}" stroke-width="8" stroke-linecap="round" filter="url(#terrain-blur)"/>`;
       }
     }
 
@@ -26,12 +27,13 @@ module.exports = {
       : '';
 
     return {
+      defs: `<filter id="terrain-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2"/></filter>`,
       css: `.terrain-glow { animation: terrain-glow 2.4s ease-in-out infinite; }
-    @keyframes terrain-glow { 0%,100% { stroke-opacity: .95 } 50% { stroke-opacity: .4 } }`,
+    @keyframes terrain-glow { 0%,100% { stroke-opacity: .55 } 50% { stroke-opacity: .2 } }`,
       viewUnder: zeroLine,
-      world: `<path d="${area}" fill="${C.green1}" fill-opacity="0.18"/>
-      <polyline points="${terrain}" fill="none" stroke="${C.green2}" stroke-width="2" stroke-linejoin="round"/>
-      ${streakOverlay}`,
+      world: `${streakGlow}
+      <path d="${area}" fill="${C.green1}" fill-opacity="0.18"/>
+      <polyline points="${terrain}" fill="none" stroke="${C.green2}" stroke-width="2" stroke-linejoin="round"/>`,
     };
   },
 };

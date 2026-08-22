@@ -48,7 +48,8 @@ function renderSVG(s) {
     lastMonth = m;
 
     const info = s.status.get(iso) || { status: 'missed', count: 0 };
-    const fill = { rowed: info.count > 1 ? C.green2 : C.green1, rest: C.yellow, missed: C.empty, pending: C.empty }[info.status];
+    const rowedFill = info.count >= 3 ? C.green2 : info.count === 2 ? C.greenMid : C.green1;
+    const fill = { rowed: rowedFill, rest: C.yellow, missed: C.empty, pending: C.empty }[info.status];
     const label = { rowed: `rowed${info.count > 1 ? ` ×${info.count}` : ''}`, rest: 'rest day (streak held)', missed: 'no row', pending: 'today — not yet rowed' }[info.status];
     const streakCls = inStreak(iso) ? ' streak' : '';
     const pending = info.status === 'pending' ? ` stroke="${C.muted}" stroke-dasharray="2 2"` : '';
@@ -68,8 +69,9 @@ function renderSVG(s) {
   const legendY = H - 16;
   const legend = [
     `<rect x="${x0}" y="${legendY - 8}" width="8" height="8" rx="2" fill="${C.green1}"/>`,
-    `<rect x="${x0 + 10}" y="${legendY - 8}" width="8" height="8" rx="2" fill="${C.green2}"/>`,
-    `<text x="${x0 + 24}" y="${legendY}" font-size="10" fill="${C.muted}">rowed / ×2+</text>`,
+    `<rect x="${x0 + 10}" y="${legendY - 8}" width="8" height="8" rx="2" fill="${C.greenMid}"/>`,
+    `<rect x="${x0 + 20}" y="${legendY - 8}" width="8" height="8" rx="2" fill="${C.green2}"/>`,
+    `<text x="${x0 + 34}" y="${legendY}" font-size="10" fill="${C.muted}">rowed ×1/2/3+</text>`,
     `<rect x="${x0 + 96}" y="${legendY - 8}" width="8" height="8" rx="2" fill="${C.yellow}"/>`,
     `<text x="${x0 + 110}" y="${legendY}" font-size="10" fill="${C.muted}">rest (streak held)</text>`,
     `<rect x="${x0 + 210}" y="${legendY - 8}" width="8" height="8" rx="2" fill="${C.empty}"/>`,

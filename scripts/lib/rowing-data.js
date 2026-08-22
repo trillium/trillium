@@ -103,11 +103,14 @@ function computeStats(days, asOfISO, windowDays) {
   function visit(d, count) {
     yearReset(dayISO(d).slice(0, 4));
     yearRows += count;
-    if (d >= windowStart && d <= asOf) {
-      const s = count > 0 ? 'rowed' : (st.ds > 0 && st.bank > 0 ? 'rest' : 'missed');
-      status.set(dayISO(d), { status: s, count, standing: yearRows - dayOfYear(d) });
-    }
+    const inWindow = d >= windowStart && d <= asOf;
+    // Classify before step() (rest-vs-missed needs the pre-step bank), but
+    // record the streak as it stands after the day is applied.
+    const s = count > 0 ? 'rowed' : (st.ds > 0 && st.bank > 0 ? 'rest' : 'missed');
     step(d, count);
+    if (inWindow) {
+      status.set(dayISO(d), { status: s, count, standing: yearRows - dayOfYear(d), ds: st.ds, rs: st.rs });
+    }
   }
 
   const sorted = [...days.keys()].sort();
@@ -127,7 +130,7 @@ function computeStats(days, asOfISO, windowDays) {
     for (let g = addDays(prev, 1); g < asOf; g = addDays(g, 1)) visit(g, 0);
     if (prev < asOf) {
       yearReset(asOfISO.slice(0, 4));
-      status.set(asOfISO, { status: 'pending', count: 0, standing: yearRows - dayOfYear(asOf) });
+      status.set(asOfISO, { status: 'pending', count: 0, standing: yearRows - dayOfYear(asOf), ds: st.ds, rs: st.rs });
     }
   }
 
@@ -180,7 +183,7 @@ function parseArgs(argv) {
 
 const PALETTE = {
   bg: '#282a36', border: '#ffd200', title: '#f40082', text: '#f8f8f2',
-  muted: '#9ba0b0', empty: '#363949', green1: '#2f9e4f', green2: '#50fa7b',
+  muted: '#9ba0b0', empty: '#363949', green1: '#2f9e4f', greenMid: '#3fbf63', green2: '#50fa7b',
   yellow: '#ffd200', red: '#ff5555', streak: '#f40082',
   water: '#6272a4', waterHi: '#8be9fd',
 };
