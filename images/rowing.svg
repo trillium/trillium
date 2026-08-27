@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="562" height="196" viewBox="0 0 562 196" font-family="'Segoe UI', Ubuntu, Helvetica, Arial, sans-serif" role="img" aria-label="Rowing: 348 rows in the last year">
-  <title>Rowing — 348 rows across 225 days in the last year</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="562" height="196" viewBox="0 0 562 196" font-family="'Segoe UI', Ubuntu, Helvetica, Arial, sans-serif" role="img" aria-label="Rowing: 352 rows in the last year">
+  <title>Rowing — 352 rows across 227 days in the last year</title>
   <style>
     .pulse { animation: pulse 2.4s ease-in-out infinite; }
     @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .55 } }
@@ -12,7 +12,7 @@
   </style>
   <rect x="0.5" y="0.5" width="561" height="195" rx="10" fill="#282a36" stroke="#ffd200"/>
   <text x="16" y="34" font-size="18" font-weight="bold" fill="#f40082">🚣 Rowing — last 365 days</text>
-  <text class="pulse" x="546" y="34" text-anchor="end" font-size="16" font-weight="bold" fill="#ffd200">🔥 43d · 50r</text>
+  <text class="pulse" x="546" y="34" text-anchor="end" font-size="16" font-weight="bold" fill="#ffd200">🔥 45d · 54r</text>
   <text x="26" y="58" font-size="9" fill="#9ba0b0">Sep</text>
   <text x="66" y="58" font-size="9" fill="#9ba0b0">Oct</text>
   <text x="106" y="58" font-size="9" fill="#9ba0b0">Nov</text>
@@ -25,7 +25,6 @@
   <text x="416" y="58" font-size="9" fill="#9ba0b0">Jun</text>
   <text x="456" y="58" font-size="9" fill="#9ba0b0">Jul</text>
   <text x="496" y="58" font-size="9" fill="#9ba0b0">Aug</text>
-  <rect class="cell" style="animation-delay:0ms" x="16" y="86" width="8" height="8" rx="2" fill="#ffd200"><title>2025-08-26: rest day (streak held)</title></rect>
   <rect class="cell" style="animation-delay:0ms" x="16" y="96" width="8" height="8" rx="2" fill="#ffd200"><title>2025-08-27: rest day (streak held)</title></rect>
   <rect class="cell" style="animation-delay:0ms" x="16" y="106" width="8" height="8" rx="2" fill="#ffd200"><title>2025-08-28: rest day (streak held)</title></rect>
   <rect class="cell" style="animation-delay:0ms" x="16" y="116" width="8" height="8" rx="2" fill="#ffd200"><title>2025-08-29: rest day (streak held)</title></rect>
@@ -389,8 +388,9 @@
   <rect class="cell streak" style="animation-delay:714ms" x="526" y="126" width="8" height="8" rx="2" fill="#50fa7b"><title>2026-08-22: rowed ×3</title></rect>
   <rect class="cell streak" style="animation-delay:728ms" x="536" y="66" width="8" height="8" rx="2" fill="#3fbf63"><title>2026-08-23: rowed ×2</title></rect>
   <rect class="cell streak" style="animation-delay:728ms" x="536" y="76" width="8" height="8" rx="2" fill="#ffd200"><title>2026-08-24: rest day (streak held)</title></rect>
-  <rect class="cell" style="animation-delay:728ms" x="536" y="86" width="8" height="8" rx="2" fill="#363949" stroke="#9ba0b0" stroke-dasharray="2 2"><title>2026-08-25: today — not yet rowed</title></rect>
-  <text class="fadein" x="16" y="162" font-size="12" fill="#f8f8f2">348 rows across 225 days · <tspan fill="#ffd200">Current streak: Jul 13 → today · 43 days · 50 rows · bank 7</tspan></text>
+  <rect class="cell streak" style="animation-delay:728ms" x="536" y="86" width="8" height="8" rx="2" fill="#3fbf63"><title>2026-08-25: rowed ×2</title></rect>
+  <rect class="cell streak" style="animation-delay:728ms" x="536" y="96" width="8" height="8" rx="2" fill="#3fbf63"><title>2026-08-26: rowed ×2</title></rect>
+  <text class="fadein" x="16" y="162" font-size="12" fill="#f8f8f2">352 rows across 227 days · <tspan fill="#ffd200">Current streak: Jul 13 → today · 45 days · 54 rows · bank 9</tspan></text>
   <rect x="16" y="172" width="8" height="8" rx="2" fill="#2f9e4f"/>
   <rect x="26" y="172" width="8" height="8" rx="2" fill="#3fbf63"/>
   <rect x="36" y="172" width="8" height="8" rx="2" fill="#50fa7b"/>
