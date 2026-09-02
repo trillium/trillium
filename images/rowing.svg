@@ -13,7 +13,6 @@
   <rect x="0.5" y="0.5" width="561" height="195" rx="10" fill="#282a36" stroke="#ffd200"/>
   <text x="16" y="34" font-size="18" font-weight="bold" fill="#f40082">🚣 Rowing — last 365 days</text>
   <text class="pulse" x="546" y="34" text-anchor="end" font-size="16" font-weight="bold" fill="#ffd200">🔥 50d · 59r</text>
-  <text x="16" y="58" font-size="9" fill="#9ba0b0">Sep</text>
   <text x="56" y="58" font-size="9" fill="#9ba0b0">Oct</text>
   <text x="96" y="58" font-size="9" fill="#9ba0b0">Nov</text>
   <text x="146" y="58" font-size="9" fill="#9ba0b0">Dec</text>
@@ -25,7 +24,6 @@
   <text x="406" y="58" font-size="9" fill="#9ba0b0">Jun</text>
   <text x="446" y="58" font-size="9" fill="#9ba0b0">Jul</text>
   <text x="486" y="58" font-size="9" fill="#9ba0b0">Aug</text>
-  <rect class="cell" style="animation-delay:0ms" x="16" y="76" width="8" height="8" rx="2" fill="#ffd200"><title>2025-09-01: rest day (streak held)</title></rect>
   <rect class="cell" style="animation-delay:0ms" x="16" y="86" width="8" height="8" rx="2" fill="#ffd200"><title>2025-09-02: rest day (streak held)</title></rect>
   <rect class="cell" style="animation-delay:0ms" x="16" y="96" width="8" height="8" rx="2" fill="#ffd200"><title>2025-09-03: rest day (streak held)</title></rect>
   <rect class="cell" style="animation-delay:0ms" x="16" y="106" width="8" height="8" rx="2" fill="#3fbf63"><title>2025-09-04: rowed ×2</title></rect>
@@ -390,6 +388,7 @@
   <rect class="cell streak" style="animation-delay:714ms" x="526" y="126" width="8" height="8" rx="2" fill="#ffd200"><title>2026-08-29: rest day (streak held)</title></rect>
   <rect class="cell streak" style="animation-delay:728ms" x="536" y="66" width="8" height="8" rx="2" fill="#ffd200"><title>2026-08-30: rest day (streak held)</title></rect>
   <rect class="cell streak" style="animation-delay:728ms" x="536" y="76" width="8" height="8" rx="2" fill="#2f9e4f"><title>2026-08-31: rowed</title></rect>
+  <rect class="cell" style="animation-delay:728ms" x="536" y="86" width="8" height="8" rx="2" fill="#363949" stroke="#9ba0b0" stroke-dasharray="2 2"><title>2026-09-01: today — not yet rowed</title></rect>
   <text class="fadein" x="16" y="162" font-size="12" fill="#f8f8f2">357 rows across 230 days · <tspan fill="#ffd200">Current streak: Jul 13 → today · 50 days · 59 rows · bank 9</tspan></text>
   <rect x="16" y="172" width="8" height="8" rx="2" fill="#2f9e4f"/>
   <rect x="26" y="172" width="8" height="8" rx="2" fill="#3fbf63"/>
