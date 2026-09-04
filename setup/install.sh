@@ -42,6 +42,19 @@ if [[ "$OS" == "MACOS" ]]; then
     # Create symlink
     ln -s "$REPO_ROOT/config/karabiner.json" ~/.config/karabiner/karabiner.json
     echo "  ✅ Karabiner config symlink created"
+
+    echo "🖼️  Setting up wallpaper..."
+    mkdir -p ~/Pictures/wallpapers
+    WALLPAPER="$HOME/Pictures/wallpapers/omarchy-elk.png"
+    if [[ ! -f "$WALLPAPER" ]]; then
+        curl -sL "https://files.catbox.moe/593by2.png" -o "$WALLPAPER"
+        echo "  Downloaded omarchy-elk.png"
+    else
+        echo "  Already present, skipping download"
+    fi
+    osascript -e "tell application \"System Events\" to tell every desktop to set picture to POSIX file \"$WALLPAPER\""
+    defaults write com.apple.loginwindow DesktopPicture "$WALLPAPER"
+    echo "  ✅ Wallpaper set (desktop + lock screen)"
 fi
 
 echo ""
