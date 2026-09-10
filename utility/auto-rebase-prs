@@ -45,12 +45,10 @@
 
 set -euo pipefail
 
-CACHE_DIR="${HOME}/.cache/auto-rebase"
-mkdir -p "$CACHE_DIR"
-LOG="${CACHE_DIR}/auto-rebase.log"
+. ~/scripts/rebase-lib.sh
 
-log() { echo "$(date '+%Y-%m-%d %H:%M:%S') $*" >> "$LOG"; }
-notify() { ~/scripts/notify-human "$*" 2>/dev/null || true; }
+# --- Check for Telegram replies before doing anything else ---
+~/scripts/telegram-poll.sh
 
 # Refresh PR list every 30 minutes
 PR_CACHE="${CACHE_DIR}/open-prs.json"
@@ -94,14 +92,40 @@ for repo in $REPOS; do
   [[ -f "$sha_file" ]] && previous_sha=$(cat "$sha_file")
 
   if [[ "$current_sha" == "$previous_sha" ]]; then
+    # No change — but check if a debounced rebase is due
+    debounce_file="${CACHE_DIR}/$(echo "$repo" | tr '/' '_').debounce"
+    if [[ -f "$debounce_file" ]]; then
+      debounce_ts=$(cat "$debounce_file")
+      now=$(date +%s)
+      if (( now - debounce_ts >= DEBOUNCE_SECONDS )); then
+        log "DEBOUNCE: ${repo} settled for ${DEBOUNCE_SECONDS}s, triggering rebase"
+        rm -f "$debounce_file"
+        # Fall through to rebase below
+      else
+        remaining=$(( DEBOUNCE_SECONDS - (now - debounce_ts) ))
+        log "DEBOUNCE: ${repo} waiting (${remaining}s remaining)"
+        continue
+      fi
+    else
+      continue
+    fi
+  else
+    # Main moved — record the change and start/reset debounce timer
+    echo "$current_sha" > "$sha_file"
+    log "CHANGE: ${repo} main moved to ${current_sha:0:8}"
+
+    # Start or reset the debounce timer
+    debounce_file="${CACHE_DIR}/$(echo "$repo" | tr '/' '_').debounce"
+    date +%s > "$debounce_file"
+    log "DEBOUNCE: ${repo} timer started/reset (${DEBOUNCE_SECONDS}s)"
+
+    # Notify immediately about the change (informational only)
+    pr_list=$(jq -r ".[] | select(.repository.nameWithOwner == \"${repo}\") | \"#\(.number) \(.title)\"" "$PR_CACHE" | tr '\n' ', ')
+    notify "🔄 *${repo}* main moved. Rebase queued (${DEBOUNCE_SECONDS}s debounce): ${pr_list%,}"
     continue
   fi
 
-  # Main moved — update cache and notify
-  echo "$current_sha" > "$sha_file"
-  log "CHANGE: ${repo} main moved to ${current_sha:0:8}"
-  pr_list=$(jq -r ".[] | select(.repository.nameWithOwner == \"${repo}\") | \"#\(.number) \(.title)\"" "$PR_CACHE" | tr '\n' ', ')
-  notify "🔄 *${repo}* main moved. Your open PRs may need rebase: ${pr_list%,}"
+  # --- Debounce expired — execute rebase ---
 
   # Sync fork main if we have a fork
   fork_check=$(gh api "repos/trillium/$(basename "$repo")" --jq '.fork' 2>/dev/null || echo "false")
@@ -114,8 +138,39 @@ for repo in $REPOS; do
   # Rebase each open PR on this repo
   pr_numbers=$(jq -r ".[] | select(.repository.nameWithOwner == \"${repo}\") | .number" "$PR_CACHE")
   for pr in $pr_numbers; do
-    result=$(gh api "repos/${repo}/pulls/${pr}/update-branch" -f update_method=rebase 2>&1) && \
-      log "REBASE: ${repo}#${pr} rebased" || \
-      log "CONFLICT: ${repo}#${pr} rebase failed — $(echo "$result" | head -1)"
+    result=$(gh api "repos/${repo}/pulls/${pr}/update-branch" -f update_method=rebase 2>&1) && {
+      log "REBASE: ${repo}#${pr} rebased (server-side)"
+      continue
+    }
+
+    log "CONFLICT: ${repo}#${pr} server-side rebase failed, trying local"
+    post_bridge_event "$repo" "$pr" "${repo}#${pr} server-side rebase failed — trying local"
+
+    # --- Local rebase fallback ---
+    # Resolve repo to local clone path
+    local_path=$(resolve_local_repo "$repo")
+    if [[ -z "$local_path" ]]; then
+      log "SKIP: no local clone found for ${repo}"
+      continue
+    fi
+
+    # Get the PR's head branch
+    pr_branch=$(gh api "repos/${repo}/pulls/${pr}" --jq '.head.ref' 2>/dev/null || echo "")
+    if [[ -z "$pr_branch" ]]; then
+      log "WARN: could not determine branch for ${repo}#${pr}"
+      continue
+    fi
+
+    # Determine the upstream remote name in the local repo
+    upstream_name=$(cd "$local_path" && git remote -v | grep "github.com[:/]${repo}" | head -1 | awk '{print $1}')
+    upstream_name="${upstream_name:-upstream}"
+
+    # Trigger local rebase
+    if ~/scripts/local-rebase-pr.sh "$local_path" "$upstream_name" "$pr_branch"; then
+      log "REBASE: ${repo}#${pr} rebased (local)"
+    else
+      log "CONFLICT: ${repo}#${pr} local rebase failed — needs agent"
+      post_bridge_event "$repo" "$pr" "${repo}#${pr} local rebase failed — manual intervention needed"
+    fi
   done
 done

@@ -1,151 +1,194 @@
-<div>
-<h1>
- Hey there, I'm Trillium!
-</h1>
- <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=14&duration=2500&pause=1500&color=F43F5E&random=false&width=435&height=25&lines=Hey%2C+I'm+Trillium+(Rhymes+with+'William')+%F0%9F%91%8B;I'm+a+Software+Engineer+based+in+Los+Angeles;%E2%9C%85+Open+Source+Contributor;%E2%9C%85+Lover+of+espresso.+Mmm+mmm+coffee!+%F0%9F%A4%8E;%E2%9C%85+Partner+dancer%3A+salsa%2C+tango%2C+swing%2C+fusion+%F0%9F%92%83%F0%9F%95%BA;%E2%9D%8C+Not+from+The+Hitchhiker's+Guide+-+that's+Trillian;%E2%9D%8C+Not+a+2000s+chat+app+--+that's+also+Trillian;%E2%9D%8C+Trillium+is+not+a+big+number+--+that's+trillion;Trillion%3A+a+million+millions%2C+1%2C000%2C000%2C000%2C000;%F0%9F%8C%B7+I'm+named+after+a+flower+(it's+a+lily)+;%F0%9F%92%A1+Fun+facts+about+trillium+the+flower%3A;The+seeds+of+the+trillium+are+dispersed+by+ants!+%F0%9F%90%9C;Picking+parts+off+a+trillium+plant+can+kill+it!;Are+you+really+still+reading+this+%3F+.+.+.+;.+.+.+.+.+.+.+.+.+.+" alt="Typing SVG" />
-</div>
+<a id="readme-top"></a>
 
-I build robust, scalable web applications as well as fun one-offs and tiny tools.
-I enjoy getting into the nitty-gritty of elusive bugs and errors, taking a larger scoped view to help design and architect systems, or finding the exact right CSS to make a website really shine.
-Lately my work centers on voice-driven development and AI agent tooling — I code by voice using Talon.
+<h1>Hey, I'm Trillium 👋</h1>
 
-Outside of software development work, I'm an avid social dancer, massage therapist, and espresso enthusiast.
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=14&duration=2500&pause=1500&color=F43F5E&random=false&width=500&height=25&lines=Hey%2C+I'm+Trillium+(Rhymes+with+'William')+%F0%9F%91%8B;Full-Stack+Engineer+%7C+TypeScript+%C2%B7+React+%C2%B7+Next.js;I+code+entirely+by+voice+using+Talon+%F0%9F%8E%A4;Voice+accessibility+advocate+%2B+open+source+contributor;Massage+therapist+%E2%86%92+software+engineer+%F0%9F%8C%B1;Building+agentic+AI+infrastructure;Contributor%3A+Cursorless+%C2%B7+Talonhub+%C2%B7+Gas+Town" alt="Typing SVG" />
 
-### 📅 Get in touch — schedule time with me
+I'm a full-stack software engineer who codes entirely by voice using [Talon Voice](https://talonvoice.com). In 2021, I realized my body couldn't sustain massage therapy indefinitely — so I leaned into coding by voice instead. Now it's a wireless mic, a rowing machine, and a big TV, and life is better.
 
-**The fastest way to connect is to [book time directly](https://cal.com/trillium/) at [cal.com/trillium](https://cal.com/trillium/).** I'm open to sessions for:
+I build voice accessibility tooling, agentic infrastructure, and full-stack applications. Open source contributor to [Cursorless](https://github.com/cursorless-dev/cursorless), [Talonhub](https://github.com/talonhub/community), and Steve Yegge's [Gas Town](https://github.com/Coder-World04/gas-town).
 
-<div>
-<a href="https://cal.com/trillium/120m-pair"><img src="https://img.shields.io/badge/Paired_Programming-f40082?style=for-the-badge&logo=caldotcom&logoColor=white" alt="Book a paired programming session" /></a>
-<a href="https://cal.com/trillium/"><img src="https://img.shields.io/badge/Agentic_Orchestration-282a36?style=for-the-badge&logo=caldotcom&logoColor=ffd200" alt="Book time to talk agentic orchestration" /></a>
-<a href="https://cal.com/trillium/"><img src="https://img.shields.io/badge/Voice_Accessibility_Assistance-ffd200?style=for-the-badge&logo=caldotcom&logoColor=282a36" alt="Book voice accessibility assistance" /></a>
-<a href="https://cal.com/trillium/"><img src="https://img.shields.io/badge/Consulting-f40082?style=for-the-badge&logo=caldotcom&logoColor=white" alt="Book a consulting session" /></a>
-</div>
-
-Prefer async? Reach me here:
-
-<div>
-<a href="mailto:trillium@trilliumsmith.com"><img src="https://img.shields.io/badge/Email-trillium%40trilliumsmith.com-f40082?style=for-the-badge&logo=maildotru&logoColor=white" alt="Email trillium@trilliumsmith.com" /></a>
-<a href="https://linkedin.com/in/trilliumsmith"><img src="https://img.shields.io/badge/LinkedIn-trilliumsmith-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn: trilliumsmith" /></a>
-<a href="https://trilliumsmith.com"><img src="https://img.shields.io/badge/Portfolio-trilliumsmith.com-ffd200?style=for-the-badge&logo=firefoxbrowser&logoColor=282a36" alt="Portfolio: trilliumsmith.com" /></a>
-</div>
-
----
-
-## 📝 Latest Blog Posts
-
-<!-- BLOG-POST-LIST:START -->
-- [Parlay: Voice-First Agent Orchestration](https://trilliumsmith.com/blog/parlay-a-chat-server-for-your-ai-agents) (2026-08-16)
-- [Accessible software is better for everybody](https://trilliumsmith.com/blog/accessible-software-is-better-for-everybody) (2026-07-24)
-- [Building a Calendar-Integrated Modern Booking Platform](https://trilliumsmith.com/blog/trillium-massage) (2025-09-19)
-- [Voice Accessibility: My Journey with Talon Voice and Public Speaking](https://trilliumsmith.com/blog/talon-voice-continued) (2025-09-18)
-- [Paired Programming - The Pair-amid Scheme](https://trilliumsmith.com/blog/pairing-magic) (2024-12-06)
-<!-- BLOG-POST-LIST:END -->
-
-Read more on [trilliumsmith.com/blog](https://trilliumsmith.com/blog) or see [the full list →](./BLOG.md)
-
-## 🛠️ Featured Projects
-
-<!-- PROJECT-LIST:START -->
-<h3 align="center">
- <strong>www.trilliumsmith.com</strong> | <a href="https://github.com/trillium/trilliumsmith.com">Repo</a> | <a href="https://trilliumsmith.com">Live Site</a>
-</h3>
-
-
-<div align="center">
-<a href="https://trilliumsmith.com">
- <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/d773d9e0-25b6-4888-9594-369cfaa8c9e4">
-  <img width="561" alt="Screenshot of trilliumsmith.com" src="https://github.com/user-attachments/assets/e9bc6e54-96fa-4fd7-877f-e7ab95898387">
- </picture>
-</a>
-</div>
-
-
-_Stack_: [TypeScript](https://www.typescriptlang.org/) | [NextJs](https://nextjs.org/) | [Tailwind.css](https://tailwindcss.com/) | [Netlify](https://www.netlify.com/)
-
----
-
-<h3 align="center">
- <strong>Parlay</strong> | <a href="https://github.com/trillium/parlay">Repo</a> | <a href="https://trilliumsmith.com/blog/parlay-a-chat-server-for-your-ai-agents">Blog Post</a>
-</h3>
-
-Parlay is a small event-driven command server for AI agents — talk to your background coding agents from your phone. Every long-running agent gets its own chat channel, with voice-first control and durable identity across restarts.
-
-Built to scratch my own itch: orchestrating fleets of coding agents by voice while away from the keyboard.
-
-_Stack_: [Go](https://go.dev/)
-
----
-
-<h3 align="center">
- <strong>Awesome Talon</strong> | <a href="https://github.com/trillium/awesome-talon">Repo</a> | <a href="https://awesome-talon.vercel.app">Live Site</a>
-</h3>
-
-A curated directory of Talon Voice resources, plus a website with a command search engine indexed across community Talon repos. I code by voice, and this makes the ecosystem discoverable for everyone else who does too.
-
-_Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang.org/) | [Vercel](https://vercel.com/)
-
----
-
-<h3 align="center">
- <strong>Zed × Cursorless</strong> - Systems Integration | <a href="https://github.com/trillium/zed">Zed Fork</a> | <a href="https://github.com/trillium/cursorless">Cursorless Fork</a>
-</h3>
-
-Bringing Cursorless voice-coding to the Zed editor: a decoration-rendering API added to Zed in Rust for cursorless hat overlays, a WASM adapter bridging the Cursorless engine to Zed, and new engine-wrapper packages in the Cursorless monorepo.
-
-_Stack_: [Rust](https://www.rust-lang.org/) | [WASM](https://webassembly.org/) | [TypeScript](https://www.typescriptlang.org/)
-
----
-
-<h3 align="center">
- <strong>Trillium Massage</strong> | <a href="https://github.com/trillium/massage">Repo</a> | <a href="https://trilliummassage.la/">Live Site</a>
-</h3>
-
-
-<div align="center">
-<a href="https://trilliummassage.la/">
- <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/trillium/trillium/assets/5898009/2953e699-1f0d-4041-bb04-1ded74260e64">
-  <img width="561" alt="Trillium Massage site screenshot" src="https://github.com/trillium/trillium/assets/5898009/83519a1b-86fc-4662-ae97-bd37af78f2e9">
- </picture>
-</a>
-</div>
-
-
-A scheduling tool built in TypeScript that lets clients book appointments with a service provider, coach, or business owner. Integrates with the Google Calendar API and Gmail API for up-to-date booking information, and works for both in-person and online meetings — a simpler, more customizable Calendly alternative.
-
-_Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang.org/) | [Tailwind.css](https://tailwindcss.com/) | [Vercel](https://vercel.com/) | [Redux](https://redux.js.org/)
-
-_For more examples, please refer to the [Portfolio](https://trilliumsmith.com)_
-<!-- PROJECT-LIST:END -->
-
-## 🚣 Rowing
-
-The last year on the water and the scope of my current streak — generated daily from my [row_tracker](https://github.com/trillium/row_tracker) log:
-
-<img src="images/rowing.svg" alt="Animated heatmap of the last 365 days of rowing, with the current streak span highlighted" />
-
-<img src="images/rowing-runner.svg" alt="Row Runner: a side-scroller of the last 90 days — the rower rides the pace line while each day's +/~/- glyph scrolls past" />
-
-## 📊 Stats & Technologies
+**Stack:** TypeScript · React · Next.js · Node.js · Vitest · Playwright · GitHub Actions · PostgreSQL · MongoDB · Supabase · Serverless
 
 <p>
-<img src="https://trillium-github-readme-stats.vercel.app/api/?username=trillium&show_icons=true&count_private=true&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10&rank_icon=github&include_all_commits=true" alt="Trillium's GitHub stats" height="192" />
-<img alt="Trillium's most used languages" src="https://trillium-github-readme-stats.vercel.app/api/top-langs/?username=trillium&langs_count=8&layout=compact&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10" height="192px" />
+<img src="https://trillium-github-readme-stats.vercel.app/api/?username=trillium&show_icons=true&count_private=true&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10&rank_icon=github&include_all_commits=true" height="192" />
+<img alt="NirmalNaveen20 Top Languages" src="https://trillium-github-readme-stats.vercel.app/api/top-langs/?username=trillium&langs_count=8&layout=compact&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10" height="192px" />
 </p>
 
-Technologies I work with:
-[TypeScript](https://www.typescriptlang.org/) · [React](https://react.dev/) · [NextJs](https://nextjs.org/) · [Tailwind.css](https://tailwindcss.com/) · [Vite](https://vite.dev) · [ExpressJS](https://expressjs.com/) · [MongoDB](https://www.mongodb.com/) · [Docker](https://www.docker.com/) · [AWS](https://aws.amazon.com/) · [Go](https://go.dev/) · [Rust](https://www.rust-lang.org/) · [Redux](https://redux.js.org/)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Built With
+
+This section lists the major frameworks/libraries used in my projects.
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [NextJs](https://nextjs.org/)
+- [Tailwind.css](https://tailwindcss.com/)
+- [React](https://react.dev/)
+- [Vite](https://vite.dev)
+- [ExpressJS](https://expressjs.com/)
+- [MongoDB](https://www.mongodb.com/)
+- [Docker](https://www.docker.com/)
+- [AWS](https://aws.amazon.com/)
+- [MaterialUI](https://mui.com/)
+- [Redux](https://redux.js.org/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+To view my portfolio or explore my projects, visit [trilliumsmith.com](https://trilliumsmith.com).
+
+### Prerequisites
+
+No prerequisites needed to view the portfolio. For development or contributions, ensure you have:
+
+- Node.js
+- npm or yarn
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/trillium/trillium.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+3. Run the development server
+   ```sh
+   npm run dev
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Projects
+
+<h3 align="center">
+ <strong>feedtack</strong> | <a href="https://github.com/trillium/feedtack">Repo</a> | <a href="https://www.npmjs.com/package/feedtack">npm</a>
+</h3>
+
+Drop-in React feedback overlay. Click anywhere on a page, drop a pin on a specific element, leave a note — feedtack emits a structured JSON payload complete enough for an LLM to attempt a first-pass fix before it touches a developer's queue. 20+ versions shipped, in production use.
+
+_Stack_: [TypeScript](https://www.typescriptlang.org/) | [React](https://react.dev/) | [Vitest](https://vitest.dev/) | [Playwright](https://playwright.dev/) | [npm](https://www.npmjs.com/package/feedtack)
+
+---
+
+<h3 align="center">
+ <strong>Barterboo</strong> | <a href="https://github.com/trillium/barter">Repo</a> | <a href="https://barterboo.com">Live Site</a>
+</h3>
+
+A platform where professionals exchange services without money changing hands. Time is the currency — give an hour, earn an hour. Supports direct swaps, multi-party trade rings, vouches, and location-aware scheduling.
+
+_Stack_: [TypeScript](https://www.typescriptlang.org/) | [NextJs](https://nextjs.org/) | [Supabase](https://supabase.com/) | [Tailwind.css](https://tailwindcss.com/) | [Bun](https://bun.sh/)
+
+---
+
+<h3 align="center">
+ <strong>Trillium Massage — Booking Platform</strong> | <a href="https://github.com/trillium/www-massage/">Repo</a> | <a href="https://trilliummassage.la/">Live Site</a>
+</h3>
+
+<div align="center">
+    <a href="https://trilliummassage.la/">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://github.com/trillium/trillium/assets/5898009/2953e699-1f0d-4041-bb04-1ded74260e64">
+        <img width="561" alt="Trillium Massage booking platform" src="https://github.com/trillium/trillium/assets/5898009/83519a1b-86fc-4662-ae97-bd37af78f2e9">
+      </picture>
+  </a>
+</div>
+
+A self-hosted booking platform with Google Calendar and Gmail API integration — handles in-person and online appointments for a real service business. A simpler, fully customizable alternative to Calendly.
+
+_Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang.org/) | [Tailwind.css](https://tailwindcss.com/) | [Vercel](https://vercel.com/)
+
+<!-- ROADMAP -->
+
+## Roadmap
+
+- [x] Build personal portfolio website
+- [x] Showcase projects
+- [ ] Add more projects
+- [ ] Add blog section
+- [ ] Multi-language Support
+  - [ ] Spanish
+
+See the [open issues](https://github.com/trillium/trillium/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTRIBUTING -->
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Top contributors:
+
+<a href="https://github.com/trillium/trillium/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=trillium/trillium" alt="contrib.rocks image" />
+</a>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
 
 ## Contact
 
-**The fastest way to connect is to [schedule time with me](https://cal.com/trillium/)** — paired programming, agentic orchestration, voice accessibility assistance, or consulting. Also open to roles, collaborations, and open source work.
+Trillium Smith - [@your_twitter](https://twitter.com/your_username) - Trillium@trilliumsmith.com
 
-|           |                                                                     |
-| --------- | ------------------------------------------------------------------- |
-| Schedule  | [cal.com/trillium](https://cal.com/trillium/)                        |
-| Email     | [trillium@trilliumsmith.com](mailto:trillium@trilliumsmith.com)      |
-| LinkedIn  | [linkedin.com/in/trilliumsmith](https://linkedin.com/in/trilliumsmith) |
-| Portfolio | [trilliumsmith.com](https://trilliumsmith.com)                       |
-| GitHub    | [github.com/trillium](https://github.com/trillium)                   |
+Project Link: [https://github.com/trillium/trillium](https://github.com/trillium/trillium)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
+
+## Acknowledgments
+
+Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
+
+- [Choose an Open Source License](https://choosealicense.com)
+- [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
+- [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
+- [Malven's Grid Cheatsheet](https://grid.malven.co/)
+- [Img Shields](https://shields.io)
+- [GitHub Pages](https://pages.github.com)
+- [Font Awesome](https://fontawesome.com)
+- [React Icons](https://react-icons.github.io/react-icons/search)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/trillium/trillium.svg?style=for-the-badge
+[contributors-url]: https://github.com/trillium/trillium/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/trillium/trillium.svg?style=for-the-badge
+[forks-url]: https://github.com/trillium/trillium/network/members
+[stars-shield]: https://img.shields.io/github/stars/trillium/trillium.svg?style=for-the-badge
+[stars-url]: https://github.com/trillium/trillium/stargazers
+[issues-shield]: https://img.shields.io/github/issues/trillium/trillium.svg?style=for-the-badge
+[issues-url]: https://github.com/trillium/trillium/issues
+[license-shield]: https://img.shields.io/github/license/trillium/trillium.svg?style=for-the-badge
+[license-url]: https://github.com/trillium/trillium/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/trilliumsmith

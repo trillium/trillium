@@ -31,17 +31,71 @@
 
 set -euo pipefail
 
-TELEGRAM_BOT_TOKEN=$(security find-generic-password -s notify-human -a TELEGRAM_BOT_TOKEN -w 2>/dev/null) || {
-  echo "notify-human: TELEGRAM_BOT_TOKEN not found in Keychain. Add it with:" >&2
-  echo "  security add-generic-password -s notify-human -a TELEGRAM_BOT_TOKEN -w '<token>'" >&2
-  exit 1
+show_help() {
+  cat <<'HELP'
+notify-human — Send a message to Trillium via Telegram.
+
+USAGE
+  notify-human "something happened"
+  echo "multiline message" | notify-human
+
+FORMATTING
+  Messages are sent with Markdown parse_mode. The human prefers rich,
+  actionable notifications — follow these guidelines:
+
+  - ALWAYS include hyperlinks when you have a URL. Use Markdown inline
+    link syntax: [descriptive text](https://url). Never send a bare URL
+    when you can make it a clickable link.
+      Good:  "Build failed for [my-repo#42](https://github.com/trillium/my-repo/actions/runs/42)"
+      Bad:   "Build failed: https://github.com/trillium/my-repo/actions/runs/42"
+  - Keep messages concise but informative — lead with what happened,
+    then link to where.
+  - Supported Markdown: *bold*, _italic_, [links](url), `inline code`.
+  - Telegram Markdown does NOT support headers (#), lists (-), or
+    nested formatting.
+
+EXAMPLES
+  notify-human "PR [fix-auth#7](https://github.com/trillium/app/pull/7) is ready for review"
+  notify-human "Deploy complete: [production dashboard](https://app.vercel.com/trillium/deploy/abc)"
+  notify-human "*Alert:* stale contacts found — [view task](https://twenty.example.com/task/123)"
+
+CONFIG
+  Credentials are stored in macOS Keychain (service: "notify-human"):
+    security add-generic-password -s notify-human -a TELEGRAM_BOT_TOKEN -w "<token>"
+    security add-generic-password -s notify-human -a TELEGRAM_CHAT_ID -w "<chat-id>"
+
+DEPENDENCIES
+  curl, macOS Keychain (security command), a Telegram bot token (@BotFather)
+HELP
+  exit 0
 }
 
-TELEGRAM_CHAT_ID=$(security find-generic-password -s notify-human -a TELEGRAM_CHAT_ID -w 2>/dev/null) || {
-  echo "notify-human: TELEGRAM_CHAT_ID not found in Keychain. Add it with:" >&2
-  echo "  security add-generic-password -s notify-human -a TELEGRAM_CHAT_ID -w '<chat-id>'" >&2
-  exit 1
-}
+# Show help on --help, -h, or no args with no piped stdin
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  show_help
+fi
+if [[ $# -eq 0 && -t 0 ]]; then
+  show_help
+fi
+
+CONFIG="${HOME}/.config/notify-human/config"
+if [[ -f "$CONFIG" ]]; then
+  source "$CONFIG"
+fi
+
+if [[ -z "${TELEGRAM_BOT_TOKEN:-}" ]]; then
+  TELEGRAM_BOT_TOKEN=$(security find-generic-password -s notify-human -a TELEGRAM_BOT_TOKEN -w 2>/dev/null) || {
+    echo "notify-human: TELEGRAM_BOT_TOKEN not found. Add to $CONFIG or Keychain." >&2
+    exit 1
+  }
+fi
+
+if [[ -z "${TELEGRAM_CHAT_ID:-}" ]]; then
+  TELEGRAM_CHAT_ID=$(security find-generic-password -s notify-human -a TELEGRAM_CHAT_ID -w 2>/dev/null) || {
+    echo "notify-human: TELEGRAM_CHAT_ID not found. Add to $CONFIG or Keychain." >&2
+    exit 1
+  }
+fi
 
 # Message from args or stdin
 if [[ $# -gt 0 ]]; then
