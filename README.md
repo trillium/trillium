@@ -4,6 +4,12 @@
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=14&duration=2500&pause=1500&color=F43F5E&random=false&width=500&height=25&lines=Hey%2C+I'm+Trillium+(Rhymes+with+'William')+%F0%9F%91%8B;Full-Stack+Engineer+%7C+TypeScript+%C2%B7+React+%C2%B7+Next.js;I+code+entirely+by+voice+using+Talon+%F0%9F%8E%A4;Voice+accessibility+advocate+%2B+open+source+contributor;Massage+therapist+%E2%86%92+software+engineer+%F0%9F%8C%B1;Building+agentic+AI+infrastructure;Contributor%3A+Cursorless+%C2%B7+Talonhub+%C2%B7+Gas+Town" alt="Typing SVG" />
 
+<!-- LIVE-STATUS:START -->
+[![Twitch status](https://img.shields.io/badge/Twitch-offline-555555?style=for-the-badge&logo=twitch&logoColor=white)](https://www.twitch.tv/YOUR_TWITCH_LOGIN)
+
+Currently offline — catch the next stream on [Twitch](https://www.twitch.tv/YOUR_TWITCH_LOGIN).
+<!-- LIVE-STATUS:END -->
+
 I'm a full-stack software engineer who codes entirely by voice using [Talon Voice](https://talonvoice.com). In 2021, I realized my body couldn't sustain massage therapy indefinitely — so I leaned into coding by voice instead. Now it's a wireless mic, a rowing machine, and a big TV, and life is better.
 
 I build voice accessibility tooling, agentic infrastructure, and full-stack applications. Open source contributor to [Cursorless](https://github.com/cursorless-dev/cursorless), [Talonhub](https://github.com/talonhub/community), and Steve Yegge's [Gas Town](https://github.com/Coder-World04/gas-town).
@@ -64,6 +70,28 @@ No prerequisites needed to view the portfolio. For development or contributions,
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Stream Status
+
+The badge at the top of this profile flips between 🔴 **LIVE** and **offline**
+based on the actual Twitch stream state. A scheduled workflow
+(`.github/workflows/live-status.yml`, every 10 minutes) polls the Twitch Helix
+`Get Streams` endpoint via `scripts/update-live-status.js` and commits only when
+the state changes — no secrets ever live in this repo.
+
+### Setup (one time)
+
+1. Create an app at <https://dev.twitch.tv/console> (OAuth Redirect URLs can be
+   `http://localhost` — only the client-credentials flow is used, no login or
+   user OAuth required).
+2. Repo **Settings → Secrets → Actions**: add `TWITCH_CLIENT_ID` and
+   `TWITCH_CLIENT_SECRET` from that app.
+3. Repo **Settings → Variables → Actions**: add `TWITCH_CHANNEL` with the
+   channel login (e.g. `trillium`), then replace `YOUR_TWITCH_LOGIN` in the
+   `LIVE-STATUS` block above with the same login.
+4. Optionally run the workflow manually once (**Actions → Live Status Badge →
+   Run workflow**) to verify. Until all three values exist, the script exits
+   `SKIP` and the workflow is a harmless no-op.
 
 ## Projects
 

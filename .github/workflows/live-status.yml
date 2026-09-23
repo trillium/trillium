@@ -1,0 +1,57 @@
+name: Live Status Badge
+
+# Polls the Twitch Helix API and flips the README's LIVE-STATUS block between
+# LIVE and offline. Commits only when the rendered block actually changes.
+#
+# Setup (one time, by the repo owner — values live in repo settings, never here):
+#   1. Create an app at https://dev.twitch.tv/console (OAuth Redirect URLs can be
+#      http://localhost — only the client-credentials flow is used, no login).
+#   2. Repo settings → Secrets → Actions: add TWITCH_CLIENT_ID and
+#      TWITCH_CLIENT_SECRET from that app.
+#   3. Repo settings → Variables → Actions: add TWITCH_CHANNEL with the channel
+#      login (e.g. "trillium").
+# Until all three exist the script exits SKIP and this workflow is a harmless no-op.
+
+on:
+  schedule:
+    # Every 10 minutes — fast enough to catch a stream, slow enough to sip the
+    # (free, unmetered-for-this-use) Helix rate limit.
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: live-status
+  cancel-in-progress: true
+
+jobs:
+  live-status:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Update live status block
+        env:
+          TWITCH_CHANNEL: ${{ vars.TWITCH_CHANNEL }}
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
+        run: node scripts/update-live-status.js
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if git diff --cached --quiet; then
+            echo "No live-status change to commit"
+          else
+            git commit -m "chore: flip live-status badge (automated)"
+            git push
+          fi
