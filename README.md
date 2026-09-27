@@ -8,6 +8,8 @@ I'm a full-stack software engineer who codes entirely by voice using [Talon Voic
 
 I build voice accessibility tooling, agentic infrastructure, and full-stack applications. Open source contributor to [Cursorless](https://github.com/cursorless-dev/cursorless), [Talonhub](https://github.com/talonhub/community), and Steve Yegge's [Gas Town](https://github.com/Coder-World04/gas-town).
 
+[![Twitch Status](https://img.shields.io/twitch/status/trilliumsmith?style=flat&logo=twitch&logoColor=white&label=Twitch)](https://www.twitch.tv/trilliumsmith) — I live-code by voice on [Twitch](https://www.twitch.tv/trilliumsmith) — voice-first dev, agentic AI, and TypeScript.
+
 **Stack:** TypeScript · React · Next.js · Node.js · Vitest · Playwright · GitHub Actions · PostgreSQL · MongoDB · Supabase · Serverless
 
 <p>
@@ -35,35 +37,7 @@ This section lists the major frameworks/libraries used in my projects.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- GETTING STARTED -->
-
-## Getting Started
-
 To view my portfolio or explore my projects, visit [trilliumsmith.com](https://trilliumsmith.com).
-
-### Prerequisites
-
-No prerequisites needed to view the portfolio. For development or contributions, ensure you have:
-
-- Node.js
-- npm or yarn
-
-### Installation
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/trillium/trillium.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
-3. Run the development server
-   ```sh
-   npm run dev
-   ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Projects
 
