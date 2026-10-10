@@ -2,6 +2,9 @@
 // Renders the auto-generated sections of the profile README:
 //   <!-- BLOG-POST-LIST:START --> ... <!-- BLOG-POST-LIST:END -->   from data/blog-posts.json
 //   <!-- PROJECT-LIST:START -->   ... <!-- PROJECT-LIST:END -->     from data/projects.json
+// A section whose markers are absent from the README is skipped with a warning
+// (the README is hand-edited and may drop a section) — it must never abort the
+// run, because the same workflow commits the rowing SVGs.
 // Also writes BLOG.md (the full post list).
 // Run by .github/workflows/sync-profile.yml; safe to run locally: node scripts/generate-readme.js
 
@@ -21,7 +24,8 @@ function replaceBetween(content, marker, replacement) {
   const end = `<!-- ${marker}:END -->`;
   const regex = new RegExp(`${start}[\\s\\S]*?${end}`);
   if (!regex.test(content)) {
-    throw new Error(`README is missing markers ${start} ... ${end}`);
+    console.warn(`⚠ README is missing markers ${start} ... ${end}; skipping ${marker}`);
+    return content;
   }
   return content.replace(regex, `${start}\n${replacement}\n${end}`);
 }

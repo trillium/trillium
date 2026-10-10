@@ -21,8 +21,21 @@ function diffDays(a, b) {
 function dayOfYear(d) {
   return diffDays(d, parseDay(`${dayISO(d).slice(0, 4)}-01-01`)) + 1;
 }
-function todayLA() {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles' }).format(new Date());
+const TZ = 'America/Los_Angeles';
+
+// Calendar date (YYYY-MM-DD) in Los Angeles at instant `now`.
+function todayLA(now = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(now);
+}
+// Data cutoff: the last *completed* LA calendar day. The day in progress is
+// excluded so a run at 3 AM never draws a half-finished day as a miss.
+function cutoffLA(now = new Date()) {
+  return dayISO(addDays(parseDay(todayLA(now)), -1));
+}
+// Day the generators draw through. `--today=YYYY-MM-DD` pretends that is the
+// current LA date (so the cutoff is the day before it); default is the real one.
+function resolveAsOf(args, now = new Date()) {
+  return args.today ? dayISO(addDays(parseDay(args.today), -1)) : cutoffLA(now);
 }
 function fmtShort(iso) {
   return parseDay(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
@@ -44,10 +57,12 @@ function parseRows(text) {
 
 // --- Streak walk (port of the rest-day bank rule in row.sh) ---
 // Walks the whole log, recording for every day in the trailing window:
-//   status   'rowed' | 'rest' | 'missed' | 'pending'
+//   status   'rowed' | 'rest' | 'missed'
 //   count    rows that day
 //   standing rows-this-year-to-date minus day-of-year (row.sh's pace number)
 // plus the span of the most recent streak (current if alive, else last done).
+// `asOfISO` is a completed day: it is stepped like any other, so an as-of day
+// with no rows counts as a miss/rest day (callers pass the cutoff, never today).
 
 function computeStats(days, asOfISO, windowDays) {
   const asOf = parseDay(asOfISO);
@@ -124,14 +139,8 @@ function computeStats(days, asOfISO, windowDays) {
     visit(d, days.get(iso));
     prev = d;
   }
-  // Like row.sh, the as-of day itself is not stepped as a miss when it has no
-  // rows — the day isn't over yet.
   if (prev !== null) {
-    for (let g = addDays(prev, 1); g < asOf; g = addDays(g, 1)) visit(g, 0);
-    if (prev < asOf) {
-      yearReset(asOfISO.slice(0, 4));
-      status.set(asOfISO, { status: 'pending', count: 0, standing: yearRows - dayOfYear(asOf), ds: st.ds, rs: st.rs });
-    }
+    for (let g = addDays(prev, 1); g <= asOf; g = addDays(g, 1)) visit(g, 0);
   }
 
   const current = st.ds > 0 ? { start: streakStart, end: lastStepped, ds: st.ds, rs: st.rs } : null;
@@ -189,6 +198,6 @@ const PALETTE = {
 };
 
 module.exports = {
-  parseDay, dayISO, addDays, diffDays, dayOfYear, todayLA, fmtShort,
+  parseDay, dayISO, addDays, diffDays, dayOfYear, todayLA, cutoffLA, resolveAsOf, fmtShort,
   parseRows, computeStats, loadDays, parseArgs, PALETTE,
 };

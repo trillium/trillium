@@ -9,7 +9,7 @@ module.exports = {
     const { xOf, baselineY, tapeTop, tapeRow, tapeMax, clipX, clipW } = L;
 
     const glyphs = days.map((d) => {
-      const color = { rowed: C.green2, rest: C.yellow, missed: C.red, pending: C.muted }[d.status];
+      const color = { rowed: C.green2, rest: C.yellow, missed: C.red }[d.status];
       const label = `${d.iso}: ${d.status}${d.count > 1 ? ` ×${d.count}` : ''} · pace ${d.standing >= 0 ? '+' : ''}${d.standing}`;
       const cells = [];
       if (d.status === 'rowed') {
@@ -20,7 +20,7 @@ module.exports = {
           cells.push({ text: String(d.count), size: 9, dy: (tapeMax - 1) * tapeRow });
         }
       } else {
-        cells.push({ text: { rest: '~', missed: '-', pending: '?' }[d.status], size: 11, dy: 0 });
+        cells.push({ text: { rest: '~', missed: '-' }[d.status], size: 11, dy: 0 });
       }
       const texts = cells.map((c) =>
         `<text x="${xOf(d.i)}" y="${tapeTop + c.dy}" text-anchor="middle" font-size="${c.size}" font-weight="bold" fill="${color}">${c.text}</text>`

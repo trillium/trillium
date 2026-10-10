@@ -3,12 +3,12 @@
 // of rowing. Thin entry shim; the scene lives in scripts/runner/ (composer,
 // layout, timeline, and one file per visual layer).
 // Run by .github/workflows/sync-profile.yml; locally: node scripts/generate-rowing-runner-svg.js
-// Options: --today=YYYY-MM-DD (default: today in America/Los_Angeles)
+// Options: --today=YYYY-MM-DD (default: today in America/Los_Angeles; data runs through the day before)
 //          --rows-file=path   (default: fetch from the row_tracker repo)
 
 const fs = require('fs');
 const path = require('path');
-const { todayLA, loadDays, parseArgs } = require('./lib/rowing-data');
+const { resolveAsOf, loadDays, parseArgs } = require('./lib/rowing-data');
 const { renderRunner } = require('./runner');
 
 const OUT_FILE = path.join(__dirname, '..', 'images', 'rowing-runner.svg');
@@ -16,7 +16,7 @@ const OUT_FILE = path.join(__dirname, '..', 'images', 'rowing-runner.svg');
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const days = await loadDays(args);
-  const asOf = args.today || todayLA();
+  const asOf = resolveAsOf(args);
   const { svg, stats } = renderRunner(days, asOf);
   console.log(`Runner window: ${stats.windowRows} rows / ${stats.windowDaysRowed} days since ${stats.windowStart}`);
 

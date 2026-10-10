@@ -4,7 +4,7 @@
 // lives in layout.js, shared timing in timeline.js.
 
 const {
-  parseDay, dayISO, addDays, todayLA, computeStats, PALETTE,
+  parseDay, dayISO, addDays, computeStats, PALETTE,
 } = require('../lib/rowing-data');
 const layoutMod = require('./layout');
 const { RUN_SECONDS, makeTimeline } = require('./timeline');
@@ -69,7 +69,7 @@ function compose(stats, { only } = {}) {
   }
   worldFrames.push(`100% { transform: translateX(-${L.scrollMax.toFixed(1)}px) }`);
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="'Segoe UI', Ubuntu, Helvetica, Arial, sans-serif" role="img" aria-label="Row Runner: last ${ctx.days.length} days of rowing as a side-scroller">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" data-as-of="${ctx.stats.asOfISO}" font-family="'Segoe UI', Ubuntu, Helvetica, Arial, sans-serif" role="img" aria-label="Row Runner: last ${ctx.days.length} days of rowing as a side-scroller">
   <title>Row Runner — the last ${ctx.days.length} days scroll past; the rower rides the pace line${paceText ? ` (${paceText.replace(/^..\s/, '')})` : ''}</title>
   <style>
     .world { animation: world-scroll ${T.RUN_SECONDS}s linear infinite; }

@@ -3,13 +3,13 @@
 // with the most recent streak's span highlighted. Day statuses come from
 // scripts/lib/rowing-data.js (rest-day bank rule ported from row.sh).
 // Run by .github/workflows/sync-profile.yml; locally: node scripts/generate-rowing-svg.js
-// Options: --today=YYYY-MM-DD (default: today in America/Los_Angeles)
+// Options: --today=YYYY-MM-DD (default: today in America/Los_Angeles; data runs through the day before)
 //          --rows-file=path   (default: fetch from the row_tracker repo)
 
 const fs = require('fs');
 const path = require('path');
 const {
-  parseDay, dayISO, addDays, diffDays, todayLA, fmtShort,
+  parseDay, dayISO, addDays, diffDays, resolveAsOf, fmtShort,
   computeStats, loadDays, parseArgs, PALETTE: C,
 } = require('./lib/rowing-data');
 
@@ -49,18 +49,17 @@ function renderSVG(s) {
 
     const info = s.status.get(iso) || { status: 'missed', count: 0 };
     const rowedFill = info.count >= 3 ? C.green2 : info.count === 2 ? C.greenMid : C.green1;
-    const fill = { rowed: rowedFill, rest: C.yellow, missed: C.empty, pending: C.empty }[info.status];
-    const label = { rowed: `rowed${info.count > 1 ? ` ×${info.count}` : ''}`, rest: 'rest day (streak held)', missed: 'no row', pending: 'today — not yet rowed' }[info.status];
+    const fill = { rowed: rowedFill, rest: C.yellow, missed: C.empty }[info.status];
+    const label = { rowed: `rowed${info.count > 1 ? ` ×${info.count}` : ''}`, rest: 'rest day (streak held)', missed: 'no row' }[info.status];
     const streakCls = inStreak(iso) ? ' streak' : '';
-    const pending = info.status === 'pending' ? ` stroke="${C.muted}" stroke-dasharray="2 2"` : '';
     cells.push(
-      `<rect class="cell${streakCls}" style="animation-delay:${col * 14}ms" x="${x}" y="${y}" width="${cell}" height="${cell}" rx="2" fill="${fill}"${pending}>` +
+      `<rect class="cell${streakCls}" style="animation-delay:${col * 14}ms" x="${x}" y="${y}" width="${cell}" height="${cell}" rx="2" fill="${fill}">` +
       `<title>${iso}: ${label}</title></rect>`
     );
   }
 
   const streakLine = s.streak
-    ? `${s.streakActive ? 'Current' : 'Last'} streak: ${fmtShort(dayISO(s.streak.start))} → ${s.streakActive ? 'today' : fmtShort(dayISO(s.streak.end))} · ${s.streak.ds} days · ${s.streak.rs} rows · bank ${s.bank}`
+    ? `${s.streakActive ? 'Current' : 'Last'} streak: ${fmtShort(dayISO(s.streak.start))} → ${fmtShort(dayISO(s.streak.end))} · ${s.streak.ds} days · ${s.streak.rs} rows · bank ${s.bank}`
     : 'No streak yet';
   const headline = s.streak
     ? `<text class="pulse" x="${W - x0}" y="34" text-anchor="end" font-size="16" font-weight="bold" fill="${C.yellow}">🔥 ${s.streak.ds}d · ${s.streak.rs}r</text>`
@@ -80,7 +79,7 @@ function renderSVG(s) {
     `<text x="${x0 + 290}" y="${legendY}" font-size="10" fill="${C.muted}">streak span</text>`,
   ].join('\n  ');
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="'Segoe UI', Ubuntu, Helvetica, Arial, sans-serif" role="img" aria-label="Rowing: ${s.windowRows} rows in the last year">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" data-as-of="${s.asOfISO}" font-family="'Segoe UI', Ubuntu, Helvetica, Arial, sans-serif" role="img" aria-label="Rowing: ${s.windowRows} rows in the last year">
   <title>Rowing — ${s.windowRows} rows across ${s.windowDaysRowed} days in the last year</title>
   <style>
     .pulse { animation: pulse 2.4s ease-in-out infinite; }
@@ -106,7 +105,7 @@ function renderSVG(s) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const days = await loadDays(args);
-  const asOf = args.today || todayLA();
+  const asOf = resolveAsOf(args);
   const stats = computeStats(days, asOf, YEAR_WINDOW);
   const sk = stats.streak
     ? `${stats.streakActive ? 'current' : 'last'} streak ${stats.streak.ds}d/${stats.streak.rs}r from ${dayISO(stats.streak.start)} (bank ${stats.bank})`
@@ -118,7 +117,11 @@ async function main() {
   console.log(`✓ Wrote ${path.relative(process.cwd(), OUT_FILE)}`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error(err);
+    process.exitCode = 1;
+  });
+}
+
+module.exports = { renderSVG };

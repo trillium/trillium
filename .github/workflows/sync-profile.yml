@@ -2,8 +2,11 @@ name: Sync Profile Content
 
 on:
   schedule:
-    # Run daily at 2 AM UTC to check for new blog posts
-    - cron: '0 2 * * *'
+    # 3:00 AM America/Los_Angeles. Cron is UTC-only, so list both UTC hours that
+    # can be 3 AM in LA (10:00 during PDT, 11:00 during PST); the gate job lets
+    # exactly one of them through (scripts/should-run-now.js).
+    - cron: '0 10 * * *'
+    - cron: '0 11 * * *'
   workflow_dispatch:
   push:
     branches: [main]
@@ -12,8 +15,31 @@ on:
       - 'scripts/**'
       - '.github/workflows/sync-profile.yml'
 
+# Scheduled, manual and push runs all commit to main; never overlap.
+concurrency:
+  group: sync-profile
+  cancel-in-progress: false
+
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts
+
+      - name: Is this the 3 AM Pacific run?
+        id: gate
+        env:
+          SCHEDULE_CRON: ${{ github.event.schedule }}
+        run: node scripts/should-run-now.js
+
   sync:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -26,21 +52,29 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run streak-logic regression tests
-        run: node tests/streaks.test.js
+      - name: Run regression tests (streaks, date boundaries, schedule)
+        run: |
+          for t in tests/*.test.js; do node "$t"; done
 
-      - name: Fetch blog posts from RSS
-        run: node scripts/fetch-blog-posts.js
-
-      - name: Generate rowing activity SVGs
+      # Rowing images come first and the later steps still run (and the commit
+      # step still publishes) when one of them fails, so a broken blog fetch or
+      # README can't leave the images stale again. The job still ends red.
+      - name: Generate rowing activity SVGs (through yesterday, Pacific time)
         run: |
           node scripts/generate-rowing-svg.js
           node scripts/generate-rowing-runner-svg.js
+          node scripts/check-rowing-freshness.js
+
+      - name: Fetch blog posts from RSS
+        if: ${{ !cancelled() }}
+        run: node scripts/fetch-blog-posts.js
 
       - name: Regenerate README sections and BLOG.md
+        if: ${{ !cancelled() }}
         run: node scripts/generate-readme.js
 
       - name: Commit and push changes
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
