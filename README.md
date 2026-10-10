@@ -79,6 +79,14 @@ A self-hosted booking platform with Google Calendar and Gmail API integration �
 _Stack_: [NextJs](https://nextjs.org/) | [TypeScript](https://www.typescriptlang.org/) | [Tailwind.css](https://tailwindcss.com/) | [Vercel](https://vercel.com/)
 
 
+## 🚣 Rowing
+
+The last year on the water and the scope of my current streak — generated daily from my [row_tracker](https://github.com/trillium/row_tracker) log:
+
+<img src="images/rowing.svg" alt="Animated heatmap of the last 365 days of rowing, with the current streak span highlighted" />
+
+<img src="images/rowing-runner.svg" alt="Row Runner: a side-scroller of the last 90 days — the rower rides the pace line while each day's +/~/- glyph scrolls past" />
+
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [contributors-shield]: https://img.shields.io/github/contributors/trillium/trillium.svg?style=for-the-badge
