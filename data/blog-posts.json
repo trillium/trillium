@@ -1,6 +1,19 @@
 {
-  "updated": "2026-08-22T18:20:11.479Z",
+  "updated": "2026-10-11T18:53:35.322Z",
   "recentPosts": [
+    {
+      "title": "ChatGPT Voice as a Way to Think Through Software Development Work",
+      "url": "https://trilliumsmith.com/blog/bringing-voice-to-more-of-the-software-development-stack",
+      "summary": "This week's experiment: ChatGPT Voice as a way to think through software development work — with MCP access to a durable store so a conversation becomes the layer between a loosely formed idea and the systems that act on it.",
+      "date": "2026-09-17",
+      "tags": [
+        "voice",
+        "ai-agents",
+        "mcp",
+        "beads",
+        "tooling"
+      ]
+    },
     {
       "title": "Parlay: Voice-First Agent Orchestration",
       "url": "https://trilliumsmith.com/blog/parlay-a-chat-server-for-your-ai-agents",
@@ -98,17 +111,7 @@
       "tags": [
         "Talon Voice"
       ]
-    },
-    {
-      "title": "Cellphone as Trackpad for Talon Voice",
-      "url": "https://trilliumsmith.com/blog/remote-desktop-with-cellphone",
-      "summary": "Use your cellphone as a trackpad when in conjunction with Talon Voice",
-      "date": "2021-01-02",
-      "tags": [
-        "Talon Voice",
-        "Remote Desktop"
-      ]
     }
   ],
-  "totalPosts": 10
+  "totalPosts": 11
 }
