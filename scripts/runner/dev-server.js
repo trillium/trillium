@@ -39,11 +39,11 @@ function sourceVersion() {
 
 function render(only) {
   bustCache();
-  const { parseRows, todayLA } = require(path.join(SCRIPTS_DIR, 'lib/rowing-data'));
+  const { parseRows, resolveAsOf } = require(path.join(SCRIPTS_DIR, 'lib/rowing-data'));
   const { renderRunner } = require(path.join(SCRIPTS_DIR, 'runner'));
   const text = fs.readFileSync(args['rows-file'], 'utf8');
   const days = parseRows(text);
-  const asOf = args.today || todayLA();
+  const asOf = resolveAsOf(args);
   return renderRunner(days, asOf, only ? { only: [only] } : {}).svg;
 }
 

@@ -2,6 +2,8 @@
 // Renders the auto-generated sections of the profile README:
 //   <!-- BLOG-POST-LIST:START --> ... <!-- BLOG-POST-LIST:END -->   from data/blog-posts.json
 //   <!-- PROJECT-LIST:START -->   ... <!-- PROJECT-LIST:END -->     from data/projects.json
+// A missing marker pair throws, failing this step loudly; sync-profile.yml runs
+// the rowing SVG steps first and still commits them when this step fails.
 // Also writes BLOG.md (the full post list).
 // Run by .github/workflows/sync-profile.yml; safe to run locally: node scripts/generate-readme.js
 
