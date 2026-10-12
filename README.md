@@ -13,8 +13,8 @@ I build voice accessibility tooling, agentic infrastructure, and full-stack appl
 **Stack:** TypeScript · React · Next.js · Node.js · Vitest · Playwright · GitHub Actions · PostgreSQL · MongoDB · Supabase · Serverless
 
 <p>
-<img src="https://trillium-github-readme-stats.vercel.app/api/?username=trillium&show_icons=true&count_private=true&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10&rank_icon=github&include_all_commits=true" height="192" />
-<img alt="NirmalNaveen20 Top Languages" src="https://trillium-github-readme-stats.vercel.app/api/top-langs/?username=trillium&langs_count=8&layout=compact&theme=react&bg_color=282a36&title_color=f40082&icon_color=ffd200&show_icons=true&border_color=ffd200&border_radius=10" height="192px" />
+<img src="https://vps01.trilliumsmith.com/stats.svg" height="192" />
+<img alt="NirmalNaveen20 Top Languages" src="https://vps01.trilliumsmith.com/top-langs.svg" height="192px" />
 </p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
