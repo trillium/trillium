@@ -1,6 +1,19 @@
 {
-  "updated": "2026-10-11T18:53:35.322Z",
+  "updated": "2026-10-23T10:16:14.119Z",
   "recentPosts": [
+    {
+      "title": "Brain: Beads as a domain-based task store",
+      "url": "https://trilliumsmith.com/blog/brain-beads-as-a-domain-based-task-store",
+      "summary": "One database, many named stores: an extension of beads I have used for 7 months as a personal information tracker for agent based records.",
+      "date": "2026-10-22",
+      "tags": [
+        "beads",
+        "ai-agents",
+        "brain",
+        "tooling",
+        "knowledge"
+      ]
+    },
     {
       "title": "ChatGPT Voice as a Way to Think Through Software Development Work",
       "url": "https://trilliumsmith.com/blog/bringing-voice-to-more-of-the-software-development-stack",
@@ -102,16 +115,7 @@
         "tools",
         "automation"
       ]
-    },
-    {
-      "title": "Wakey Wakey!",
-      "url": "https://trilliumsmith.com/blog/wakey-wakey",
-      "summary": "Having fun with waking up Talon Voice",
-      "date": "2024-02-02",
-      "tags": [
-        "Talon Voice"
-      ]
     }
   ],
-  "totalPosts": 11
+  "totalPosts": 12
 }
